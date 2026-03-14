@@ -64,14 +64,17 @@ export const handler = async (event) => {
     const page = data.results[0];
     const props = page.properties;
 
+    const titleFormatted = extractText(props.TitleFormatted?.rich_text);
+    const bodyFormatted = extractText(props.BodyFormatted?.rich_text);
+
     const article = {
       id: page.id,
-      title: extractText(props.Title?.title),
+      title: titleFormatted || extractText(props.Title?.title),
       category: extractText(props.Category?.rich_text),
       readTime: extractText(props.ReadTime?.rich_text),
       date: props.Date?.date?.start || "",
       slug: extractText(props.Slug?.rich_text),
-      body: extractText(props.Body?.rich_text),
+      body: bodyFormatted || extractText(props.Body?.rich_text),
     };
 
     return {
