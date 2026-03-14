@@ -7,11 +7,15 @@ export const handler = async (event) => {
   const publishSecret = process.env.PUBLISH_SECRET;
 
   if (event.httpMethod === "GET") {
-    const token = event.queryStringParameters?.token;
-    if (!publishSecret || token !== publishSecret) {
-      return { statusCode: 401, body: JSON.stringify({ error: "Unauthorized" }) };
-    }
-  } else if (event.httpMethod !== "POST") {
+  const token = event.queryStringParameters?.token;
+  const secret = process.env.PUBLISH_SECRET;
+  console.log('token received:', JSON.stringify(token));
+  console.log('secret stored:', JSON.stringify(secret));
+  console.log('match:', token === secret);
+  if (!secret || token !== secret) {
+    return { statusCode: 401, body: JSON.stringify({ error: "Unauthorized", debug: { tokenReceived: token, secretExists: !!secret } }) };
+  }
+} else if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method not allowed" };
   }
 
