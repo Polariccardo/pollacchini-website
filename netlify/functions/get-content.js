@@ -61,13 +61,16 @@ function formatArticle(page, index) {
 
 function formatWeeklyBrief(page) {
   const props = page.properties;
+  const headline = extractText(props.Headline?.rich_text);
+  const trending = extractText(props.Trending?.rich_text);
+  const excerpt = (headline || trending || extractText(props.Body?.rich_text)).slice(0, 160) + "…";
   return {
     id: page.id,
     issue: props.Issue?.number || 0,
     title: extractText(props.Title?.title),
+    headline: headline,
     date: props.Date?.date?.start || "",
-    body: extractText(props.Body?.rich_text),
-    excerpt: extractText(props.Body?.rich_text).slice(0, 160) + "…",
+    excerpt: excerpt,
   };
 }
 
