@@ -1,0 +1,783 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Riccardo Pollacchini — Head of Business Finance</title>
+
+  <!-- Open Graph / LinkedIn sharing -->
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://pollacchini.com/" />
+  <meta property="og:title" content="Riccardo Pollacchini — Head of Business Finance" />
+  <meta property="og:description" content="Finance leader helping teams grow with clarity, data, and a bit of fun. Weekly insights, articles, and real thinking on business finance." />
+  <meta property="og:image" content="https://pollacchini.com/og-image.jpg" />
+  <meta name="twitter:card" content="summary_large_image" />
+  <meta name="description" content="Finance leader helping teams grow with clarity, data, and a bit of fun. Weekly insights, articles, and real thinking on business finance." />
+
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ink: #111110;
+      --paper: #F7F5F0;
+      --warm: #E8603A;
+      --warm-light: #FDF0EC;
+      --muted: #7A7870;
+      --border: #E2DFD8;
+      --card: #FFFFFF;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      background: var(--paper);
+      color: var(--ink);
+      font-family: var(--font-body);
+      font-weight: 300;
+      line-height: 1.7;
+      -webkit-font-smoothing: antialiased;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 20px 48px;
+      background: rgba(247, 245, 240, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      transition: padding 0.3s;
+    }
+    .nav-logo {
+      font-family: var(--font-display);
+      font-size: 18px; font-weight: 700;
+      color: var(--ink); text-decoration: none;
+      letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--warm); }
+    .nav-links { display: flex; gap: 36px; list-style: none; }
+    .nav-links a {
+      font-size: 13px; font-weight: 400; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--warm); }
+
+    /* ── HERO ── */
+    #hero {
+      min-height: 100vh;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      padding-top: 80px;
+      overflow: hidden;
+    }
+    .hero-left {
+      display: flex; flex-direction: column; justify-content: center;
+      padding: 80px 48px 80px 80px;
+    }
+    .hero-tag {
+      display: inline-flex; align-items: center; gap: 8px;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--warm); letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 28px;
+    }
+    .hero-tag::before {
+      content: ''; display: block;
+      width: 24px; height: 1px; background: var(--warm);
+    }
+    .hero-h1 {
+      font-family: var(--font-display);
+      font-size: clamp(48px, 6vw, 80px);
+      font-weight: 900;
+      line-height: 1.0;
+      letter-spacing: -0.03em;
+      color: var(--ink);
+      margin-bottom: 28px;
+    }
+    .hero-h1 em {
+      font-style: italic; color: var(--warm);
+    }
+    .hero-sub {
+      font-size: 17px; color: var(--muted);
+      max-width: 420px; line-height: 1.8;
+      margin-bottom: 44px;
+    }
+    .hero-cta {
+      display: flex; gap: 16px; flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--warm); color: #fff;
+      padding: 14px 28px; border-radius: 4px;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; text-decoration: none;
+      transition: background 0.2s, transform 0.15s;
+    }
+    .btn-primary:hover { background: #C94E2C; transform: translateY(-1px); }
+    .btn-ghost {
+      border: 1px solid var(--border); color: var(--ink);
+      padding: 14px 28px; border-radius: 4px;
+      font-size: 13px; font-weight: 400; letter-spacing: 0.06em;
+      text-transform: uppercase; text-decoration: none;
+      transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-ghost:hover { border-color: var(--warm); color: var(--warm); }
+
+    .hero-right {
+      display: flex; align-items: center; justify-content: center;
+      padding: 80px 80px 80px 40px;
+      position: relative;
+    }
+    .hero-stats {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 2px; width: 100%; max-width: 400px;
+    }
+    .stat-card {
+      background: var(--card); padding: 32px 28px;
+      border: 1px solid var(--border);
+    }
+    .stat-card:first-child { border-radius: 12px 0 0 0; }
+    .stat-card:nth-child(2) { border-radius: 0 12px 0 0; background: var(--warm); }
+    .stat-card:nth-child(3) { border-radius: 0 0 0 12px; }
+    .stat-card:last-child { border-radius: 0 0 12px 0; }
+    .stat-num {
+      font-family: var(--font-display);
+      font-size: 44px; font-weight: 900;
+      letter-spacing: -0.04em; line-height: 1;
+      color: var(--ink); margin-bottom: 6px;
+    }
+    .stat-card:nth-child(2) .stat-num,
+    .stat-card:nth-child(2) .stat-label { color: #fff; }
+    .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
+    .stat-card:nth-child(2) .stat-label { color: rgba(255,255,255,0.75); }
+
+    /* ── SECTION SHARED ── */
+    section { padding: 100px 80px; }
+    .section-eyebrow {
+      display: flex; align-items: center; gap: 12px;
+      font-family: var(--font-mono); font-size: 11px;
+      color: var(--warm); letter-spacing: 0.12em; text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+    .section-eyebrow::after {
+      content: ''; flex: 1; max-width: 60px;
+      height: 1px; background: var(--warm);
+    }
+    .section-h2 {
+      font-family: var(--font-display);
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 700; letter-spacing: -0.03em; line-height: 1.1;
+      color: var(--ink); margin-bottom: 20px;
+    }
+    .section-lead {
+      font-size: 17px; color: var(--muted);
+      max-width: 560px; line-height: 1.8; margin-bottom: 56px;
+    }
+
+    /* ── ABOUT ── */
+    #about { background: var(--card); border-top: 1px solid var(--border); }
+    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
+    .about-text p { font-size: 16px; color: var(--muted); line-height: 1.9; margin-bottom: 20px; }
+    .about-text strong { color: var(--ink); font-weight: 500; }
+    .about-values { display: flex; flex-direction: column; gap: 20px; }
+    .value-item {
+      display: flex; gap: 20px; align-items: flex-start;
+      padding: 24px; border: 1px solid var(--border); border-radius: 8px;
+      background: var(--paper); transition: border-color 0.2s;
+    }
+    .value-item:hover { border-color: var(--warm); }
+    .value-icon {
+      width: 40px; height: 40px; border-radius: 8px;
+      background: var(--warm-light); display: flex; align-items: center;
+      justify-content: center; font-size: 18px; flex-shrink: 0;
+    }
+    .value-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
+    .value-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+
+    /* ── WEEKLY UPDATES ── */
+    #weekly { border-top: 1px solid var(--border); }
+    .weekly-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+    .weekly-card {
+      border: 1px solid var(--border); border-radius: 8px;
+      background: var(--card); padding: 28px;
+      transition: border-color 0.2s, transform 0.2s; cursor: pointer;
+    }
+    .weekly-card:hover { border-color: var(--warm); transform: translateY(-3px); }
+    .weekly-card:first-child { border-color: var(--warm); background: var(--warm-light); }
+    .weekly-meta {
+      display: flex; align-items: center; justify-content: space-between;
+      margin-bottom: 16px;
+    }
+    .weekly-issue {
+      font-family: var(--font-mono); font-size: 10px;
+      color: var(--warm); letter-spacing: 0.1em; text-transform: uppercase;
+    }
+    .weekly-date { font-size: 11px; color: var(--muted); }
+    .weekly-title {
+      font-family: var(--font-display); font-size: 20px;
+      font-weight: 700; color: var(--ink); line-height: 1.3;
+      margin-bottom: 10px; letter-spacing: -0.02em;
+    }
+    .weekly-excerpt { font-size: 13px; color: var(--muted); line-height: 1.7; margin-bottom: 20px; }
+    .weekly-footer {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 16px; border-top: 1px solid var(--border);
+    }
+    .weekly-tags { display: flex; gap: 6px; }
+    .tag {
+      font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
+      padding: 3px 8px; border-radius: 3px;
+      background: var(--paper); color: var(--muted);
+    }
+    .weekly-link { font-size: 12px; color: var(--warm); text-decoration: none; font-weight: 500; }
+    .weekly-link:hover { text-decoration: underline; }
+
+    /* share button */
+    .share-btn {
+      display: inline-flex; align-items: center; gap: 6px;
+      font-size: 11px; color: var(--muted); background: none; border: none;
+      cursor: pointer; transition: color 0.2s; padding: 0;
+      font-family: var(--font-body);
+    }
+    .share-btn:hover { color: #0A66C2; }
+    .share-btn svg { width: 14px; height: 14px; }
+
+    /* ── ARTICLES ── */
+    #articles { background: var(--card); border-top: 1px solid var(--border); }
+    .articles-list { display: flex; flex-direction: column; gap: 0; }
+    .article-row {
+      display: grid; grid-template-columns: 80px 1fr auto;
+      gap: 32px; align-items: center;
+      padding: 28px 0; border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: color 0.2s;
+    }
+    .article-row:first-child { border-top: 1px solid var(--border); }
+    .article-row:hover .article-title { color: var(--warm); }
+    .article-num {
+      font-family: var(--font-display); font-size: 36px;
+      font-weight: 900; color: var(--border);
+      letter-spacing: -0.04em; line-height: 1;
+    }
+    .article-title {
+      font-family: var(--font-display); font-size: 22px;
+      font-weight: 700; color: var(--ink); letter-spacing: -0.02em;
+      line-height: 1.2; margin-bottom: 6px;
+      transition: color 0.2s;
+    }
+    .article-meta-row { display: flex; gap: 16px; align-items: center; }
+    .article-cat { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--warm); }
+    .article-read { font-size: 12px; color: var(--muted); }
+    .article-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .article-link { font-size: 13px; color: var(--warm); text-decoration: none; font-weight: 500; }
+
+    /* ── AI CHAT ── */
+    #ai-chat { border-top: 1px solid var(--border); background: var(--ink); color: var(--paper); }
+    #ai-chat .section-eyebrow { color: var(--warm); }
+    #ai-chat .section-h2 { color: var(--paper); }
+    #ai-chat .section-lead { color: rgba(247,245,240,0.6); }
+    .chat-widget {
+      background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 12px; overflow: hidden; max-width: 680px;
+    }
+    .chat-topbar {
+      display: flex; align-items: center; gap: 10px;
+      padding: 14px 20px; border-bottom: 1px solid rgba(255,255,255,0.08);
+    }
+    .chat-dot { width: 10px; height: 10px; border-radius: 50%; }
+    .chat-label { font-family: var(--font-mono); font-size: 11px; color: rgba(247,245,240,0.4); margin-left: auto; }
+    .chat-messages { padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; min-height: 200px; }
+    .msg { max-width: 80%; padding: 12px 16px; border-radius: 8px; font-size: 14px; line-height: 1.6; }
+    .msg-user { background: var(--warm); color: #fff; align-self: flex-end; border-radius: 8px 8px 2px 8px; }
+    .msg-ai { background: rgba(255,255,255,0.08); color: var(--paper); align-self: flex-start; border-radius: 8px 8px 8px 2px; }
+    .chat-input-row {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 20px; border-top: 1px solid rgba(255,255,255,0.08);
+    }
+    .chat-input {
+      flex: 1; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);
+      border-radius: 6px; padding: 10px 14px; color: var(--paper);
+      font-family: var(--font-body); font-size: 14px; outline: none;
+    }
+    .chat-input::placeholder { color: rgba(247,245,240,0.3); }
+    .chat-input:focus { border-color: var(--warm); }
+    .chat-send {
+      background: var(--warm); border: none; border-radius: 6px;
+      padding: 10px 18px; color: #fff; font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: background 0.2s;
+      font-family: var(--font-body);
+    }
+    .chat-send:hover { background: #C94E2C; }
+    .chat-note { font-size: 12px; color: rgba(247,245,240,0.35); margin-top: 12px; }
+
+    /* ── CONTACT / FOOTER ── */
+    #contact {
+      background: var(--paper); border-top: 1px solid var(--border);
+      padding: 100px 80px 60px;
+    }
+    .contact-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; margin-bottom: 80px; }
+    .contact-links { display: flex; flex-direction: column; gap: 12px; }
+    .contact-link {
+      display: flex; align-items: center; gap: 14px;
+      padding: 16px 20px; border: 1px solid var(--border); border-radius: 6px;
+      text-decoration: none; color: var(--ink); background: var(--card);
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .contact-link:hover { border-color: var(--warm); transform: translateX(4px); }
+    .contact-link-icon { font-size: 18px; }
+    .contact-link-label { font-size: 13px; font-weight: 500; }
+    .contact-link-sub { font-size: 11px; color: var(--muted); }
+    .footer-bar {
+      display: flex; align-items: center; justify-content: space-between;
+      padding-top: 32px; border-top: 1px solid var(--border);
+    }
+    .footer-copy { font-size: 12px; color: var(--muted); }
+    .footer-built { font-family: var(--font-mono); font-size: 10px; color: var(--border); }
+
+    /* ── ANIMATIONS ── */
+    @keyframes fadeUp {
+      from { opacity: 0; transform: translateY(24px); }
+      to   { opacity: 1; transform: translateY(0); }
+    }
+    .hero-tag   { animation: fadeUp 0.6s ease both; }
+    .hero-h1    { animation: fadeUp 0.6s 0.1s ease both; }
+    .hero-sub   { animation: fadeUp 0.6s 0.2s ease both; }
+    .hero-cta   { animation: fadeUp 0.6s 0.3s ease both; }
+    .hero-stats { animation: fadeUp 0.6s 0.4s ease both; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .nav-links { display: none; }
+      #hero { grid-template-columns: 1fr; min-height: auto; }
+      .hero-left { padding: 100px 24px 40px; }
+      .hero-right { padding: 0 24px 60px; }
+      section { padding: 60px 24px; }
+      .about-grid, .contact-grid { grid-template-columns: 1fr; gap: 40px; }
+      .weekly-grid { grid-template-columns: 1fr; }
+      .article-row { grid-template-columns: 1fr; gap: 8px; }
+      .article-num { font-size: 20px; }
+      #contact { padding: 60px 24px 40px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#hero" class="nav-logo">R.<span>P</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">About</a></li>
+    <li><a href="#weekly">Weekly</a></li>
+    <li><a href="#articles">Articles</a></li>
+    <li><a href="#ai-chat">Ask me</a></li>
+    <li><a href="#contact">Contact</a></li>
+  </ul>
+</nav>
+
+<!-- ── HERO ── -->
+<section id="hero">
+  <div class="hero-left">
+    <div class="hero-tag">Head of Business Finance</div>
+    <h1 class="hero-h1">Finance that<br><em>moves</em><br>the needle.</h1>
+    <p class="hero-sub">
+      I'm Riccardo Pollacchini. I help companies scale with clarity, sharp financial thinking,
+      and the belief that great work should actually be enjoyable.
+    </p>
+    <div class="hero-cta">
+      <a href="#articles" class="btn-primary">Read my thinking</a>
+      <a href="#contact" class="btn-ghost">Get in touch</a>
+    </div>
+  </div>
+  <div class="hero-right">
+    <div class="hero-stats">
+      <div class="stat-card">
+        <div class="stat-num">5+</div>
+        <div class="stat-label">Years in finance leadership</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">∞</div>
+        <div class="stat-label">Belief that work can be fun</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">1</div>
+        <div class="stat-label">Weekly update, every week</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">0</div>
+        <div class="stat-label">Tolerance for boring decks</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="section-eyebrow">About me</div>
+  <h2 class="section-h2">Serious about finance.<br>Not about myself.</h2>
+  <p class="section-lead">
+    Finance is often treated as a support function. I believe it's a growth engine — when done right.
+  </p>
+  <div class="about-grid">
+    <div class="about-text">
+      <p>
+        I'm a <strong>Head of Business Finance</strong> with 5+ years of experience working at the intersection
+        of data, strategy, and people. My work lives at the scale-up stage — where the numbers
+        need to be sharp, the decisions need to be fast, and the teams need to stay motivated.
+      </p>
+      <p>
+        I don't believe finance has to be dry. The best financial leaders I've met combine
+        <strong>rigour with curiosity</strong>, and they communicate in ways that actually make
+        people act — not just nod along.
+      </p>
+      <p>
+        This site is where I share what I learn: weekly observations from the trenches,
+        long-form thinking on topics I care about, and the occasional unpopular opinion
+        about how business finance really works.
+      </p>
+      <br/>
+      <a href="https://www.linkedin.com/in/riccardo-pollacchini" target="_blank" class="btn-primary" style="display:inline-block;">
+        View LinkedIn profile
+      </a>
+    </div>
+    <div class="about-values">
+      <div class="value-item">
+        <div class="value-icon">📈</div>
+        <div>
+          <div class="value-title">Finance as a growth function</div>
+          <div class="value-desc">Not just reporting the past — shaping what comes next. FP&A, partnering, and strategic clarity.</div>
+        </div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">🤝</div>
+        <div>
+          <div class="value-title">People-first approach</div>
+          <div class="value-desc">Numbers tell stories about people's decisions. Good finance starts by understanding that.</div>
+        </div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">⚡</div>
+        <div>
+          <div class="value-title">Speed at scale</div>
+          <div class="value-desc">Scale-ups can't afford slow. I build processes and models that give teams answers fast.</div>
+        </div>
+      </div>
+      <div class="value-item">
+        <div class="value-icon">😄</div>
+        <div>
+          <div class="value-title">Work should be fun</div>
+          <div class="value-desc">Seriously. If the team dreads the monthly close, something is wrong and it's probably fixable.</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── WEEKLY UPDATES ── -->
+<section id="weekly">
+  <div class="section-eyebrow">Weekly updates</div>
+  <h2 class="section-h2">What I'm thinking<br>this week.</h2>
+  <p class="section-lead">
+    Short, punchy, and always grounded in something real. Every week, one observation
+    from the world of business finance — straight to the point.
+  </p>
+  <div class="weekly-grid">
+
+    <div class="weekly-card">
+      <div class="weekly-meta">
+        <span class="weekly-issue">Issue #01 · Latest</span>
+        <span class="weekly-date">Mar 14, 2025</span>
+      </div>
+      <div class="weekly-title">Why most finance teams are still reporting the past</div>
+      <div class="weekly-excerpt">
+        The monthly close is a ritual. But if that's where your energy goes, you're a historian,
+        not a finance partner. Here's how I think about shifting the balance.
+      </div>
+      <div class="weekly-footer">
+        <div class="weekly-tags">
+          <span class="tag">FP&amp;A</span>
+          <span class="tag">Strategy</span>
+        </div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <button class="share-btn" onclick="shareOnLinkedIn('Why most finance teams are still reporting the past', 'Issue #01 of my weekly finance brief.')">
+            <svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Share
+          </button>
+          <a href="#" class="weekly-link">Read →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="weekly-card">
+      <div class="weekly-meta">
+        <span class="weekly-issue">Issue #02</span>
+        <span class="weekly-date">Coming soon</span>
+      </div>
+      <div class="weekly-title">The one metric every scale-up CFO ignores</div>
+      <div class="weekly-excerpt">
+        Everyone talks about burn rate and ARR. Almost nobody talks about the ratio that
+        actually tells you if the growth is sustainable. Let's fix that.
+      </div>
+      <div class="weekly-footer">
+        <div class="weekly-tags"><span class="tag">Metrics</span><span class="tag">Scale-up</span></div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <button class="share-btn" onclick="shareOnLinkedIn('The one metric every scale-up CFO ignores', 'Issue #02 of my weekly finance brief.')">
+            <svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Share
+          </button>
+          <a href="#" class="weekly-link">Read →</a>
+        </div>
+      </div>
+    </div>
+
+    <div class="weekly-card">
+      <div class="weekly-meta">
+        <span class="weekly-issue">Issue #03</span>
+        <span class="weekly-date">Coming soon</span>
+      </div>
+      <div class="weekly-title">When finance stops being fun (and what to do about it)</div>
+      <div class="weekly-excerpt">
+        Burnout in finance is real. But I think it's often caused by fixable structural problems,
+        not just workload. A practical take on keeping the energy up.
+      </div>
+      <div class="weekly-footer">
+        <div class="weekly-tags"><span class="tag">Culture</span><span class="tag">Teams</span></div>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <button class="share-btn" onclick="shareOnLinkedIn('When finance stops being fun', 'Issue #03 of my weekly finance brief.')">
+            <svg viewBox="0 0 24 24" fill="#0A66C2"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+            Share
+          </button>
+          <a href="#" class="weekly-link">Read →</a>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── ARTICLES ── -->
+<section id="articles">
+  <div class="section-eyebrow">Articles</div>
+  <h2 class="section-h2">Long-form thinking.</h2>
+  <p class="section-lead">
+    When a topic deserves more than a tweet or a weekly brief — I go deep.
+    These pieces take time to write and hopefully time to read.
+  </p>
+  <div class="articles-list">
+
+    <div class="article-row">
+      <div class="article-num">01</div>
+      <div>
+        <div class="article-title">Building a Finance Function That Actually Scales</div>
+        <div class="article-meta-row">
+          <span class="article-cat">Leadership</span>
+          <span class="article-read">8 min read</span>
+          <span class="article-date" style="font-size:12px;color:var(--muted);">Coming soon</span>
+        </div>
+      </div>
+      <div class="article-actions">
+        <a href="#" class="article-link">Read →</a>
+        <button class="share-btn" onclick="shareOnLinkedIn('Building a Finance Function That Actually Scales', 'A new article by Riccardo Pollacchini on pollacchini.com')">
+          <svg viewBox="0 0 24 24" fill="#0A66C2" width="14" height="14"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Share on LinkedIn
+        </button>
+      </div>
+    </div>
+
+    <div class="article-row">
+      <div class="article-num">02</div>
+      <div>
+        <div class="article-title">The Hidden Cost of a Slow Budget Process</div>
+        <div class="article-meta-row">
+          <span class="article-cat">Process</span>
+          <span class="article-read">6 min read</span>
+          <span class="article-date" style="font-size:12px;color:var(--muted);">Coming soon</span>
+        </div>
+      </div>
+      <div class="article-actions">
+        <a href="#" class="article-link">Read →</a>
+        <button class="share-btn" onclick="shareOnLinkedIn('The Hidden Cost of a Slow Budget Process', 'A new article by Riccardo Pollacchini on pollacchini.com')">
+          <svg viewBox="0 0 24 24" fill="#0A66C2" width="14" height="14"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Share on LinkedIn
+        </button>
+      </div>
+    </div>
+
+    <div class="article-row">
+      <div class="article-num">03</div>
+      <div>
+        <div class="article-title">How to Communicate Financials to Non-Finance People</div>
+        <div class="article-meta-row">
+          <span class="article-cat">Communication</span>
+          <span class="article-read">10 min read</span>
+          <span class="article-date" style="font-size:12px;color:var(--muted);">Coming soon</span>
+        </div>
+      </div>
+      <div class="article-actions">
+        <a href="#" class="article-link">Read →</a>
+        <button class="share-btn" onclick="shareOnLinkedIn('How to Communicate Financials to Non-Finance People', 'A new article by Riccardo Pollacchini on pollacchini.com')">
+          <svg viewBox="0 0 24 24" fill="#0A66C2" width="14" height="14"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
+          Share on LinkedIn
+        </button>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ── AI CHAT ── -->
+<section id="ai-chat">
+  <div class="section-eyebrow">Ask me anything</div>
+  <h2 class="section-h2">Got a question<br>about finance?</h2>
+  <p class="section-lead">
+    This AI assistant is trained on my thinking, articles, and approach. Ask it anything
+    about business finance, FP&amp;A, scale-ups, or how I work.
+  </p>
+  <div class="chat-widget">
+    <div class="chat-topbar">
+      <div class="chat-dot" style="background:#FF5F56;"></div>
+      <div class="chat-dot" style="background:#FFBD2E;"></div>
+      <div class="chat-dot" style="background:#27C93F;"></div>
+      <span class="chat-label">Ask Riccardo · AI assistant</span>
+    </div>
+    <div class="chat-messages" id="chat-messages">
+      <div class="msg msg-ai">
+        Hi! I'm Riccardo's AI assistant. Ask me about business finance, how he thinks about FP&A, scale-ups, or anything else. What's on your mind?
+      </div>
+    </div>
+    <div class="chat-input-row">
+      <input class="chat-input" id="chat-input" type="text" placeholder="e.g. How do you approach a budget process at a scale-up?" />
+      <button class="chat-send" id="chat-send">Send</button>
+    </div>
+  </div>
+  <p class="chat-note">* AI responses are generated and may not perfectly represent Riccardo's views. For important decisions, reach out directly.</p>
+</section>
+
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="section-eyebrow">Contact</div>
+  <h2 class="section-h2">Let's talk.</h2>
+  <p class="section-lead">
+    Whether you want to discuss a finance challenge, collaborate on something, or just say hi
+    — I'm always happy to connect.
+  </p>
+  <div class="contact-grid">
+    <div class="contact-links">
+      <a href="https://www.linkedin.com/in/riccardo-pollacchini" target="_blank" class="contact-link">
+        <span class="contact-link-icon">💼</span>
+        <div>
+          <div class="contact-link-label">LinkedIn</div>
+          <div class="contact-link-sub">linkedin.com/in/riccardo-pollacchini</div>
+        </div>
+      </a>
+      <a href="mailto:riccardo@pollacchini.com" class="contact-link">
+        <span class="contact-link-icon">✉️</span>
+        <div>
+          <div class="contact-link-label">Email</div>
+          <div class="contact-link-sub">riccardo@pollacchini.com</div>
+        </div>
+      </a>
+    </div>
+    <div>
+      <p style="font-size:16px;color:var(--muted);line-height:1.9;margin-bottom:20px;">
+        I'm particularly interested in conversations around finance transformation,
+        scale-up challenges, and building high-performing teams. No cold pitches please —
+        but genuine conversations are always welcome.
+      </p>
+      <p style="font-size:13px;color:var(--border);">Based in Copenhagen, Denmark 🇩🇰</p>
+    </div>
+  </div>
+  <div class="footer-bar">
+    <span class="footer-copy">© 2025 Riccardo Pollacchini · pollacchini.com</span>
+    <span class="footer-built">Built with intention</span>
+  </div>
+</section>
+
+<script>
+  // ── LinkedIn share ──
+  function shareOnLinkedIn(title, text) {
+    const url = encodeURIComponent('https://pollacchini.com');
+    const summary = encodeURIComponent(text + ' Read more at pollacchini.com');
+    const liUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${encodeURIComponent(title)}&summary=${summary}`;
+    window.open(liUrl, '_blank', 'width=600,height=500');
+  }
+
+  // ── AI Chat ──
+  const SYSTEM_PROMPT = `You are an AI assistant representing Riccardo Pollacchini, a Head of Business Finance with 5+ years of experience, based in Copenhagen. 
+
+Riccardo's philosophy:
+- Finance should be a growth function, not just a reporting one
+- Work should be fun and impactful — he genuinely believes this
+- He specialises in scale-up environments where speed and clarity matter
+- He's people-first: numbers tell stories about human decisions
+- He has zero tolerance for boring, slow, or overly bureaucratic finance processes
+- He values FP&A, strategic partnering, and helping non-finance people understand data
+
+Answer questions as if you are a knowledgeable assistant who knows Riccardo's work and thinking well. Be warm, direct, occasionally witty, and always practical. Keep answers concise and useful. If asked something very personal or specific that you can't know, suggest they reach out directly via LinkedIn or email.`;
+
+  const messagesEl = document.getElementById('chat-messages');
+  const inputEl = document.getElementById('chat-input');
+  const sendBtn = document.getElementById('chat-send');
+  const history = [];
+
+  function addMessage(text, isUser) {
+    const div = document.createElement('div');
+    div.className = 'msg ' + (isUser ? 'msg-user' : 'msg-ai');
+    div.textContent = text;
+    messagesEl.appendChild(div);
+    messagesEl.scrollTop = messagesEl.scrollHeight;
+    return div;
+  }
+
+  async function sendMessage() {
+    const text = inputEl.value.trim();
+    if (!text) return;
+    inputEl.value = '';
+    sendBtn.disabled = true;
+    sendBtn.textContent = '...';
+
+    addMessage(text, true);
+    history.push({ role: 'user', content: text });
+
+    const thinking = addMessage('Thinking…', false);
+
+    try {
+      const res = await fetch('https://api.anthropic.com/v1/messages', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          model: 'claude-sonnet-4-20250514',
+          max_tokens: 1000,
+          system: SYSTEM_PROMPT,
+          messages: history
+        })
+      });
+      const data = await res.json();
+      const reply = data.content?.[0]?.text || 'Sorry, something went wrong. Please try again.';
+      thinking.textContent = reply;
+      history.push({ role: 'assistant', content: reply });
+    } catch (e) {
+      thinking.textContent = 'Something went wrong. Please try again.';
+    }
+
+    sendBtn.disabled = false;
+    sendBtn.textContent = 'Send';
+  }
+
+  sendBtn.addEventListener('click', sendMessage);
+  inputEl.addEventListener('keydown', e => { if (e.key === 'Enter') sendMessage(); });
+
+  // ── Nav scroll shrink ──
+  window.addEventListener('scroll', () => {
+    document.querySelector('nav').style.padding =
+      window.scrollY > 40 ? '12px 48px' : '20px 48px';
+  });
+</script>
+
+</body>
+</html>
