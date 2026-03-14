@@ -1,37 +1,30 @@
 // netlify/functions/publish.js
-// Triggers a Netlify rebuild when called. 
-// This is what fires when you say "publish" in the chat.
+// Triggers a Netlify rebuild.
+// Accepts GET with secret token (used by Claude) or POST.
 
 export const handler = async (event) => {
-  if (event.httpMethod !== "POST") {
+  const buildHookUrl = process.env.NETLIFY_BUILD_HOOK;
+  const publishSecret = process.env.PUBLISH_SECRET;
+
+  if (event.httpMethod === "GET") {
+    const token = event.queryStringParameters?.token;
+    if (!publishSecret || token !== publishSecret) {
+      return { statusCode: 401, body: JSON.stringify({ error: "Unauthorized" }) };
+    }
+  } else if (event.httpMethod !== "POST") {
     return { statusCode: 405, body: "Method not allowed" };
   }
 
-  const buildHookUrl = process.env.NETLIFY_BUILD_HOOK;
-
   if (!buildHookUrl) {
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: "Build hook not configured" }),
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: "Build hook not configured" }) };
   }
 
   try {
     const response = await fetch(buildHookUrl, { method: "POST" });
-
-    if (!response.ok) {
-      throw new Error(`Build hook responded with ${response.status}`);
-    }
-
-    return {
-      statusCode: 200,
-      body: JSON.stringify({ success: true, message: "Site rebuild triggered" }),
-    };
+    if (!response.ok) throw new Error(`Build hook responded with ${response.status}`);
+    return { statusCode: 200, body: JSON.stringify({ success: true, message: "Site rebuild triggered" }) };
   } catch (err) {
     console.error("publish error:", err);
-    return {
-      statusCode: 500,
-      body: JSON.stringify({ error: err.message }),
-    };
+    return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
   }
 };
