@@ -10,6 +10,7 @@
   <meta property="og:image" content="https://pollacchini.com/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
+  <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><rect width='32' height='32' rx='4' fill='%23F7F5F0'/><text x='50%25' y='50%25' dominant-baseline='central' text-anchor='middle' font-family='Georgia,serif' font-weight='900' font-size='14' fill='%232E2EFF'>R<span style="color:#2E2EFF;">P</span></text></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
@@ -229,7 +230,7 @@
 <body>
 
 <nav>
-  <a href="/" class="nav-logo">R.<span>P</span></a>
+  <a href="/" class="nav-logo">R<span style="color:#2E2EFF;">P</span></a>
 </nav>
 
 <a href="/#articles" class="back-fixed">← Articles</a>
@@ -282,7 +283,7 @@
       if (!res.ok) throw new Error('Not found');
       const { article } = await res.json();
 
-      document.title = article.title + ' — Riccardo Pollacchini';
+      document.title = article.title.replace(/<[^>]+>/g, '') + ' — Riccardo Pollacchini';
 
       document.getElementById('article-wrapper').innerHTML = `
         <div class="article-eyebrow">${article.category || 'Article'}</div>
@@ -302,7 +303,7 @@
           </button>
         </div>
         <div class="author-signature">
-          <div class="author-avatar">RP</div>
+          <div class="author-avatar">R<span style="color:#2E2EFF;">P</span></div>
           <div class="author-info">
             <div class="author-name">Riccardo Pollacchini</div>
             <div class="author-desc">Head of Business Finance · 5+ years building finance functions at scale-ups. I believe finance should be a growth engine — sharp, fast, and actually fun.</div>
