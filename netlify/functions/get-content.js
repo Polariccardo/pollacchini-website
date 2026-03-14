@@ -35,13 +35,22 @@ function extractText(richText) {
   return richText.map(t => t.plain_text || "").join("");
 }
 
+function decodeTags(text) {
+  if (!text) return text;
+  return text
+    .replace(/\[em\]/g, "<em>")
+    .replace(/\[\/em\]/g, "</em>")
+    .replace(/\[hl\]/g, '<span class="hl"><span>')
+    .replace(/\[\/hl\]/g, "</span></span>");
+}
+
 function formatArticle(page, index) {
   const props = page.properties;
   const titleFormatted = extractText(props.TitleFormatted?.rich_text);
   return {
     id: page.id,
     num: String(index + 1).padStart(2, "0"),
-    title: titleFormatted || extractText(props.Title?.title),
+    title: decodeTags(titleFormatted || extractText(props.Title?.title)),
     category: extractText(props.Category?.rich_text),
     readTime: extractText(props.ReadTime?.rich_text) || "",
     date: props.Date?.date?.start || "",
