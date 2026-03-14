@@ -10,6 +10,15 @@ function extractText(richText) {
   return richText.map(t => t.plain_text || "").join("");
 }
 
+function decodeTags(text) {
+  if (!text) return text;
+  return text
+    .replace(/\[em\]/g, '<em>')
+    .replace(/\[\/em\]/g, '</em>')
+    .replace(/\[hl\]/g, '<span class="hl"><span>')
+    .replace(/\[\/hl\]/g, '</span></span>');
+}
+
 export const handler = async (event) => {
   const slug = event.queryStringParameters?.slug;
 
@@ -69,12 +78,12 @@ export const handler = async (event) => {
 
     const article = {
       id: page.id,
-      title: titleFormatted || extractText(props.Title?.title),
+      title: decodeTags(titleFormatted || extractText(props.Title?.title)),
       category: extractText(props.Category?.rich_text),
       readTime: extractText(props.ReadTime?.rich_text),
       date: props.Date?.date?.start || "",
       slug: extractText(props.Slug?.rich_text),
-      body: bodyFormatted || extractText(props.Body?.rich_text),
+      body: decodeTags(bodyFormatted || extractText(props.Body?.rich_text)),
     };
 
     return {
