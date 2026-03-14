@@ -606,13 +606,13 @@
           <span class="weekly-issue">Issue #${String(b.issue).padStart(2,'0')}${i === 0 ? ' · Latest' : ''}</span>
           <span class="weekly-date">${formatDate(b.date)}</span>
         </div>
-        <div class="weekly-title">${b.title}</div>
+        <div class="weekly-title">${b.headline || b.title}</div>
         <div class="weekly-excerpt">${b.excerpt}</div>
         <div class="weekly-footer">
           <div class="weekly-tags"></div>
           <div style="display:flex;gap:12px;align-items:center;">
             <button class="share-btn" onclick="shareOnLinkedIn(${JSON.stringify(b.title)}, 'Issue #${b.issue} of my weekly finance brief.')">${LI_SVG} Share</button>
-            <a href="#" class="weekly-link">Read →</a>
+            <a href="/weekly?issue=${b.issue}" class="weekly-link">Read →</a>
           </div>
         </div>
       </div>
