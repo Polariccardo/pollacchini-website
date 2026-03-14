@@ -636,7 +636,7 @@
           </div>
         </div>
         <div class="article-actions">
-          <a href="${a.slug ? '/articles/' + a.slug : '#'}" class="article-link">Read →</a>
+          <a href="${a.slug ? '/article?slug=' + a.slug : '#'}" class="article-link">Read →</a>
           <button class="share-btn" onclick="shareOnLinkedIn(${JSON.stringify(a.title)}, 'A new article by Riccardo Pollacchini on pollacchini.com')">${LI_SVG} Share on LinkedIn</button>
         </div>
       </div>
