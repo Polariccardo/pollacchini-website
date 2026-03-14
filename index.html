@@ -22,8 +22,9 @@
     :root {
       --ink: #111110;
       --paper: #F7F5F0;
-      --warm: #E8603A;
-      --warm-light: #FDF0EC;
+      --warm: #2E2EFF;
+      --yellow: #FFFF00;
+      --warm-light: #EDEDFF;
       --muted: #7A7870;
       --border: #E2DFD8;
       --card: #FFFFFF;
@@ -90,13 +91,13 @@
     }
     .hero-tag::before {
       content: ''; display: block;
-      width: 24px; height: 1px; background: var(--warm);
+      width: 24px; height: 1px; background: var(--yellow);
     }
     .hero-h1 {
       font-family: var(--font-display);
       font-size: clamp(48px, 6vw, 80px);
       font-weight: 900;
-      line-height: 1.0;
+      line-height: 1.15;
       letter-spacing: -0.03em;
       color: var(--ink);
       margin-bottom: 28px;
@@ -119,7 +120,7 @@
       text-transform: uppercase; text-decoration: none;
       transition: background 0.2s, transform 0.15s;
     }
-    .btn-primary:hover { background: #C94E2C; transform: translateY(-1px); }
+    .btn-primary:hover { background: #1a1acc; transform: translateY(-1px); }
     .btn-ghost {
       border: 1px solid var(--border); color: var(--ink);
       padding: 14px 28px; border-radius: 4px;
@@ -143,19 +144,19 @@
       border: 1px solid var(--border);
     }
     .stat-card:first-child { border-radius: 12px 0 0 0; }
-    .stat-card:nth-child(2) { border-radius: 0 12px 0 0; background: var(--warm); }
+    .stat-card:nth-child(2) { border-radius: 0 12px 0 0; background: var(--yellow); }
     .stat-card:nth-child(3) { border-radius: 0 0 0 12px; }
     .stat-card:last-child { border-radius: 0 0 12px 0; }
     .stat-num {
       font-family: var(--font-display);
       font-size: 44px; font-weight: 900;
-      letter-spacing: -0.04em; line-height: 1;
+      letter-spacing: -0.04em;
       color: var(--ink); margin-bottom: 6px;
     }
     .stat-card:nth-child(2) .stat-num,
-    .stat-card:nth-child(2) .stat-label { color: #fff; }
+    .stat-card:nth-child(2) .stat-label { color: var(--ink); }
     .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
-    .stat-card:nth-child(2) .stat-label { color: rgba(255,255,255,0.75); }
+    .stat-card:nth-child(2) .stat-label { color: rgba(0,0,0,0.6); }
 
     /* ── SECTION SHARED ── */
     section { padding: 100px 80px; }
@@ -167,7 +168,7 @@
     }
     .section-eyebrow::after {
       content: ''; flex: 1; max-width: 60px;
-      height: 1px; background: var(--warm);
+      height: 1px; background: var(--yellow);
     }
     .section-h2 {
       font-family: var(--font-display);
@@ -209,7 +210,7 @@
       transition: border-color 0.2s, transform 0.2s; cursor: pointer;
     }
     .weekly-card:hover { border-color: var(--warm); transform: translateY(-3px); }
-    .weekly-card:first-child { border-color: var(--warm); background: var(--warm-light); }
+    .weekly-card:first-child { border-color: var(--yellow); background: #FFFFF0; }
     .weekly-meta {
       display: flex; align-items: center; justify-content: space-between;
       margin-bottom: 16px;
@@ -262,7 +263,7 @@
     .article-num {
       font-family: var(--font-display); font-size: 36px;
       font-weight: 900; color: var(--border);
-      letter-spacing: -0.04em; line-height: 1;
+      letter-spacing: -0.04em;
     }
     .article-title {
       font-family: var(--font-display); font-size: 22px;
@@ -278,7 +279,8 @@
 
     /* ── AI CHAT ── */
     #ai-chat { border-top: 1px solid var(--border); background: var(--ink); color: var(--paper); }
-    #ai-chat .section-eyebrow { color: var(--warm); }
+    #ai-chat .section-eyebrow { color: #fff; }
+    #ai-chat .section-eyebrow::after { background: var(--yellow); }
     #ai-chat .section-h2 { color: var(--paper); }
     #ai-chat .section-lead { color: rgba(247,245,240,0.6); }
     .chat-widget {
@@ -293,7 +295,7 @@
     .chat-label { font-family: var(--font-mono); font-size: 11px; color: rgba(247,245,240,0.4); margin-left: auto; }
     .chat-messages { padding: 24px 20px; display: flex; flex-direction: column; gap: 16px; min-height: 200px; }
     .msg { max-width: 80%; padding: 12px 16px; border-radius: 8px; font-size: 14px; line-height: 1.6; }
-    .msg-user { background: var(--warm); color: #fff; align-self: flex-end; border-radius: 8px 8px 2px 8px; }
+    .msg-user { background: var(--yellow); color: var(--ink); align-self: flex-end; border-radius: 8px 8px 2px 8px; }
     .msg-ai { background: rgba(255,255,255,0.08); color: var(--paper); align-self: flex-start; border-radius: 8px 8px 8px 2px; }
     .chat-input-row {
       display: flex; align-items: center; gap: 12px;
@@ -305,14 +307,14 @@
       font-family: var(--font-body); font-size: 14px; outline: none;
     }
     .chat-input::placeholder { color: rgba(247,245,240,0.3); }
-    .chat-input:focus { border-color: var(--warm); }
+    .chat-input:focus { border-color: var(--yellow); }
     .chat-send {
-      background: var(--warm); border: none; border-radius: 6px;
-      padding: 10px 18px; color: #fff; font-size: 13px; font-weight: 500;
-      cursor: pointer; transition: background 0.2s;
+      background: var(--yellow); border: none; border-radius: 6px;
+      padding: 10px 18px; color: var(--ink); font-size: 13px; font-weight: 500;
+      cursor: pointer; transition: background 0.2s, transform 0.15s;
       font-family: var(--font-body);
     }
-    .chat-send:hover { background: #C94E2C; }
+    .chat-send:hover { background: #e6e600; transform: translateY(-1px); }
     .chat-note { font-size: 12px; color: rgba(247,245,240,0.35); margin-top: 12px; }
 
     /* ── CONTACT / FOOTER ── */
@@ -384,7 +386,7 @@
 <section id="hero">
   <div class="hero-left">
     <div class="hero-tag">Head of Business Finance</div>
-    <h1 class="hero-h1">Finance that<br><em>moves</em><br>the needle.</h1>
+    <h1 class="hero-h1">Finance that<br><em style="font-style:italic;color:#2E2EFF;">moves</em><br>the <span style="background:#FFFF00;color:#111110;padding:0 4px;display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone;line-height:1;"><span style="display:inline;">needle.</span></span></h1>
     <p class="hero-sub">
       I'm Riccardo Pollacchini. I help companies scale with clarity, sharp financial thinking,
       and the belief that great work should actually be enjoyable.
@@ -441,7 +443,7 @@
         about how business finance really works.
       </p>
       <br/>
-      <a href="https://www.linkedin.com/in/riccardo-pollacchini" target="_blank" class="btn-primary" style="display:inline-block;">
+      <a href="https://www.linkedin.com/in/riccardo-pollacchini" target="_blank" class="btn-primary" style="display:inline;">
         View LinkedIn profile
       </a>
     </div>
@@ -628,7 +630,7 @@
       <div class="article-row">
         <div class="article-num">${a.num}</div>
         <div>
-          <div class="article-title">${a.title}</div>
+          <a href="${a.slug ? '/article?slug=' + a.slug : '#'}" style="text-decoration:none;color:inherit;"><div class="article-title">${a.title}</div></a>
           <div class="article-meta-row">
             ${a.category ? `<span class="article-cat">${a.category}</span>` : ''}
             ${a.readTime ? `<span class="article-read">${a.readTime}</span>` : ''}
