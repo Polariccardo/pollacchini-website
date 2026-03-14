@@ -1,6 +1,6 @@
 // netlify/functions/publish.js
 // Triggers a Netlify rebuild.
-// Accepts GET with secret token (used by Claude) or POST.
+// Accepts GET with secret token in URL — low risk (triggers rebuild only, no data access).
 
 export const handler = async (event) => {
   const buildHookUrl = process.env.NETLIFY_BUILD_HOOK;
@@ -22,7 +22,10 @@ export const handler = async (event) => {
   try {
     const response = await fetch(buildHookUrl, { method: "POST" });
     if (!response.ok) throw new Error(`Build hook responded with ${response.status}`);
-    return { statusCode: 200, body: JSON.stringify({ success: true, message: "Site rebuild triggered" }) };
+    return {
+      statusCode: 200,
+      body: JSON.stringify({ success: true, message: "Site rebuild triggered" }),
+    };
   } catch (err) {
     console.error("publish error:", err);
     return { statusCode: 500, body: JSON.stringify({ error: err.message }) };
