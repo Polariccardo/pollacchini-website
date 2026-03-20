@@ -16,7 +16,8 @@ function decodeTags(text) {
     .replace(/\[em\]/g, '<em>')
     .replace(/\[\/em\]/g, '</em>')
     .replace(/\[hl\]/g, '<span class="hl"><span>')
-    .replace(/\[\/hl\]/g, '</span></span>');
+    .replace(/\[\/hl\]/g, '</span></span>')
+    .replace(/\[link url=([^\]]+)\](.*?)\[\/link\]/g, '<a href="$1" target="_blank">$2</a>');
 }
 
 export const handler = async (event) => {
