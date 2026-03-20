@@ -30,10 +30,19 @@
 
     /* NAV */
     nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(247,245,240,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
+
+        .back-btn-round {
+      width: 40px; height: 40px; border-radius: 50%;
+      background: var(--yellow, #FFFF00);
+      border: 2px solid var(--accent, #2E2EFF);
+      display: flex; align-items: center; justify-content: center;
+      text-decoration: none;
+      transition: transform 0.15s, opacity 0.2s;
+      flex-shrink: 0;
+    }
+    .back-btn-round:hover { opacity: 0.8; transform: translateX(-2px); }
     .nav-logo { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
     .nav-logo span { color: var(--accent); }
-    .nav-back { font-size: 11px; font-weight: 400; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); text-decoration: none; padding: 7px 14px; border: 1px solid var(--border); border-radius: 4px; background: var(--paper); transition: color 0.2s, background 0.2s, border-color 0.2s; }
-    .nav-back:hover { color: var(--ink); background: var(--yellow); border-color: var(--yellow); }
 
     /* BACK FIXED */
     .back-fixed:hover { color: var(--ink); background: var(--yellow); border-color: var(--yellow); }
@@ -119,13 +128,12 @@
 <body>
 
 <nav>
+  <a href="/#weekly" class="back-btn-round" aria-label="Back"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E2EFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></a>
   <a href="/" class="nav-logo">R<span style="color:#2E2EFF;">P</span></a>
-  <a href="/#weekly" class="nav-back">← All briefs</a>
 </nav>
 
 
 <div class="brief-wrapper" id="brief-wrapper">
-  <a href="/#weekly" class="back-btn">← Briefs</a>
   <div class="state-message"><p>Loading brief…</p></div>
 </div>
 
