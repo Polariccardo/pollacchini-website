@@ -242,7 +242,7 @@
 
     /* share button */
     .share-btn {
-      display: inline-flex; align-items: center;
+      display: inline-flex; align-items: center; gap: 5px;
       background: none; border: none;
       cursor: pointer; transition: opacity 0.2s; padding: 0;
       opacity: 0.6;
@@ -562,7 +562,7 @@
         <div class="weekly-footer">
           <div class="weekly-tags"></div>
           <div style="display:flex;gap:12px;align-items:center;">
-            <button class="share-btn" onclick="shareOnLinkedIn('${b.title.replace(/<[^>]+>/g, '')}', 'Issue #${b.issue} of my weekly finance brief.')">Share on ${LI_SVG}</button>
+            <button class="share-btn" onclick="shareOnLinkedIn('${b.title.replace(/<[^>]+>/g, '')}', 'Issue #${b.issue} of my weekly finance brief.')"><span>Share on</span>${LI_SVG}</button>
             <a href="/weekly?issue=${b.issue}" class="weekly-link">Read →</a>
           </div>
         </div>
@@ -590,7 +590,7 @@
         </div>
         <div class="article-actions">
           <a href="${a.slug ? '/article?slug=' + a.slug : '#'}" class="article-link">Read →</a>
-          <button class="share-btn" onclick="shareOnLinkedIn('${a.title.replace(/<[^>]+>/g, '')}', 'A new article by Riccardo Pollacchini on pollacchini.com')">Share on ${LI_SVG}</button>
+          <button class="share-btn" onclick="shareOnLinkedIn('${a.title.replace(/<[^>]+>/g, '')}', 'A new article by Riccardo Pollacchini on pollacchini.com')"><span>Share on</span>${LI_SVG}</button>
         </div>
       </div>
     `).join('');
