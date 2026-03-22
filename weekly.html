@@ -155,39 +155,69 @@
   // Parse a section stored as pipe-delimited signals
   // Format per signal: TYPE|TITLE|BODY|TAG_CLASS|TAG_LABEL
   // Signals separated by \n---\n
-  // Signal format: TYPE|BODY|TAG_CLASS|TAG_LABEL
-  // Body opens with **bold first sentence** — rendered as signal-title
+  // Signal format — backwards compatible:
+  // New: TYPE|BODY|TAG_CLASS|TAG_LABEL (body opens with **bold first sentence**)
+  // Old: TYPE|TITLE|BODY|TAG_CLASS|TAG_LABEL (5 parts, separate title)
   function renderSignals(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map(s => {
       const parts = s.split('|');
       const type = (parts[0] || '').trim();
-      const body = (parts[1] || '').trim();
-      const tagClass = (parts[2] || '').trim();
-      const tagLabel = (parts[3] || '').trim();
+      let title, body, tagClass, tagLabel;
+      if (parts.length >= 5) {
+        // Old format: TYPE|TITLE|BODY|TAG_CLASS|TAG_LABEL
+        title = parts[1].trim();
+        body = parts[2].trim();
+        tagClass = parts[3].trim();
+        tagLabel = parts[4].trim();
+      } else {
+        // New format: TYPE|BODY|TAG_CLASS|TAG_LABEL
+        const rawBody = parts[1] || '';
+        tagClass = (parts[2] || '').trim();
+        tagLabel = (parts[3] || '').trim();
+        // Extract **bold first sentence** as title
+        const boldMatch = rawBody.match(/^\*\*(.+?)\*\*(.*)$/s);
+        if (boldMatch) {
+          title = boldMatch[1].trim();
+          body = boldMatch[2].trim();
+        } else {
+          title = '';
+          body = rawBody.trim();
+        }
+      }
       const tag = tagClass && tagLabel ? `<span class="tag ${tagClass}">${tagLabel}</span>` : '';
-      // Extract bold first sentence as title, rest as body
-      const boldMatch = body.match(/^\*\*(.+?)\*\*(.*)$/s);
-      const titleHtml = boldMatch
-        ? `<div class="signal-title">${boldMatch[1].trim()}</div><div class="signal-body">${boldMatch[2].trim()} ${tag}</div>`
-        : `<div class="signal-body">${body} ${tag}</div>`;
-      return `<div class="signal ${type}">${titleHtml}</div>`;
+      return `<div class="signal ${type}">
+        ${title ? `<div class="signal-title">${title}</div>` : ''}
+        <div class="signal-body">${body} ${tag}</div>
+      </div>`;
     }).join('');
   }
 
-  // CFO Questions format: QUESTION|TAG_CLASS:Label · TAG_CLASS:Label
+  // CFO Questions — backwards compatible:
+  // New: QUESTION|TAG_CLASS:Label · TAG_CLASS:Label (coloured pills)
+  // Old: QUESTION|Subtitle text (plain subtitle)
   function renderCFOQuestions(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map((s, i) => {
       const pipeIdx = s.indexOf('|');
       const question = pipeIdx >= 0 ? s.slice(0, pipeIdx).trim() : s.trim();
       const tagStr = pipeIdx >= 0 ? s.slice(pipeIdx + 1).trim() : '';
-      // Parse coloured tag pills: TAG_CLASS:Label · TAG_CLASS:Label
-      const tagPills = tagStr ? tagStr.split('·').map(t => {
-        const [cls, label] = t.trim().split(':');
-        return cls && label ? `<span class="tag ${cls.trim()}">${label.trim()}</span>` : '';
-      }).join(' ') : '';
-      return `<div class="cfo-q"><div class="q-num">0${i+1}</div><div><div class="q-text">${question}</div>${tagPills ? `<div class="q-sub" style="margin-top:8px;">${tagPills}</div>` : ''}</div></div>`;
+      // Detect new format: contains TAG_CLASS:Label pattern
+      const isNewFormat = tagStr && /tag-[a-z]+:[^·]+/.test(tagStr);
+      let subHtml = '';
+      if (isNewFormat) {
+        const tagPills = tagStr.split('·').map(t => {
+          const colonIdx = t.indexOf(':');
+          if (colonIdx < 0) return '';
+          const cls = t.slice(0, colonIdx).trim();
+          const label = t.slice(colonIdx + 1).trim();
+          return cls && label ? `<span class="tag ${cls}">${label}</span>` : '';
+        }).join(' ');
+        subHtml = tagPills ? `<div class="q-sub" style="margin-top:8px;">${tagPills}</div>` : '';
+      } else if (tagStr) {
+        subHtml = `<div class="q-sub">${tagStr}</div>`;
+      }
+      return `<div class="cfo-q"><div class="q-num">0${i+1}</div><div><div class="q-text">${question}</div>${subHtml}</div></div>`;
     }).join('');
   }
 
