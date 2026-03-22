@@ -53,14 +53,14 @@
 
     .back-btn-round {
       width: 40px; height: 40px; border-radius: 50%;
-      background: var(--yellow, #FFFF00);
+      background: transparent;
       border: 2px solid var(--accent, #2E2EFF);
       display: flex; align-items: center; justify-content: center;
       text-decoration: none;
-      transition: transform 0.15s, opacity 0.2s;
+      transition: transform 0.15s, background 0.2s;
       flex-shrink: 0;
     }
-    .back-btn-round:hover { opacity: 0.8; transform: translateX(-2px); }
+    .back-btn-round:hover { background: var(--yellow, #FFFF00); transform: translateX(-2px); }
     .nav-logo {
       font-family: var(--font-display);
       font-size: 18px; font-weight: 700;
@@ -242,9 +242,10 @@
   }
 
   function shareOnLinkedIn(title) {
-    const url = encodeURIComponent('https://pollacchini.com');
-    const text = encodeURIComponent(title + ' — by Riccardo Pollacchini on pollacchini.com');
-    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url + '&summary=' + text, '_blank', 'width=600,height=500');
+    const slug = new URLSearchParams(window.location.search).get('slug');
+    const pageUrl = encodeURIComponent('https://pollacchini.com/article?slug=' + slug);
+    const text = encodeURIComponent(title + ' — by Riccardo Pollacchini');
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + pageUrl + '&summary=' + text, '_blank', 'width=600,height=500');
   }
 
   function clientDecodeTags(text) {
