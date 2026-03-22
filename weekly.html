@@ -33,14 +33,14 @@
 
         .back-btn-round {
       width: 40px; height: 40px; border-radius: 50%;
-      background: var(--yellow, #FFFF00);
+      background: transparent;
       border: 2px solid var(--accent, #2E2EFF);
       display: flex; align-items: center; justify-content: center;
       text-decoration: none;
-      transition: transform 0.15s, opacity 0.2s;
+      transition: transform 0.15s, background 0.2s;
       flex-shrink: 0;
     }
-    .back-btn-round:hover { opacity: 0.8; transform: translateX(-2px); }
+    .back-btn-round:hover { background: var(--yellow, #FFFF00); transform: translateX(-2px); }
     .nav-logo { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
     .nav-logo span { color: var(--accent); }
 
@@ -146,44 +146,52 @@
   }
 
   function shareOnLinkedIn(title) {
-    const url = encodeURIComponent('https://pollacchini.com');
+    const issue = new URLSearchParams(window.location.search).get('issue');
+    const pageUrl = encodeURIComponent('https://pollacchini.com/weekly?issue=' + issue);
     const text = encodeURIComponent(title + ' — Weekly Brief by Riccardo Pollacchini');
-    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + url + '&summary=' + text, '_blank', 'width=600,height=500');
+    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + pageUrl + '&summary=' + text, '_blank', 'width=600,height=500');
   }
 
   // Parse a section stored as pipe-delimited signals
   // Format per signal: TYPE|TITLE|BODY|TAG_CLASS|TAG_LABEL
   // Signals separated by \n---\n
+  // Signal format: TYPE|BODY|TAG_CLASS|TAG_LABEL
+  // Body opens with **bold first sentence** — rendered as signal-title
   function renderSignals(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map(s => {
       const parts = s.split('|');
       const type = (parts[0] || '').trim();
-      const title = (parts[1] || '').trim();
-      const body = (parts[2] || '').trim();
-      const tagClass = (parts[3] || '').trim();
-      const tagLabel = (parts[4] || '').trim();
+      const body = (parts[1] || '').trim();
+      const tagClass = (parts[2] || '').trim();
+      const tagLabel = (parts[3] || '').trim();
       const tag = tagClass && tagLabel ? `<span class="tag ${tagClass}">${tagLabel}</span>` : '';
-      return `<div class="signal ${type}"><div class="signal-title">${title}</div><div class="signal-body">${body} ${tag}</div></div>`;
+      // Extract bold first sentence as title, rest as body
+      const boldMatch = body.match(/^\*\*(.+?)\*\*(.*)$/s);
+      const titleHtml = boldMatch
+        ? `<div class="signal-title">${boldMatch[1].trim()}</div><div class="signal-body">${boldMatch[2].trim()} ${tag}</div>`
+        : `<div class="signal-body">${body} ${tag}</div>`;
+      return `<div class="signal ${type}">${titleHtml}</div>`;
     }).join('');
   }
 
-  // Parse CFO questions
-  // Format per question: QUESTION|SUBTITLE
-  // Questions separated by \n---\n
+  // CFO Questions format: QUESTION|TAG_CLASS:Label · TAG_CLASS:Label
   function renderCFOQuestions(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map((s, i) => {
-      const parts = s.split('|');
-      const question = (parts[0] || '').trim();
-      const sub = (parts[1] || '').trim();
-      return `<div class="cfo-q"><div class="q-num">0${i+1}</div><div><div class="q-text">${question}</div>${sub ? `<div class="q-sub">${sub}</div>` : ''}</div></div>`;
+      const pipeIdx = s.indexOf('|');
+      const question = pipeIdx >= 0 ? s.slice(0, pipeIdx).trim() : s.trim();
+      const tagStr = pipeIdx >= 0 ? s.slice(pipeIdx + 1).trim() : '';
+      // Parse coloured tag pills: TAG_CLASS:Label · TAG_CLASS:Label
+      const tagPills = tagStr ? tagStr.split('·').map(t => {
+        const [cls, label] = t.trim().split(':');
+        return cls && label ? `<span class="tag ${cls.trim()}">${label.trim()}</span>` : '';
+      }).join(' ') : '';
+      return `<div class="cfo-q"><div class="q-num">0${i+1}</div><div><div class="q-text">${question}</div>${tagPills ? `<div class="q-sub" style="margin-top:8px;">${tagPills}</div>` : ''}</div></div>`;
     }).join('');
   }
 
-  // Parse must-read articles
-  // Format per article: DATE|CATEGORY|TITLE|WHY|URL|SOURCE|READTIME
-  // Articles separated by \n---\n
+  // Must-Read format: DATE|CATEGORY|TITLE|WHY|URL|SOURCE|READTIME (1 article)
   function renderMustRead(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map((s, i) => {
