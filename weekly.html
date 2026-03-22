@@ -156,7 +156,7 @@
   // Format per signal: TYPE|TITLE|BODY|TAG_CLASS|TAG_LABEL
   // Signals separated by \n---\n
   // Signal format — backwards compatible:
-  // New: TYPE|BODY|TAG_CLASS|TAG_LABEL (body opens with **bold first sentence**)
+  // New: TYPE|BODY|TAG_CLASS|TAG_LABEL ([b]bold[/b] decoded server-side to <strong>)
   // Old: TYPE|TITLE|BODY|TAG_CLASS|TAG_LABEL (5 parts, separate title)
   function renderSignals(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
@@ -172,18 +172,11 @@
         tagLabel = parts[4].trim();
       } else {
         // New format: TYPE|BODY|TAG_CLASS|TAG_LABEL
-        const rawBody = parts[1] || '';
+        // [b]...[/b] is decoded to <strong> by get-weekly.js before reaching here
+        body = (parts[1] || '').trim();
         tagClass = (parts[2] || '').trim();
         tagLabel = (parts[3] || '').trim();
-        // Extract **bold first sentence** as title
-        const boldMatch = rawBody.match(/^\*\*(.+?)\*\*(.*)$/s);
-        if (boldMatch) {
-          title = boldMatch[1].trim();
-          body = boldMatch[2].trim();
-        } else {
-          title = '';
-          body = rawBody.trim();
-        }
+        title = '';
       }
       const tag = tagClass && tagLabel ? `<span class="tag ${tagClass}">${tagLabel}</span>` : '';
       return `<div class="signal ${type}">
