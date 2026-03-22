@@ -9,6 +9,17 @@ function extractText(richText) {
   return richText.map(t => t.plain_text || "").join("");
 }
 
+function decodeTags(text) {
+  if (!text) return text;
+  return text
+    .replace(/\[b\]/g, "<strong>")
+    .replace(/\[\/b\]/g, "</strong>");
+}
+
+function decodeSection(richText) {
+  return decodeTags(extractText(richText));
+}
+
 export const handler = async (event) => {
   const issue = event.queryStringParameters?.issue;
 
@@ -58,12 +69,12 @@ export const handler = async (event) => {
       title: extractText(props.Title?.title),
       headline: extractText(props.Headline?.rich_text),
       date: props.Date?.date?.start || "",
-      trending: extractText(props.Trending?.rich_text),
-      arr: extractText(props.ARR?.rich_text),
-      marginGuardrails: extractText(props.MarginGuardrails?.rich_text),
-      capitalStructure: extractText(props.CapitalStructure?.rich_text),
-      innovation: extractText(props.Innovation?.rich_text),
-      cfoQuestions: extractText(props.CFOQuestions?.rich_text),
+      trending: decodeSection(props.Trending?.rich_text),
+      arr: decodeSection(props.ARR?.rich_text),
+      marginGuardrails: decodeSection(props.MarginGuardrails?.rich_text),
+      capitalStructure: decodeSection(props.CapitalStructure?.rich_text),
+      innovation: decodeSection(props.Innovation?.rich_text),
+      cfoQuestions: decodeSection(props.CFOQuestions?.rich_text),
       mustRead: extractText(props.MustRead?.rich_text),
       sources: extractText(props.Sources?.rich_text),
     };
