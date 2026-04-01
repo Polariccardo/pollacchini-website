@@ -10,7 +10,7 @@
   <meta property="og:image" content="https://pollacchini.com/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
 
-      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
@@ -41,7 +41,6 @@
       -webkit-font-smoothing: antialiased;
     }
 
-    /* ── NAV ── */
     nav {
       position: fixed; top: 0; left: 0; right: 0; z-index: 100;
       display: flex; align-items: center; justify-content: space-between;
@@ -69,7 +68,6 @@
     }
     .nav-logo span { color: var(--accent); }
 
-    /* ── ARTICLE ── */
     .article-wrapper {
       max-width: 720px;
       margin: 0 auto;
@@ -141,7 +139,6 @@
     .article-title .hl, .art-title .hl { background: var(--yellow); color: var(--ink); padding: 0 4px; font-style: normal; display: inline; -webkit-box-decoration-break: clone; box-decoration-break: clone; line-height: 1; }
     .article-body .highlight { font-weight: 500; color: var(--ink); background: none; padding: 0; }
 
-    /* ── SHARE BUTTON ── */
     .article-share {
       margin-top: 56px;
       padding-top: 32px;
@@ -159,7 +156,6 @@
     }
     .share-btn:hover { background: #1a1acc; transform: translateY(-1px); }
 
-    /* ── AUTHOR SIGNATURE ── */
     .author-signature {
       margin-top: 64px;
       padding: 36px;
@@ -174,14 +170,10 @@
       background: var(--yellow);
       border: 3px solid var(--yellow);
       flex-shrink: 0;
-      display: flex; align-items: center; justify-content: center;
-      font-family: var(--font-display);
-      font-size: 28px; font-weight: 900;
-      color: var(--ink);
       overflow: hidden;
     }
     .author-avatar img {
-      width: 100%; height: 100%; object-fit: cover;
+      width: 100%; height: 100%; object-fit: cover; object-position: center top;
     }
     .author-info { flex: 1; }
     .author-name {
@@ -202,7 +194,6 @@
     }
     .author-linkedin:hover { opacity: 0.75; }
 
-    /* ── LOADING / ERROR ── */
     .state-message {
       text-align: center; padding: 80px 0;
       color: var(--muted); font-size: 16px;
@@ -227,7 +218,6 @@
   <a href="/#articles" class="back-btn-round" aria-label="Back"><svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E2EFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg></a>
   <a href="/" class="nav-logo">R<span style="color:#2E2EFF;">P</span></a>
 </nav>
-
 
 <div class="article-wrapper" id="article-wrapper">
   <div class="state-message" id="loading">
@@ -261,7 +251,6 @@
   function formatBody(text) {
     if (!text) return '';
     const paragraphs = text.split('\n').filter(p => p.trim().length > 0);
-    // Find where references section starts
     const refIdx = paragraphs.findIndex(p => /^(REFERENCES|References:?)$/i.test(p.trim()));
     const bodyParagraphs = refIdx >= 0 ? paragraphs.slice(0, refIdx) : paragraphs;
     const refParagraphs = refIdx >= 0 ? paragraphs.slice(refIdx + 1) : [];
@@ -320,7 +309,7 @@
           </button>
         </div>
         <div class="author-signature">
-          <div class="author-avatar">R<span style="color:#2E2EFF;">P</span></div>
+          <div class="author-avatar"><img src="/IMG_0242.jpg" alt="Riccardo Pollacchini" /></div>
           <div class="author-info">
             <div class="author-name">Riccardo Pollacchini</div>
             <div class="author-desc">Head of Business Finance · 5+ years building finance functions at scale-ups. I believe finance should be a growth engine — sharp, fast, and actually fun.</div>
