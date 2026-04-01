@@ -318,8 +318,8 @@
       .hero-right { padding: 0 24px 60px; }
       section { padding: 60px 24px; }
       .about-grid { grid-template-columns: 1fr; gap: 40px; }
-      .about-text div[style*="float"] { float: none !important; width: 100% !important; height: 260px !important; margin: 0 0 24px 0 !important; }
-      .about-text div[style*="float"] img { width: 100% !important; height: 100% !important; }
+      .about-text div[style*="float"] { float: none !important; width: 100% !important; height: auto !important; margin: 0 0 24px 0 !important; }
+      .about-photo { width: 100% !important; height: auto !important; max-height: none !important; object-fit: contain !important; }
       .weekly-grid { grid-template-columns: 1fr; }
       .services-grid { grid-template-columns: 1fr; }
       .article-row { grid-template-columns: 1fr; gap: 8px; }
@@ -384,7 +384,7 @@
   <div class="about-grid">
     <div class="about-text">
       <div style="float:left;margin:0 40px 24px 0;flex-shrink:0;">
-        <img src="/IMG_0242.jpg" alt="Riccardo Pollacchini" style="width:220px;height:280px;object-fit:cover;object-position:center top;border-radius:8px;display:block;" />
+        <img src="/IMG_0242.jpg" alt="Riccardo Pollacchini" class="about-photo" style="width:160px;height:200px;object-fit:cover;object-position:center top;border-radius:8px;display:block;" />
       </div>
       <p>
         I'm based in Copenhagen, and I've spent the last five years inside SaaS scale-ups trying to answer one question: how do you efficiently scale an organisation without losing sight of what matters? I've sat at the table with founders and C-level in scaled complexity — and learned that although the question is always the same, the answer changes.
