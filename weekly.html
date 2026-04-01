@@ -7,7 +7,7 @@
   <meta property="og:type" content="article" />
   <meta property="og:image" content="https://pollacchini.com/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-      <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
@@ -30,27 +30,15 @@
 
     /* NAV */
     nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(247,245,240,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
-
-        .back-btn-round {
-      width: 40px; height: 40px; border-radius: 50%;
-      background: transparent;
-      border: 2px solid var(--accent, #2E2EFF);
-      display: flex; align-items: center; justify-content: center;
-      text-decoration: none;
-      transition: transform 0.15s, background 0.2s;
-      flex-shrink: 0;
-    }
+    .back-btn-round { width: 40px; height: 40px; border-radius: 50%; background: transparent; border: 2px solid var(--accent, #2E2EFF); display: flex; align-items: center; justify-content: center; text-decoration: none; transition: transform 0.15s, background 0.2s; flex-shrink: 0; }
     .back-btn-round:hover { background: var(--yellow, #FFFF00); transform: translateX(-2px); }
     .nav-logo { font-family: var(--font-display); font-size: 18px; font-weight: 700; color: var(--ink); text-decoration: none; letter-spacing: -0.02em; }
     .nav-logo span { color: var(--accent); }
 
-    /* BACK FIXED */
-    .back-fixed:hover { color: var(--ink); background: var(--yellow); border-color: var(--yellow); }
-
     /* WRAPPER */
     .brief-wrapper { max-width: 720px; margin: 0 auto; padding: 48px 48px 100px; }
 
-    /* BRIEF STYLES — keeping original colourful design */
+    /* BRIEF STYLES */
     .brief-header { border-bottom: 2px solid #E2DFD8; padding-bottom: 16px; margin-bottom: 28px; }
     .brief-eyebrow { font-family: var(--font-mono); font-size: 11px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 6px; }
     .brief-headline { font-family: var(--font-display); font-size: clamp(24px, 4vw, 36px); font-weight: 700; color: var(--ink); letter-spacing: -0.02em; line-height: 1.15; margin-bottom: 8px; }
@@ -75,6 +63,9 @@
     .signal.purple { border-left-color: #7F77DD; }
     .signal-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
     .signal-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
+
+    /* ── BOLD FIX — [b]...[/b] decoded to <strong> ── */
+    .signal-body strong { color: var(--ink); font-weight: 500; }
 
     .tag { display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; margin-right: 4px; margin-top: 8px; }
     .tag-hot { background: #FAECE7; color: #993C1D; }
@@ -132,7 +123,6 @@
   <a href="/" class="nav-logo">R<span style="color:#2E2EFF;">P</span></a>
 </nav>
 
-
 <div class="brief-wrapper" id="brief-wrapper">
   <div class="state-message"><p>Loading brief…</p></div>
 </div>
@@ -152,12 +142,6 @@
     window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + pageUrl + '&summary=' + text, '_blank', 'width=600,height=500');
   }
 
-  // Parse a section stored as pipe-delimited signals
-  // Format per signal: TYPE|TITLE|BODY|TAG_CLASS|TAG_LABEL
-  // Signals separated by \n---\n
-  // Signal format — backwards compatible:
-  // New: TYPE|BODY|TAG_CLASS|TAG_LABEL ([b]bold[/b] decoded server-side to <strong>)
-  // Old: TYPE|TITLE|BODY|TAG_CLASS|TAG_LABEL (5 parts, separate title)
   function renderSignals(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map(s => {
@@ -165,14 +149,11 @@
       const type = (parts[0] || '').trim();
       let title, body, tagClass, tagLabel;
       if (parts.length >= 5) {
-        // Old format: TYPE|TITLE|BODY|TAG_CLASS|TAG_LABEL
         title = parts[1].trim();
         body = parts[2].trim();
         tagClass = parts[3].trim();
         tagLabel = parts[4].trim();
       } else {
-        // New format: TYPE|BODY|TAG_CLASS|TAG_LABEL
-        // [b]...[/b] is decoded to <strong> by get-weekly.js before reaching here
         body = (parts[1] || '').trim();
         tagClass = (parts[2] || '').trim();
         tagLabel = (parts[3] || '').trim();
@@ -186,16 +167,12 @@
     }).join('');
   }
 
-  // CFO Questions — backwards compatible:
-  // New: QUESTION|TAG_CLASS:Label · TAG_CLASS:Label (coloured pills)
-  // Old: QUESTION|Subtitle text (plain subtitle)
   function renderCFOQuestions(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map((s, i) => {
       const pipeIdx = s.indexOf('|');
       const question = pipeIdx >= 0 ? s.slice(0, pipeIdx).trim() : s.trim();
       const tagStr = pipeIdx >= 0 ? s.slice(pipeIdx + 1).trim() : '';
-      // Detect new format: contains TAG_CLASS:Label pattern
       const isNewFormat = tagStr && /tag-[a-z]+:[^·]+/.test(tagStr);
       let subHtml = '';
       if (isNewFormat) {
@@ -214,7 +191,6 @@
     }).join('');
   }
 
-  // Must-Read format: DATE|CATEGORY|TITLE|WHY|URL|SOURCE|READTIME (1 article)
   function renderMustRead(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map((s, i) => {
