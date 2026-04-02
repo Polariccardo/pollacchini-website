@@ -72,6 +72,42 @@
     }
     .nav-links a:hover { color: var(--warm); }
 
+    /* ── HAMBURGER ── */
+    .nav-hamburger {
+      display: none;
+      flex-direction: column; justify-content: center; align-items: center;
+      gap: 5px; width: 40px; height: 40px;
+      background: transparent; border: none; cursor: pointer; padding: 4px;
+    }
+    .nav-hamburger span {
+      display: block; width: 22px; height: 2px;
+      background: var(--ink); border-radius: 2px;
+      transition: transform 0.25s, opacity 0.2s;
+    }
+    .nav-hamburger.open span:nth-child(1) { transform: translateY(7px) rotate(45deg); }
+    .nav-hamburger.open span:nth-child(2) { opacity: 0; }
+    .nav-hamburger.open span:nth-child(3) { transform: translateY(-7px) rotate(-45deg); }
+
+    .nav-mobile-menu {
+      display: none;
+      position: fixed; top: 65px; left: 0; right: 0; z-index: 99;
+      background: rgba(247, 245, 240, 0.97);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 24px 24px 28px;
+      flex-direction: column; gap: 0;
+    }
+    .nav-mobile-menu.open { display: flex; }
+    .nav-mobile-menu a {
+      font-size: 15px; font-weight: 400; letter-spacing: 0.08em;
+      text-transform: uppercase; color: var(--muted);
+      text-decoration: none; padding: 14px 0;
+      border-bottom: 1px solid var(--border);
+      transition: color 0.2s;
+    }
+    .nav-mobile-menu a:last-child { border-bottom: none; }
+    .nav-mobile-menu a:hover { color: var(--warm); }
+
     /* ── HERO ── */
     #hero {
       min-height: 100vh;
@@ -143,6 +179,9 @@
     .stat-card {
       background: var(--card); padding: 32px 28px;
       border: 1px solid var(--border);
+      display: flex; flex-direction: column;
+      justify-content: center; align-items: flex-start;
+      text-align: left;
     }
     .stat-card:first-child { border-radius: 12px 0 0 0; }
     .stat-card:nth-child(2) { border-radius: 0 12px 0 0; background: var(--yellow); }
@@ -202,12 +241,40 @@
     .value-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
     .value-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
 
+    /* ── ARTICLES ── */
+    #articles { border-top: 1px solid var(--border); }
+    .articles-list { display: flex; flex-direction: column; gap: 0; }
+    .article-row {
+      display: grid; grid-template-columns: 80px 1fr auto;
+      gap: 32px; align-items: center;
+      padding: 28px 0; border-bottom: 1px solid var(--border);
+      cursor: pointer; transition: color 0.2s;
+    }
+    .article-row:first-child { border-top: 1px solid var(--border); }
+    .article-row:hover .article-title { color: var(--warm); }
+    .article-num {
+      font-family: var(--font-display); font-size: 36px;
+      font-weight: 900; color: var(--border);
+      letter-spacing: -0.04em;
+    }
+    .article-title {
+      font-family: var(--font-display); font-size: 22px;
+      font-weight: 700; color: var(--ink); letter-spacing: -0.02em;
+      line-height: 1.2; margin-bottom: 6px;
+      transition: color 0.2s;
+    }
+    .article-meta-row { display: flex; gap: 16px; align-items: center; }
+    .article-cat { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--warm); }
+    .article-read { font-size: 12px; color: var(--muted); }
+    .article-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+    .article-link { font-size: 13px; color: var(--warm); text-decoration: none; font-weight: 500; }
+
     /* ── WEEKLY UPDATES ── */
-    #weekly { border-top: 1px solid var(--border); }
+    #weekly { background: var(--card); border-top: 1px solid var(--border); }
     .weekly-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
     .weekly-card {
       border: 1px solid var(--border); border-radius: 8px;
-      background: var(--card); padding: 28px;
+      background: var(--paper); padding: 28px;
       transition: border-color 0.2s, transform 0.2s; cursor: pointer;
     }
     .weekly-card:hover { border-color: var(--warm); transform: translateY(-3px); }
@@ -250,34 +317,6 @@
     }
     .share-btn:hover { opacity: 1; }
     .share-btn svg { width: 14px; height: 14px; }
-
-    /* ── ARTICLES ── */
-    #articles { background: var(--card); border-top: 1px solid var(--border); }
-    .articles-list { display: flex; flex-direction: column; gap: 0; }
-    .article-row {
-      display: grid; grid-template-columns: 80px 1fr auto;
-      gap: 32px; align-items: center;
-      padding: 28px 0; border-bottom: 1px solid var(--border);
-      cursor: pointer; transition: color 0.2s;
-    }
-    .article-row:first-child { border-top: 1px solid var(--border); }
-    .article-row:hover .article-title { color: var(--warm); }
-    .article-num {
-      font-family: var(--font-display); font-size: 36px;
-      font-weight: 900; color: var(--border);
-      letter-spacing: -0.04em;
-    }
-    .article-title {
-      font-family: var(--font-display); font-size: 22px;
-      font-weight: 700; color: var(--ink); letter-spacing: -0.02em;
-      line-height: 1.2; margin-bottom: 6px;
-      transition: color 0.2s;
-    }
-    .article-meta-row { display: flex; gap: 16px; align-items: center; }
-    .article-cat { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--warm); }
-    .article-read { font-size: 12px; color: var(--muted); }
-    .article-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-    .article-link { font-size: 13px; color: var(--warm); text-decoration: none; font-weight: 500; }
 
     /* ── SERVICES ── */
     .services-grid {
@@ -341,6 +380,7 @@
     @media (max-width: 900px) {
       nav { padding: 16px 24px; }
       .nav-links { display: none; }
+      .nav-hamburger { display: flex; }
       #hero { grid-template-columns: 1fr; min-height: auto; }
       .hero-left { padding: 100px 24px 40px; }
       .hero-right { padding: 0 24px 60px; }
@@ -367,20 +407,30 @@
   <a href="#hero" class="nav-logo">R<span style="color:#2E2EFF;">P</span></a>
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
-    <li><a href="#weekly">Weekly</a></li>
     <li><a href="#articles">Articles</a></li>
+    <li><a href="#weekly">Weekly</a></li>
     <li><a href="#services">Collaborate</a></li>
   </ul>
+  <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
+    <span></span><span></span><span></span>
+  </button>
 </nav>
+
+<!-- ── MOBILE NAV MENU ── -->
+<div class="nav-mobile-menu" id="nav-mobile-menu">
+  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#articles" onclick="closeMobileMenu()">Articles</a>
+  <a href="#weekly" onclick="closeMobileMenu()">Weekly</a>
+  <a href="#services" onclick="closeMobileMenu()">Collaborate</a>
+</div>
 
 <!-- ── HERO ── -->
 <section id="hero">
   <div class="hero-left">
-    <div class="hero-tag">Head of Business Finance</div>
+    <div class="hero-tag">Made for more</div>
     <h1 class="hero-h1">Finance that<br><em style="font-style:italic;color:#2E2EFF;">moves</em><br>the <span style="background:#FFFF00;color:#111110;padding:0 4px;display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone;line-height:1;"><span style="display:inline;">needle.</span></span></h1>
     <p class="hero-sub">
-      I'm Riccardo Pollacchini. I help companies scale with clarity, sharp financial thinking,
-      and the belief that great work should actually be enjoyable.
+      I help subscription companies from seed to €50M ARR build finance and operations functions that actually move the business. Sharp analytics, stable processes, and predictable outcomes.
     </p>
     <div class="hero-cta">
       <a href="#articles" class="btn-primary">Read my thinking</a>
@@ -390,20 +440,20 @@
   <div class="hero-right">
     <div class="hero-stats">
       <div class="stat-card">
-        <div class="stat-num">5+</div>
-        <div class="stat-label">Years in finance leadership</div>
+        <div class="stat-num" style="font-size:36px;">€250M+</div>
+        <div class="stat-label">Budgeted expenses managed</div>
       </div>
       <div class="stat-card">
         <div class="stat-num">∞</div>
-        <div class="stat-label">Belief that work can be fun</div>
+        <div class="stat-label">Things I can fix for you</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">1</div>
-        <div class="stat-label">Weekly update, every week</div>
+        <div class="stat-num">25+</div>
+        <div class="stat-label">Board & investor decks</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num">0</div>
-        <div class="stat-label">Tolerance for boring decks</div>
+        <div class="stat-num" style="font-size:36px;">€250M+</div>
+        <div class="stat-label">Recurring revenue modelled</div>
       </div>
     </div>
   </div>
@@ -455,8 +505,23 @@
   </div>
 </section>
 
+<!-- ── ARTICLES ── -->
+<section id="articles">
+  <div class="section-eyebrow">Articles</div>
+  <h2 class="section-h2">How I see<br>business.</h2>
+  <p class="section-lead">
+    My perspective on finance, business, and leadership. I write about the things I see, the patterns I notice, and the ideas I keep coming back to. Opinions grounded in real experience, and always in progress.
+  </p>
+  <div class="articles-list" id="articles-list">
+    <div class="article-row" style="opacity:0.4;pointer-events:none;">
+      <div class="article-num">—</div>
+      <div><div class="article-title">Loading articles…</div></div>
+    </div>
+  </div>
+</section>
+
 <!-- ── WEEKLY UPDATES ── -->
-<section id="weekly">
+<section id="weekly" style="background: var(--card);">
   <div class="section-eyebrow">Weekly brief</div>
   <h2 class="section-h2">External signals,<br>every week.</h2>
   <p class="section-lead">
@@ -468,21 +533,6 @@
         <span class="weekly-issue">Loading…</span>
       </div>
       <div class="weekly-title">Loading briefs…</div>
-    </div>
-  </div>
-</section>
-
-<!-- ── ARTICLES ── -->
-<section id="articles">
-  <div class="section-eyebrow">Articles</div>
-  <h2 class="section-h2">How I see<br>finance.</h2>
-  <p class="section-lead">
-    My perspective on finance, business, and leadership. I write about the things I see, the patterns I notice, and the ideas I keep coming back to. Opinionated, grounded in real experience, and always in progress.
-  </p>
-  <div class="articles-list" id="articles-list">
-    <div class="article-row" style="opacity:0.4;pointer-events:none;">
-      <div class="article-num">—</div>
-      <div><div class="article-title">Loading articles…</div></div>
     </div>
   </div>
 </section>
@@ -502,15 +552,15 @@
     </div>
     <div class="service-card">
       <div class="service-header"><span class="service-num">03</span><span class="service-title">Strategy</span></div>
-      <div class="service-desc">Translating insights into a financial plan — forecasting, budgeting, valuation, and the scenarios that shape direction.</div>
+      <div class="service-desc">Translating insights into a plan — forecasting, budgeting, valuation, and the scenarios that shape direction.</div>
     </div>
     <div class="service-card">
       <div class="service-header"><span class="service-num">04</span><span class="service-title">Implementation</span></div>
       <div class="service-desc">Taking the plan into the organisation — project management, cross-functional coordination, and the delivery that closes the gap between strategy and reality.</div>
     </div>
     <div class="service-card">
-      <div class="service-header"><span class="service-num">05</span><span class="service-title">Controlling</span></div>
-      <div class="service-desc">Measuring whether what was implemented is working — through reporting, P&L, month-end rhythms, and the dashboards that keep leadership honest.</div>
+      <div class="service-header"><span class="service-num">05</span><span class="service-title">Automation</span></div>
+      <div class="service-desc">Designing processes for consistent outcome — AI-assisted reporting, automated workflows, and the infrastructure that lets your team focus on decisions, not spreadsheets.</div>
     </div>
     <div class="service-card">
       <div class="service-header"><span class="service-num">06</span><span class="service-title">Continuous Improvement</span></div>
@@ -533,6 +583,27 @@
 
 <script>
   const LI_SVG = `<svg viewBox="0 0 24 24" fill="#0A66C2" width="14" height="14"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
+
+  // ── MOBILE NAV ──
+  const hamburger = document.getElementById('nav-hamburger');
+  const mobileMenu = document.getElementById('nav-mobile-menu');
+
+  hamburger.addEventListener('click', () => {
+    const isOpen = mobileMenu.classList.toggle('open');
+    hamburger.classList.toggle('open', isOpen);
+  });
+
+  function closeMobileMenu() {
+    mobileMenu.classList.remove('open');
+    hamburger.classList.remove('open');
+  }
+
+  // Close on outside click
+  document.addEventListener('click', (e) => {
+    if (!hamburger.contains(e.target) && !mobileMenu.contains(e.target)) {
+      closeMobileMenu();
+    }
+  });
 
   function formatDate(dateStr) {
     if (!dateStr) return '';
