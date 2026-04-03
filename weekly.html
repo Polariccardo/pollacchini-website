@@ -89,11 +89,6 @@
 
     .brief-sources { font-size: 11px; color: var(--muted); border-top: 1px solid var(--border); padding-top: 12px; margin-top: 8px; }
 
-    /* SHARE */
-    .brief-share { margin-top: 48px; padding-top: 24px; border-top: 1px solid var(--border); display: flex; justify-content: flex-end; }
-    .share-btn { display: inline-flex; align-items: center; gap: 8px; background: var(--accent); color: #fff; padding: 12px 24px; border-radius: 4px; font-size: 12px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; border: none; cursor: pointer; transition: background 0.2s, transform 0.15s; font-family: var(--font-body); }
-    .share-btn:hover { background: #1a1acc; transform: translateY(-1px); }
-
     /* AUTHOR */
     .author-signature { margin-top: 48px; padding: 28px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; display: flex; flex-direction: column; gap: 0; }
     .author-top { display: flex; align-items: center; gap: 24px; margin-bottom: 20px; }
@@ -184,14 +179,6 @@
     if (!dateStr) return '';
     return new Date(dateStr).toLocaleDateString('en-GB', { day: 'numeric', month: 'long', year: 'numeric' });
   }
-
-  function shareOnLinkedIn(title) {
-    const issue = new URLSearchParams(window.location.search).get('issue');
-    const pageUrl = encodeURIComponent('https://pollacchini.com/weekly?issue=' + issue);
-    const text = encodeURIComponent(title + ' — Weekly Brief by Riccardo Pollacchini');
-    window.open('https://www.linkedin.com/sharing/share-offsite/?url=' + pageUrl + '&summary=' + text, '_blank', 'width=600,height=500');
-  }
-
   function renderSignals(raw) {
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map(s => {
@@ -355,12 +342,6 @@
         </div>
 
         ${brief.sources ? `<div class="brief-sources">${brief.sources}</div>` : ''}
-
-        <div class="brief-share">
-          <button class="share-btn" onclick="shareOnLinkedIn(${JSON.stringify(brief.title)})">
-            ${LI_SVG} Share on LinkedIn
-          </button>
-        </div>
 
         <div class="author-signature">
           <div class="author-top">
