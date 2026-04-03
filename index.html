@@ -625,18 +625,17 @@
       return;
     }
     grid.innerHTML = briefs.map((b, i) => `
-      <div class="weekly-card">
+      <div class="weekly-card" onclick="window.location='/weekly?issue=${b.issue}'" style="cursor:pointer;">
         <div class="weekly-meta">
           <span class="weekly-issue">Issue #${String(b.issue).padStart(2,'0')}${i === 0 ? ' · Latest' : ''}</span>
           <span class="weekly-date">${formatDate(b.date)}</span>
         </div>
-        <a href="/weekly?issue=${b.issue}" style="text-decoration:none;color:inherit;"><div class="weekly-title">${b.headline || b.title}</div></a>
+        <div class="weekly-title">${b.headline || b.title}</div>
         <div class="weekly-excerpt">${b.excerpt}</div>
         <div class="weekly-footer">
           <div class="weekly-tags"></div>
           <div style="display:flex;gap:12px;align-items:center;">
-            <button class="share-btn" onclick="shareOnLinkedIn('${b.title.replace(/<[^>]+>/g, '')}', 'Issue #${b.issue} of my weekly finance brief.')"><span>Share on</span>${LI_SVG}</button>
-            <a href="/weekly?issue=${b.issue}" class="weekly-link">Read →</a>
+            <a href="/weekly?issue=${b.issue}" class="weekly-link" onclick="event.stopPropagation()">Read →</a>
           </div>
         </div>
       </div>
