@@ -262,7 +262,7 @@
         const titled = raw.split(' ').map(w => w.charAt(0) + w.slice(1).toLowerCase()).join(' ');
         return '<h2>' + titled + '</h2>';
       }
-      if (/^(Base Layer|Middle Layer|Top Layer|First,|Second,|Third,)/.test(raw)) {
+      if (/^(Layer \d|Base Layer|Middle Layer|Top Layer|First,|Second,|Third,)/.test(raw)) {
         return '<h3>' + decoded + '</h3>';
       }
       return '<p>' + decoded + '</p>';
