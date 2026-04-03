@@ -170,8 +170,18 @@
 
     .hero-right {
       display: flex; align-items: center; justify-content: center;
+      flex-direction: column; gap: 20px;
       padding: 80px 80px 80px 40px;
       position: relative;
+    }
+    .hero-headshot {
+      width: 88px; height: 88px; border-radius: 50%;
+      border: 3px solid var(--yellow);
+      overflow: hidden; flex-shrink: 0;
+    }
+    .hero-headshot img {
+      width: 100%; height: 100%;
+      object-fit: cover; object-position: center 15%;
     }
     .hero-stats {
       display: grid; grid-template-columns: 1fr 1fr;
@@ -447,6 +457,9 @@
     </div>
   </div>
   <div class="hero-right">
+    <div class="hero-headshot">
+      <img src="/Riccardo_Pollacchini-002_2048px.jpg" alt="Riccardo Pollacchini" />
+    </div>
     <div class="hero-stats">
       <div class="stat-card">
         <div class="stat-num" style="font-size:36px;">€250M+</div>
@@ -461,7 +474,7 @@
         <div class="stat-label">Board & investor decks</div>
       </div>
       <div class="stat-card">
-        <div class="stat-num" style="font-size:36px;">€250M+</div>
+        <div class="stat-num" style="font-size:36px;">€1B+</div>
         <div class="stat-label">Recurring revenue modelled</div>
       </div>
     </div>
@@ -534,7 +547,7 @@
   <div class="section-eyebrow">Weekly brief</div>
   <h2 class="section-h2">External signals,<br>every week.</h2>
   <p class="section-lead">
-    Every week I scan the noise so you don't have to. Six sections covering what's moving in SaaS, ARR trends, margin pressure, capital markets, and the questions every finance leader should be asking.
+    Every week I scan the noise so you don't have to. Seven sections covering what's moving in SaaS, ARR trends, margin pressure, capital markets, and the questions every finance leader should be asking.
   </p>
   <div class="weekly-grid" id="weekly-grid">
     <div class="weekly-card" style="opacity:0.4;pointer-events:none;">
