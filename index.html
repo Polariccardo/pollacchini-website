@@ -170,18 +170,8 @@
 
     .hero-right {
       display: flex; align-items: center; justify-content: center;
-      flex-direction: column; gap: 20px;
       padding: 80px 80px 80px 40px;
       position: relative;
-    }
-    .hero-headshot {
-      width: 88px; height: 88px; border-radius: 50%;
-      border: 3px solid var(--yellow);
-      overflow: hidden; flex-shrink: 0;
-    }
-    .hero-headshot img {
-      width: 100%; height: 100%;
-      object-fit: cover; object-position: center 15%;
     }
     .hero-stats {
       display: grid; grid-template-columns: 1fr 1fr;
@@ -457,17 +447,13 @@
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-headshot">
-      <img src="/Riccardo_Pollacchini-002_2048px.jpg" alt="Riccardo Pollacchini" />
-    </div>
     <div class="hero-stats">
       <div class="stat-card">
         <div class="stat-num" style="font-size:36px;">€250M+</div>
         <div class="stat-label">Budgeted expenses managed</div>
       </div>
-      <div class="stat-card">
-        <div class="stat-num">∞</div>
-        <div class="stat-label">Things I can fix for you</div>
+      <div class="stat-card" style="padding:0;overflow:hidden;">
+        <img src="/Riccardo_Pollacchini-002_2048px.jpg" alt="Riccardo Pollacchini" style="width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block;" />
       </div>
       <div class="stat-card">
         <div class="stat-num">50+</div>
