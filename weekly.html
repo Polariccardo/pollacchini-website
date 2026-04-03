@@ -26,7 +26,7 @@
     }
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-weight: 300; line-height: 1.7; -webkit-font-smoothing: antialiased; }
+    body { background: var(--paper); color: var(--ink); font-family: var(--font-body); font-weight: 300; line-height: 1.7; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
 
     /* NAV */
     nav { position: sticky; top: 0; z-index: 100; display: flex; align-items: center; justify-content: space-between; padding: 20px 48px; background: rgba(247,245,240,0.92); backdrop-filter: blur(12px); border-bottom: 1px solid var(--border); }
@@ -63,8 +63,6 @@
     .signal.purple { border-left-color: #7F77DD; }
     .signal-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
     .signal-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
-
-    /* ── BOLD FIX — [b]...[/b] decoded to <strong> ── */
     .signal-body strong { color: var(--ink); font-weight: 500; }
 
     .tag { display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; margin-right: 4px; margin-top: 8px; }
@@ -98,12 +96,72 @@
 
     /* AUTHOR */
     .author-signature { margin-top: 48px; padding: 28px; background: var(--card); border: 1px solid var(--border); border-radius: 12px; display: flex; align-items: center; gap: 24px; }
-    .author-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--yellow); border: 3px solid var(--yellow); flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-family: var(--font-display); font-size: 24px; font-weight: 900; color: var(--ink); overflow: hidden; }
+    .author-avatar { width: 72px; height: 72px; border-radius: 50%; background: var(--yellow); border: 3px solid var(--yellow); flex-shrink: 0; overflow: hidden; }
     .author-avatar img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; }
     .author-name { font-family: var(--font-display); font-size: 20px; font-weight: 700; color: var(--ink); margin-bottom: 4px; }
     .author-desc { font-size: 13px; color: var(--muted); line-height: 1.6; margin-bottom: 12px; }
     .author-linkedin { display: inline-flex; align-items: center; gap: 6px; font-size: 11px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent); text-decoration: none; transition: opacity 0.2s; }
     .author-linkedin:hover { opacity: 0.7; }
+
+    /* BRIEF NAVIGATION */
+    .brief-nav {
+      margin-top: 48px;
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 12px;
+    }
+    .brief-nav-btn {
+      display: flex; flex-direction: column;
+      padding: 20px; border: 1px solid var(--border);
+      border-radius: 8px; background: var(--card);
+      text-decoration: none; color: inherit;
+      transition: border-color 0.2s, transform 0.15s;
+    }
+    .brief-nav-btn:hover { border-color: var(--accent); transform: translateY(-2px); }
+    .brief-nav-btn.next { align-items: flex-end; text-align: right; }
+    .brief-nav-label {
+      font-family: var(--font-mono); font-size: 10px;
+      letter-spacing: 0.1em; text-transform: uppercase;
+      color: var(--muted); margin-bottom: 6px;
+    }
+    .brief-nav-title {
+      font-family: var(--font-display); font-size: 16px;
+      font-weight: 700; color: var(--ink);
+      line-height: 1.2; letter-spacing: -0.02em;
+    }
+    .brief-nav-issue {
+      font-size: 11px; color: var(--accent);
+      margin-top: 4px; font-weight: 500;
+    }
+    .brief-nav-btn.disabled {
+      opacity: 0.3; pointer-events: none;
+    }
+
+    /* LINKEDIN CTA */
+    .linkedin-cta {
+      margin-top: 24px;
+      padding: 32px;
+      background: var(--ink);
+      border-radius: 12px;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 24px; flex-wrap: wrap;
+    }
+    .linkedin-cta-text {
+      font-family: var(--font-display);
+      font-size: 20px; font-weight: 700;
+      color: var(--paper); letter-spacing: -0.02em;
+      line-height: 1.3; flex: 1; min-width: 200px;
+    }
+    .linkedin-cta-btn {
+      display: inline-flex; align-items: center; gap: 10px;
+      background: var(--yellow); color: var(--ink);
+      padding: 14px 24px; border-radius: 4px;
+      font-size: 13px; font-weight: 500; letter-spacing: 0.06em;
+      text-transform: uppercase; text-decoration: none;
+      white-space: nowrap;
+      transition: opacity 0.2s, transform 0.15s;
+      flex-shrink: 0;
+    }
+    .linkedin-cta-btn:hover { opacity: 0.85; transform: translateY(-1px); }
 
     .state-message { text-align: center; padding: 80px 0; color: var(--muted); font-size: 16px; }
     .state-message h2 { font-family: var(--font-display); font-size: 32px; font-weight: 700; color: var(--ink); margin-bottom: 12px; }
@@ -113,6 +171,10 @@
       .brief-wrapper { padding: 40px 24px 60px; }
       .author-signature { flex-direction: column; text-align: center; }
       .author-avatar { margin: 0 auto; }
+      .brief-nav { grid-template-columns: 1fr; }
+      .brief-nav-btn.next { align-items: flex-start; text-align: left; }
+      .linkedin-cta { flex-direction: column; text-align: center; }
+      .linkedin-cta-btn { width: 100%; justify-content: center; }
     }
   </style>
 </head>
@@ -129,6 +191,7 @@
 
 <script>
   const LI_SVG = '<svg viewBox="0 0 24 24" fill="white" width="14" height="14"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>';
+  const LI_SVG_INK = '<svg viewBox="0 0 24 24" fill="currentColor" width="16" height="16"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>';
 
   function formatDate(dateStr) {
     if (!dateStr) return '';
@@ -149,15 +212,11 @@
       const type = (parts[0] || '').trim();
       let title, body, tagClass, tagLabel;
       if (parts.length >= 5) {
-        title = parts[1].trim();
-        body = parts[2].trim();
-        tagClass = parts[3].trim();
-        tagLabel = parts[4].trim();
+        title = parts[1].trim(); body = parts[2].trim();
+        tagClass = parts[3].trim(); tagLabel = parts[4].trim();
       } else {
-        body = (parts[1] || '').trim();
-        tagClass = (parts[2] || '').trim();
-        tagLabel = (parts[3] || '').trim();
-        title = '';
+        body = (parts[1] || '').trim(); tagClass = (parts[2] || '').trim();
+        tagLabel = (parts[3] || '').trim(); title = '';
       }
       const tag = tagClass && tagLabel ? `<span class="tag ${tagClass}">${tagLabel}</span>` : '';
       return `<div class="signal ${type}">
@@ -195,12 +254,9 @@
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map((s, i) => {
       const parts = s.split('|');
-      const date = (parts[0] || '').trim();
-      const cat = (parts[1] || '').trim();
-      const title = (parts[2] || '').trim();
-      const why = (parts[3] || '').trim();
-      const url = (parts[4] || '').trim();
-      const source = (parts[5] || '').trim();
+      const date = (parts[0] || '').trim(); const cat = (parts[1] || '').trim();
+      const title = (parts[2] || '').trim(); const why = (parts[3] || '').trim();
+      const url = (parts[4] || '').trim(); const source = (parts[5] || '').trim();
       const readtime = (parts[6] || '').trim();
       const num = String(i + 1).padStart(2, '0');
       return `<div class="read-card">
@@ -213,6 +269,37 @@
     }).join('');
   }
 
+  function renderBriefNav(allBriefs, currentIssue) {
+    const sorted = [...allBriefs].sort((a, b) => a.issue - b.issue);
+    const idx = sorted.findIndex(b => b.issue === currentIssue);
+    const prev = idx > 0 ? sorted[idx - 1] : null;
+    const next = idx >= 0 && idx < sorted.length - 1 ? sorted[idx + 1] : null;
+
+    const prevHtml = prev
+      ? `<a class="brief-nav-btn prev" href="/weekly?issue=${prev.issue}">
+          <div class="brief-nav-label">← Previous brief</div>
+          <div class="brief-nav-title">${(prev.headline || prev.title).replace(/<[^>]+>/g, '')}</div>
+          <div class="brief-nav-issue">Issue #${String(prev.issue).padStart(2,'0')}</div>
+        </a>`
+      : `<div class="brief-nav-btn prev disabled">
+          <div class="brief-nav-label">← Previous brief</div>
+          <div class="brief-nav-title">This is the first issue</div>
+        </div>`;
+
+    const nextHtml = next
+      ? `<a class="brief-nav-btn next" href="/weekly?issue=${next.issue}">
+          <div class="brief-nav-label">Next brief →</div>
+          <div class="brief-nav-title">${(next.headline || next.title).replace(/<[^>]+>/g, '')}</div>
+          <div class="brief-nav-issue">Issue #${String(next.issue).padStart(2,'0')}</div>
+        </a>`
+      : `<div class="brief-nav-btn next disabled">
+          <div class="brief-nav-label">Next brief →</div>
+          <div class="brief-nav-title">You're on the latest issue</div>
+        </div>`;
+
+    return `<div class="brief-nav">${prevHtml}${nextHtml}</div>`;
+  }
+
   async function loadBrief() {
     const params = new URLSearchParams(window.location.search);
     const issue = params.get('issue');
@@ -221,9 +308,14 @@
       return;
     }
     try {
-      const res = await fetch('/.netlify/functions/get-weekly?issue=' + encodeURIComponent(issue));
-      if (!res.ok) throw new Error('Not found');
-      const { brief } = await res.json();
+      const [briefRes, contentRes] = await Promise.all([
+        fetch('/.netlify/functions/get-weekly?issue=' + encodeURIComponent(issue)),
+        fetch('/.netlify/functions/get-content')
+      ]);
+
+      if (!briefRes.ok) throw new Error('Not found');
+      const { brief } = await briefRes.json();
+      const { weekly: allBriefs = [] } = contentRes.ok ? await contentRes.json() : {};
 
       document.title = 'Week ' + brief.issue + ': ' + (brief.headline || brief.title).replace(/<[^>]+>/g, '') + ' — Riccardo Pollacchini';
 
@@ -293,6 +385,15 @@
               Connect on LinkedIn
             </a>
           </div>
+        </div>
+
+        ${allBriefs.length > 1 ? renderBriefNav(allBriefs, brief.issue) : ''}
+
+        <div class="linkedin-cta">
+          <div class="linkedin-cta-text">Have a take on this week's signals?<br>Let's talk on LinkedIn.</div>
+          <a href="https://www.linkedin.com/in/riccardo-pollacchini" target="_blank" class="linkedin-cta-btn">
+            ${LI_SVG_INK} Connect on LinkedIn
+          </a>
         </div>
       `;
     } catch(e) {
