@@ -64,6 +64,8 @@
     .signal-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
     .signal-body { font-size: 13px; color: var(--muted); line-height: 1.65; }
     .signal-body strong { color: var(--ink); font-weight: 500; }
+    .signal-ref { display: inline-block; font-size: 11px; color: var(--accent); text-decoration: none; margin-top: 8px; font-weight: 500; }
+    .signal-ref:hover { text-decoration: underline; }
 
     .tag { display: inline-block; font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase; padding: 2px 7px; border-radius: 4px; margin-right: 4px; margin-top: 8px; }
     .tag-hot { background: #FAECE7; color: #993C1D; }
@@ -183,6 +185,13 @@
     if (!raw) return '<p style="color:var(--muted);font-size:13px;">Coming soon.</p>';
     return raw.split('\n---\n').map(s => {
       const parts = s.split('|');
+
+      // Detect continuation reference: trailing field that is purely numeric = ref week
+      let refWeek = null;
+      if (parts.length >= 5 && /^\d+$/.test(parts[parts.length - 1].trim())) {
+        refWeek = parseInt(parts.pop().trim(), 10);
+      }
+
       const type = (parts[0] || '').trim();
       let title, body, tagClass, tagLabel;
       if (parts.length >= 5) {
@@ -193,9 +202,13 @@
         tagLabel = (parts[3] || '').trim(); title = '';
       }
       const tag = tagClass && tagLabel ? `<span class="tag ${tagClass}">${tagLabel}</span>` : '';
+      const ref = refWeek !== null
+        ? `<a class="signal-ref" href="/weekly?issue=${refWeek}">↩ Recap Week ${refWeek}</a>`
+        : '';
       return `<div class="signal ${type}">
         ${title ? `<div class="signal-title">${title}</div>` : ''}
         <div class="signal-body">${body} ${tag}</div>
+        ${ref}
       </div>`;
     }).join('');
   }
