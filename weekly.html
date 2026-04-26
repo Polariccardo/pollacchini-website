@@ -186,9 +186,12 @@
     return raw.split('\n---\n').map(s => {
       const parts = s.split('|');
 
-      // Detect continuation reference: trailing field that is purely numeric = ref week
-      let refWeek = null;
-      if (parts.length >= 5 && /^\d+$/.test(parts[parts.length - 1].trim())) {
+      // Detect continuation reference: 7 fields where parts[4] is purely numeric.
+      // Schema: TYPE|BODY|TAG_CLASS|TAG_LABEL|REF_WEEK|REF_SECTION|REF_TAG
+      let refWeek = null, refSection = null, refTag = null;
+      if (parts.length === 7 && /^\d+$/.test(parts[4].trim())) {
+        refTag = parts.pop().trim();
+        refSection = parts.pop().trim();
         refWeek = parseInt(parts.pop().trim(), 10);
       }
 
@@ -202,9 +205,14 @@
         tagLabel = (parts[3] || '').trim(); title = '';
       }
       const tag = tagClass && tagLabel ? `<span class="tag ${tagClass}">${tagLabel}</span>` : '';
-      const ref = refWeek !== null
-        ? `<a class="signal-ref" href="/weekly?issue=${refWeek}">↩ Recap Week ${refWeek}</a>`
-        : '';
+
+      let ref = '';
+      if (refWeek !== null) {
+        const linkParts = [`Recap Week ${refWeek}`];
+        if (refSection) linkParts.push(refSection);
+        if (refTag) linkParts.push(refTag);
+        ref = `<a class="signal-ref" href="/weekly?issue=${refWeek}" target="_blank" rel="noopener noreferrer">↩ ${linkParts.join(' — ')}</a>`;
+      }
       return `<div class="signal ${type}">
         ${title ? `<div class="signal-title">${title}</div>` : ''}
         <div class="signal-body">${body} ${tag}</div>
