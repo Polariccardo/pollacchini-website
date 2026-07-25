@@ -11,9 +11,12 @@
 // omitted and the page renders the rest.
 
 const YAHOO = "https://query1.finance.yahoo.com/v8/finance/chart";
-const RANGE = "1mo";
+const RANGE = "1y";       // fetch a year so we can compute up to 12-month change
 const INTERVAL = "1d";
-const SEVEN_DAYS = 7 * 24 * 60 * 60; // seconds — change window
+const DAY = 24 * 60 * 60; // seconds
+const CHART_DAYS = 31;    // front chart shows ~last 30 days (aligns with 30d change)
+// Timeframes shown on the back of each card.
+const WINDOWS = { d1: 1, d7: 7, d30: 30, m3: 91, m6: 182, m12: 365 };
 
 // ── Symbol config ── the ONLY place tickers/labels/units/groups live.
 // Add a metric here and the API + page pick it up automatically.
@@ -85,16 +88,15 @@ async function fetchSymbol(cfg) {
 
   const current = meta.regularMarketPrice ?? history.at(-1)?.c ?? null;
 
-  // 7-day change: compare against the last close on or before 7 days ago.
-  // Falls back to the earliest point we have if the series is shorter.
-  let base = history[0]?.c;
-  if (history.length) {
-    const cutoff = history.at(-1).t - SEVEN_DAYS;
-    for (let i = history.length - 1; i >= 0; i--) {
-      if (history[i].t <= cutoff) { base = history[i].c; break; }
-    }
-  }
-  const changePct = current != null && base ? ((current - base) / base) * 100 : null;
+  // % change over each timeframe, computed from the full-year series.
+  const changes = {};
+  for (const [k, days] of Object.entries(WINDOWS)) changes[k] = pctChange(history, current, days);
+
+  // Front chart only carries the most recent ~30 days (keeps payload small and
+  // aligns the line with the 30-day headline change).
+  const chartHistory = history.length
+    ? history.filter(p => p.t >= history.at(-1).t - CHART_DAYS * DAY)
+    : history;
 
   return {
     symbol: cfg.symbol,
@@ -103,9 +105,23 @@ async function fetchSymbol(cfg) {
     suffix: cfg.suffix || "",
     cat: cfg.cat,
     current,
-    changePct: changePct != null ? Number(changePct.toFixed(2)) : null,
-    history,
+    changePct: changes.d30, // headline change, aligned with the chart window
+    changes,
+    history: chartHistory,
   };
+}
+
+// % change of `current` vs the last close on or before `days` ago.
+// Falls back to the earliest point available if the series is shorter.
+function pctChange(history, current, days) {
+  if (current == null || !history.length) return null;
+  const cutoff = history.at(-1).t - days * DAY;
+  let base = history[0].c;
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (history[i].t <= cutoff) { base = history[i].c; break; }
+  }
+  if (!base) return null;
+  return Number(((current - base) / base * 100).toFixed(2));
 }
 
 export const handler = async () => {

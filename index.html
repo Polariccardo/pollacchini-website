@@ -245,20 +245,49 @@
 
     /* Uniform card grid — every metric renders at the same compact size. */
     .mkt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 16px; }
-    .mkt-card {
+
+    /* Flip card: .mkt-card is the perspective shell; front is in flow (sets
+       height), back is absolutely overlaid and rotated. */
+    .mkt-card { perspective: 1200px; }
+    .mkt-flip { position: relative; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,.2,.2,1); }
+    .mkt-card.flipped .mkt-flip { transform: rotateY(180deg); }
+    .mkt-face {
       background: var(--card); border: 1px solid var(--border); border-radius: 14px;
       padding: 16px 16px 12px; transition: box-shadow .2s, border-color .2s;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
     }
-    .mkt-card:hover { border-color: #cfcbc1; box-shadow: 0 6px 22px rgba(17,17,16,0.05); }
+    .mkt-front { position: relative; }
+    .mkt-back { position: absolute; inset: 0; transform: rotateY(180deg); display: flex; flex-direction: column; }
+    .mkt-card:hover .mkt-face { border-color: #cfcbc1; box-shadow: 0 6px 22px rgba(17,17,16,0.05); }
+
     .mkt-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
     .mkt-label { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 500; line-height: 1.35; }
-    .mkt-value { font-family: var(--font-display); font-weight: 700; font-size: 25px; letter-spacing: -.02em; line-height: 1.1; margin-top: 4px; }
+    .mkt-value-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .mkt-value { font-family: var(--font-display); font-weight: 700; font-size: 25px; letter-spacing: -.02em; line-height: 1.1; }
     .mkt-value .suffix { font-size: 12px; color: var(--muted); font-family: var(--font-body); font-weight: 400; }
-    .mkt-badge { font-family: var(--font-mono); font-size: 12px; padding: 4px 8px; border-radius: 7px; white-space: nowrap; flex-shrink: 0; }
-    .mkt-badge span { opacity: .55; font-size: 10px; margin-left: 2px; }
-    .mkt-badge.up { color: var(--up); background: var(--up-bg); }
-    .mkt-badge.down { color: var(--down); background: var(--down-bg); }
-    .mkt-foot { display: flex; justify-content: space-between; gap: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; }
+    .mkt-chg { font-family: var(--font-mono); font-size: 13px; white-space: nowrap; }
+    .mkt-chg .win { color: var(--muted); font-size: 10px; margin-left: 2px; }
+    .mkt-chg.up { color: var(--up); }
+    .mkt-chg.down { color: var(--down); }
+
+    .flip-btn {
+      flex-shrink: 0; width: 28px; height: 28px; padding: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent; border: 1px solid var(--border); border-radius: 8px;
+      color: var(--muted); transition: color .2s, border-color .2s;
+    }
+    .flip-btn:hover { color: var(--warm); border-color: var(--warm); }
+
+    /* Back face — multi-timeframe returns */
+    .mkt-back .mkt-label { color: var(--warm); }
+    .returns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 10px; margin-top: 16px; }
+    .ret-item { display: flex; flex-direction: column; gap: 3px; }
+    .ret-win { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
+    .ret-val { font-family: var(--font-mono); font-size: 16px; }
+    .ret-val.up { color: var(--up); }
+    .ret-val.down { color: var(--down); }
+    .ret-val.flat { color: var(--muted); }
+    .mkt-back .ret-caption { margin-top: auto; padding-top: 12px; font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .04em; }
 
     /* Chart + hover tooltip */
     .chart-wrap { position: relative; margin-top: 10px; }
@@ -847,17 +876,69 @@
     return wrap;
   }
 
+  const FLIP_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>';
+  const WIN_LABELS = [['d1', '1D'], ['d7', '7D'], ['d30', '30D'], ['m3', '3M'], ['m6', '6M'], ['m12', '12M']];
+
+  function fmtPct(pct) {
+    if (pct == null) return { cls: 'flat', t: '—' };
+    return { cls: pct >= 0 ? 'up' : 'down', t: (pct >= 0 ? '▲ +' : '▼ ') + Math.abs(pct).toFixed(2) + '%' };
+  }
+
   function mktCard(item) {
     const card = document.createElement('div');
     card.className = 'mkt-card';
-    const up = (item.changePct ?? 0) >= 0;
-    const badge = item.changePct == null ? ''
-      : `<span class="mkt-badge ${up ? 'up' : 'down'}">${up ? '▲ +' : '▼ '}${item.changePct.toFixed(2)}%<span>7d</span></span>`;
-    const head = document.createElement('div');
-    head.className = 'mkt-card-head';
-    head.innerHTML = `<div><div class="mkt-label">${item.label}</div><div class="mkt-value">${mktValue(item)}</div></div>${badge}`;
-    card.appendChild(head);
-    card.appendChild(buildChart(item));
+    const flip = document.createElement('div');
+    flip.className = 'mkt-flip';
+
+    // ── Front: value + inline 30d change + chart ──
+    const front = document.createElement('div');
+    front.className = 'mkt-face mkt-front';
+    const headF = document.createElement('div');
+    headF.className = 'mkt-card-head';
+    headF.innerHTML = `<div class="mkt-label">${item.label}</div>`;
+    const btnF = document.createElement('button');
+    btnF.className = 'flip-btn'; btnF.type = 'button';
+    btnF.setAttribute('aria-label', 'Show returns over time'); btnF.title = 'Returns over time';
+    btnF.innerHTML = FLIP_ICON;
+    headF.appendChild(btnF);
+    const c = fmtPct(item.changePct);
+    const valRow = document.createElement('div');
+    valRow.className = 'mkt-value-row';
+    valRow.innerHTML = `<span class="mkt-value">${mktValue(item)}</span>`
+      + (item.changePct == null ? '' : `<span class="mkt-chg ${c.cls}">${c.t}<span class="win">30d</span></span>`);
+    front.appendChild(headF);
+    front.appendChild(valRow);
+    front.appendChild(buildChart(item));
+
+    // ── Back: returns across timeframes ──
+    const back = document.createElement('div');
+    back.className = 'mkt-face mkt-back';
+    const headB = document.createElement('div');
+    headB.className = 'mkt-card-head';
+    headB.innerHTML = `<div class="mkt-label">${item.label} · Returns</div>`;
+    const btnB = document.createElement('button');
+    btnB.className = 'flip-btn'; btnB.type = 'button';
+    btnB.setAttribute('aria-label', 'Back to chart'); btnB.title = 'Back to chart';
+    btnB.innerHTML = FLIP_ICON;
+    headB.appendChild(btnB);
+    const rets = document.createElement('div');
+    rets.className = 'returns';
+    rets.innerHTML = WIN_LABELS.map(([k, lab]) => {
+      const p = fmtPct(item.changes ? item.changes[k] : null);
+      return `<div class="ret-item"><span class="ret-win">${lab}</span><span class="ret-val ${p.cls}">${p.t}</span></div>`;
+    }).join('');
+    const cap = document.createElement('div');
+    cap.className = 'ret-caption';
+    cap.textContent = 'Total return over period';
+    back.appendChild(headB);
+    back.appendChild(rets);
+    back.appendChild(cap);
+
+    flip.appendChild(front);
+    flip.appendChild(back);
+    card.appendChild(flip);
+    btnF.addEventListener('click', () => card.classList.add('flipped'));
+    btnB.addEventListener('click', () => card.classList.remove('flipped'));
     return card;
   }
 
