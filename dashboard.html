@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Markets — Riccardo Pollacchini</title>
+
+  <meta property="og:type" content="website" />
+  <meta property="og:url" content="https://pollacchini.com/dashboard" />
+  <meta property="og:title" content="Markets — Riccardo Pollacchini" />
+  <meta property="og:description" content="A live macro dashboard: indices, commodities, crypto, rates and sector trends. Refreshed hourly." />
+  <meta name="description" content="A live macro dashboard: indices, commodities, crypto, rates and sector trends. Refreshed hourly." />
+
+  <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,700;0,900;1,700&family=DM+Sans:wght@300;400;500&family=DM+Mono:wght@400&display=swap" rel="stylesheet" />
+
+  <style>
+    :root {
+      --ink: #111110;
+      --paper: #F7F5F0;
+      --accent: #2E2EFF;
+      --yellow: #FFFF00;
+      --accent-light: #EDEDFF;
+      --muted: #7A7870;
+      --border: #E2DFD8;
+      --card: #FFFFFF;
+      --up: #16794C;         /* editorial green */
+      --up-bg: #E7F1EC;
+      --down: #C0392B;       /* editorial red */
+      --down-bg: #F6E7E4;
+      --font-display: 'Playfair Display', Georgia, serif;
+      --font-body: 'DM Sans', sans-serif;
+      --font-mono: 'DM Mono', monospace;
+    }
+
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--paper); color: var(--ink);
+      font-family: var(--font-body); font-weight: 300; line-height: 1.7;
+      -webkit-font-smoothing: antialiased; overflow-x: hidden;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+      display: flex; align-items: center; gap: 18px;
+      padding: 16px 48px;
+      background: rgba(247, 245, 240, 0.88);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+    .back-btn-round {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 40px; height: 40px; border-radius: 50%;
+      border: 1px solid var(--border); background: var(--card);
+      transition: border-color 0.2s, transform 0.2s;
+    }
+    .back-btn-round:hover { border-color: var(--accent); transform: translateX(-2px); }
+    .nav-logo {
+      font-family: var(--font-display); font-size: 18px; font-weight: 700;
+      color: var(--ink); text-decoration: none; letter-spacing: -0.02em;
+    }
+    .nav-logo span { color: var(--accent); }
+
+    /* ── LAYOUT ── */
+    main { max-width: 1180px; margin: 0 auto; padding: 128px 48px 96px; }
+
+    .page-head { margin-bottom: 8px; }
+    .eyebrow {
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.16em;
+      text-transform: uppercase; color: var(--accent); margin-bottom: 14px;
+    }
+    .page-title {
+      font-family: var(--font-display); font-weight: 900;
+      font-size: clamp(40px, 7vw, 76px); line-height: 0.98;
+      letter-spacing: -0.02em;
+    }
+    .page-sub {
+      max-width: 560px; margin-top: 18px; color: var(--muted);
+      font-size: 17px; line-height: 1.6;
+    }
+    .stamp {
+      display: inline-flex; align-items: center; gap: 8px; margin-top: 22px;
+      font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+      padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px;
+      background: var(--card);
+    }
+    .stamp .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
+
+    .section-label {
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: 0.14em;
+      text-transform: uppercase; color: var(--muted);
+      margin: 64px 0 22px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+
+    /* ── HEADLINE CARDS ── */
+    .cards {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px;
+    }
+    .card {
+      background: var(--card); border: 1px solid var(--border);
+      border-radius: 14px; padding: 22px 22px 14px;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    .card:hover { border-color: #cfcbc1; box-shadow: 0 6px 24px rgba(17,17,16,0.05); }
+    .card-top { display: flex; justify-content: space-between; align-items: baseline; }
+    .card-label {
+      font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase;
+      color: var(--muted); font-weight: 500;
+    }
+    .card-value {
+      font-family: var(--font-display); font-weight: 700;
+      font-size: 34px; letter-spacing: -0.02em; margin-top: 10px; line-height: 1;
+    }
+    .card-value .suffix { font-size: 15px; color: var(--muted); font-family: var(--font-body); font-weight: 400; }
+    .badge {
+      font-family: var(--font-mono); font-size: 13px; font-weight: 400;
+      padding: 4px 9px; border-radius: 7px; white-space: nowrap;
+    }
+    .badge.up   { color: var(--up);   background: var(--up-bg); }
+    .badge.down { color: var(--down); background: var(--down-bg); }
+    .chart { margin-top: 16px; width: 100%; height: 56px; display: block; }
+
+    /* ── SECTOR HEATMAP ── */
+    .heatmap { display: grid; grid-template-columns: repeat(4, 1fr); gap: 12px; }
+    .tile {
+      border-radius: 12px; padding: 18px 16px; border: 1px solid var(--border);
+      display: flex; flex-direction: column; gap: 6px; min-height: 96px;
+      justify-content: space-between;
+    }
+    .tile-label { font-size: 13px; font-weight: 500; letter-spacing: 0.02em; }
+    .tile-change { font-family: var(--font-mono); font-size: 20px; }
+    .tile-price { font-family: var(--font-mono); font-size: 11px; opacity: 0.65; }
+
+    .foot-note {
+      margin-top: 56px; padding-top: 22px; border-top: 1px solid var(--border);
+      font-size: 13px; color: var(--muted); line-height: 1.7; max-width: 720px;
+    }
+    .foot-note code { font-family: var(--font-mono); font-size: 12px; }
+
+    .state { text-align: center; color: var(--muted); padding: 80px 0; font-size: 16px; }
+
+    @media (max-width: 900px) {
+      main { padding: 112px 24px 72px; }
+      nav { padding: 14px 24px; }
+      .cards { grid-template-columns: repeat(2, 1fr); }
+      .heatmap { grid-template-columns: repeat(2, 1fr); }
+    }
+    @media (max-width: 560px) {
+      .cards { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="/" class="back-btn-round" aria-label="Back to home">
+    <svg xmlns="http://www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#2E2EFF" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="15 18 9 12 15 6"></polyline></svg>
+  </a>
+  <a href="/" class="nav-logo">R<span>P</span></a>
+</nav>
+
+<main>
+  <header class="page-head">
+    <div class="eyebrow">Live Macro Dashboard</div>
+    <h1 class="page-title">Markets</h1>
+    <p class="page-sub">Indices, commodities, crypto, rates and sector trends — the numbers I keep an eye on, in one place. Refreshed hourly.</p>
+    <div class="stamp" id="stamp"><span class="dot"></span><span id="stamp-text">Loading…</span></div>
+  </header>
+
+  <div id="content">
+    <div class="state" id="loading">Fetching the latest market data…</div>
+  </div>
+
+  <p class="foot-note">
+    Prices via Yahoo Finance, cached and refreshed hourly. Daily change is measured against the previous trading day's close.
+    Yields shown for the US 10-year Treasury (<code>^TNX</code>); sectors are the SPDR select-sector ETFs.
+    For information only — not investment advice.
+  </p>
+</main>
+
+<script>
+  const CHART_W = 260, CHART_H = 56, PAD = 4;
+
+  function fmtValue(item) {
+    const v = item.current;
+    if (v == null) return "—";
+    if (item.unit === "percent") return v.toFixed(2) + "%";
+    if (item.unit === "usd") {
+      const n = v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+      return `$${n}<span class="suffix">${item.suffix || ""}</span>`;
+    }
+    return v.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function badge(changePct) {
+    if (changePct == null) return "";
+    const up = changePct >= 0;
+    const cls = up ? "up" : "down";
+    const sign = up ? "▲ +" : "▼ ";
+    return `<span class="badge ${cls}">${sign}${changePct.toFixed(2)}%</span>`;
+  }
+
+  // Inline SVG line + area chart from a history series, coloured by month trend.
+  function sparkline(history) {
+    const pts = history.map(h => h.c);
+    if (pts.length < 2) return "";
+    const min = Math.min(...pts), max = Math.max(...pts);
+    const span = (max - min) || 1;
+    const dx = (CHART_W - PAD * 2) / (pts.length - 1);
+    const y = v => PAD + (CHART_H - PAD * 2) * (1 - (v - min) / span);
+    const coords = pts.map((v, i) => [PAD + i * dx, y(v)]);
+    const line = coords.map((c, i) => `${i ? "L" : "M"}${c[0].toFixed(1)},${c[1].toFixed(1)}`).join(" ");
+    const area = `${line} L${coords.at(-1)[0].toFixed(1)},${CHART_H} L${coords[0][0].toFixed(1)},${CHART_H} Z`;
+    const rising = pts.at(-1) >= pts[0];
+    const stroke = rising ? "var(--up)" : "var(--down)";
+    const fill = rising ? "rgba(22,121,76,0.10)" : "rgba(192,57,43,0.10)";
+    const id = "g" + Math.round(coords[0][1] * 1000) + pts.length;
+    return `<svg class="chart" viewBox="0 0 ${CHART_W} ${CHART_H}" preserveAspectRatio="none" role="img" aria-hidden="true">
+      <path d="${area}" fill="${fill}" stroke="none"></path>
+      <path d="${line}" fill="none" stroke="${stroke}" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"></path>
+    </svg>`;
+  }
+
+  function headlineCard(item) {
+    return `<div class="card">
+      <div class="card-top">
+        <span class="card-label">${item.label}</span>
+        ${badge(item.changePct)}
+      </div>
+      <div class="card-value">${fmtValue(item)}</div>
+      ${sparkline(item.history)}
+    </div>`;
+  }
+
+  // Sector tile: background tinted by magnitude of the daily move.
+  function sectorTile(item) {
+    const c = item.changePct ?? 0;
+    const up = c >= 0;
+    const intensity = Math.min(Math.abs(c) / 3, 1);            // cap at ±3%
+    const alpha = (0.06 + intensity * 0.32).toFixed(3);
+    const rgb = up ? "22,121,76" : "192,57,43";
+    const txt = up ? "var(--up)" : "var(--down)";
+    const price = item.current != null ? item.current.toLocaleString("en-US", { minimumFractionDigits: 2, maximumFractionDigits: 2 }) : "—";
+    return `<div class="tile" style="background: rgba(${rgb}, ${alpha}); border-color: rgba(${rgb}, ${(intensity*0.5+0.15).toFixed(3)});">
+      <span class="tile-label">${item.label}</span>
+      <div>
+        <div class="tile-change" style="color:${txt}">${up ? "+" : ""}${c.toFixed(2)}%</div>
+        <div class="tile-price">$${price}</div>
+      </div>
+    </div>`;
+  }
+
+  function relativeStamp(iso) {
+    const d = new Date(iso);
+    const time = d.toLocaleTimeString("en-GB", { hour: "2-digit", minute: "2-digit", timeZone: "UTC" });
+    const date = d.toLocaleDateString("en-GB", { day: "numeric", month: "short", timeZone: "UTC" });
+    return `Updated hourly · as of ${time} UTC, ${date}`;
+  }
+
+  async function load() {
+    try {
+      const res = await fetch("/.netlify/functions/get-market");
+      if (!res.ok) throw new Error("HTTP " + res.status);
+      const data = await res.json();
+
+      document.getElementById("stamp-text").textContent = relativeStamp(data.updatedAt);
+
+      const sectors = [...data.sectors].sort((a, b) => (b.changePct ?? -99) - (a.changePct ?? -99));
+      const failedNote = data.failed && data.failed.length
+        ? `<p class="foot-note" style="margin-top:24px;color:var(--down)">Temporarily unavailable: ${data.failed.join(", ")}</p>` : "";
+
+      document.getElementById("content").innerHTML = `
+        <div class="section-label">Indices · Commodities · Crypto · Rates</div>
+        <div class="cards">${data.headline.map(headlineCard).join("")}</div>
+        <div class="section-label">Sector Trends — Today (SPDR Select ETFs)</div>
+        <div class="heatmap">${sectors.map(sectorTile).join("")}</div>
+        ${failedNote}
+      `;
+    } catch (err) {
+      document.getElementById("stamp-text").textContent = "Data unavailable";
+      document.getElementById("content").innerHTML =
+        `<div class="state">Couldn't load market data right now. Please try again in a moment.</div>`;
+      console.error(err);
+    }
+  }
+
+  load();
+</script>
+
+</body>
+</html>
