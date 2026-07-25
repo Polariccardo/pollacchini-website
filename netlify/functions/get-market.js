@@ -13,6 +13,7 @@
 const YAHOO = "https://query1.finance.yahoo.com/v8/finance/chart";
 const RANGE = "1mo";
 const INTERVAL = "1d";
+const SEVEN_DAYS = 7 * 24 * 60 * 60; // seconds — change window
 
 // ── Symbol config ── the ONLY place tickers/labels/units live.
 // Add a metric here and both the API and the page pick it up. `unit`:
@@ -64,10 +65,17 @@ async function fetchSymbol(cfg) {
   }
 
   const current = meta.regularMarketPrice ?? history.at(-1)?.c ?? null;
-  // Daily change vs the prior day's close. Yahoo omits `previousClose` for
-  // futures/indices here, so derive it from the second-to-last series point.
-  const prevClose = history.length >= 2 ? history.at(-2).c : meta.chartPreviousClose;
-  const changePct = current != null && prevClose ? ((current - prevClose) / prevClose) * 100 : null;
+
+  // 7-day change: compare against the last close on or before 7 days ago.
+  // Falls back to the earliest point we have if the series is shorter.
+  let base = history[0]?.c;
+  if (history.length) {
+    const cutoff = history.at(-1).t - SEVEN_DAYS;
+    for (let i = history.length - 1; i >= 0; i--) {
+      if (history[i].t <= cutoff) { base = history[i].c; break; }
+    }
+  }
+  const changePct = current != null && base ? ((current - base) / base) * 100 : null;
 
   return {
     symbol: cfg.symbol,
@@ -75,7 +83,6 @@ async function fetchSymbol(cfg) {
     unit: cfg.unit || "index",
     suffix: cfg.suffix || "",
     current,
-    prevClose,
     changePct: changePct != null ? Number(changePct.toFixed(2)) : null,
     history,
   };

@@ -29,6 +29,10 @@
       --muted: #7A7870;
       --border: #E2DFD8;
       --card: #FFFFFF;
+      --up: #16794C;
+      --up-bg: #E7F1EC;
+      --down: #C0392B;
+      --down-bg: #F6E7E4;
       --font-display: 'Playfair Display', Georgia, serif;
       --font-body: 'DM Sans', sans-serif;
       --font-mono: 'DM Mono', monospace;
@@ -222,6 +226,53 @@
     .section-lead {
       font-size: 17px; color: var(--muted);
       max-width: 560px; line-height: 1.8; margin-bottom: 56px;
+    }
+
+    /* ── MARKETS ── */
+    #markets { background: var(--paper); }
+    .mkt-updated {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 40px;
+      font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+      padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--card);
+    }
+    .mkt-updated .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
+
+    .mkt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
+    .mkt-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
+      padding: 26px 26px 20px; transition: box-shadow .2s, border-color .2s;
+    }
+    .mkt-card:hover { border-color: #cfcbc1; box-shadow: 0 8px 30px rgba(17,17,16,0.06); }
+    .mkt-card-head { display: flex; justify-content: space-between; align-items: flex-start; }
+    .mkt-label { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
+    .mkt-value { font-family: var(--font-display); font-weight: 700; font-size: 40px; letter-spacing: -.02em; line-height: 1.05; margin-top: 8px; }
+    .mkt-value .suffix { font-size: 16px; color: var(--muted); font-family: var(--font-body); font-weight: 400; }
+    .mkt-badge { font-family: var(--font-mono); font-size: 14px; padding: 6px 11px; border-radius: 8px; white-space: nowrap; }
+    .mkt-badge span { opacity: .55; font-size: 11px; margin-left: 3px; }
+    .mkt-badge.up { color: var(--up); background: var(--up-bg); }
+    .mkt-badge.down { color: var(--down); background: var(--down-bg); }
+    .mkt-chart { width: 100%; height: auto; display: block; margin-top: 14px; }
+    .mkt-foot { display: flex; justify-content: space-between; gap: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 12px; letter-spacing: .04em; }
+
+    .mkt-sub {
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted); margin: 56px 0 22px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+    .sector-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
+    .sector-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 16px 12px; transition: border-color .2s; }
+    .sector-card:hover { border-color: #cfcbc1; }
+    .sector-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
+    .sector-label { font-size: 13px; font-weight: 500; }
+    .sector-chg { font-family: var(--font-mono); font-size: 13px; }
+    .sector-chg.up { color: var(--up); }
+    .sector-chg.down { color: var(--down); }
+    .sector-spark { width: 100%; height: auto; display: block; }
+
+    .mkt-state { color: var(--muted); padding: 40px 0; font-size: 15px; }
+    @media (max-width: 900px) {
+      .mkt-grid { grid-template-columns: 1fr; }
+      .sector-grid { grid-template-columns: repeat(2, 1fr); }
+      .mkt-value { font-size: 34px; }
     }
 
     /* ── ABOUT ── */
@@ -420,7 +471,7 @@
     <li><a href="#about">About</a></li>
     <li><a href="#articles">Articles</a></li>
     <li><a href="#weekly">Weekly</a></li>
-    <li><a href="/dashboard">Markets</a></li>
+    <li><a href="#markets">Markets</a></li>
     <li><a href="#services">Collaborate</a></li>
   </ul>
   <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
@@ -433,7 +484,7 @@
   <a href="#about" onclick="closeMobileMenu()">About</a>
   <a href="#articles" onclick="closeMobileMenu()">Articles</a>
   <a href="#weekly" onclick="closeMobileMenu()">Weekly</a>
-  <a href="/dashboard" onclick="closeMobileMenu()">Markets</a>
+  <a href="#markets" onclick="closeMobileMenu()">Markets</a>
   <a href="#services" onclick="closeMobileMenu()">Collaborate</a>
 </div>
 
@@ -512,6 +563,16 @@
       </div>
     </div>
   </div>
+</section>
+
+<!-- ── MARKETS ── -->
+<section id="markets">
+  <div class="section-eyebrow">Markets</div>
+  <h2 class="section-h2">The numbers<br>I watch.</h2>
+  <p class="section-lead">Indices, commodities, crypto, rates and sector trends — the macro picture I keep an eye on, refreshed hourly. Moves shown over the trailing 7 days.</p>
+  <div class="mkt-updated" id="mkt-updated"><span class="dot"></span><span id="mkt-updated-text">Loading market data…</span></div>
+  <div id="mkt-content"><div class="mkt-state">Fetching the latest market data…</div></div>
+  <p class="mkt-foot" style="margin-top:28px;max-width:760px;line-height:1.7;">Prices via Yahoo Finance, cached and refreshed hourly. Change is measured over the trailing 7 days. Yields shown for the US 10-year Treasury (^TNX); sectors are the SPDR select-sector ETFs. For information only — not investment advice.</p>
 </section>
 
 <!-- ── ARTICLES ── -->
@@ -683,6 +744,107 @@
   }
 
   loadContent();
+
+  // ── MARKETS ──
+  function mktFormatValue(item) {
+    const v = item.current;
+    if (v == null) return '—';
+    if (item.unit === 'percent') return v.toFixed(2) + '%';
+    const n = v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (item.unit === 'usd') return `$${n}<span class="suffix">${item.suffix || ''}</span>`;
+    return n;
+  }
+  function mktCompact(v) {
+    if (v == null) return '—';
+    return v.toLocaleString('en-US', { minimumFractionDigits: v < 100 ? 2 : 0, maximumFractionDigits: v < 100 ? 2 : 0 });
+  }
+  function mktBadge(changePct) {
+    if (changePct == null) return '';
+    const up = changePct >= 0;
+    return `<span class="mkt-badge ${up ? 'up' : 'down'}">${up ? '▲ +' : '▼ '}${changePct.toFixed(2)}%<span>7d</span></span>`;
+  }
+
+  // Finance-style line chart: gridlines, gradient fill, latest-point marker.
+  function mktChart(history, o) {
+    const pts = history.map(p => p.c);
+    if (pts.length < 2) return '';
+    const { w, h, padL, padR, padT, padB, grid, dot, sw, dotR, cls } = o;
+    const min = Math.min(...pts), max = Math.max(...pts), span = (max - min) || 1;
+    const x = i => padL + (w - padL - padR) * (i / (pts.length - 1));
+    const y = v => padT + (h - padT - padB) * (1 - (v - min) / span);
+    const line = pts.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
+    const area = `${line} L${x(pts.length - 1).toFixed(1)},${(h - padB).toFixed(1)} L${x(0).toFixed(1)},${(h - padB).toFixed(1)} Z`;
+    const rising = pts.at(-1) >= pts[0];
+    const col = rising ? 'var(--up)' : 'var(--down)';
+    const rgb = rising ? '22,121,76' : '192,57,43';
+    const uid = 'g' + Math.round(Math.abs(min) + pts.length * 97 + (rising ? 1 : 0));
+    let gridSvg = '';
+    if (grid) for (let g = 0; g <= grid; g++) {
+      const gy = (padT + (h - padT - padB) * g / grid).toFixed(1);
+      gridSvg += `<line x1="${padL}" y1="${gy}" x2="${w - padR}" y2="${gy}" stroke="var(--border)" stroke-width="1"${g && g < grid ? ' stroke-dasharray="2 5"' : ''}/>`;
+    }
+    const dx = x(pts.length - 1).toFixed(1), dy = y(pts.at(-1)).toFixed(1);
+    const dotSvg = dot ? `<circle cx="${dx}" cy="${dy}" r="${(dotR || 3.5) + 3}" fill="rgba(${rgb},0.16)"/><circle cx="${dx}" cy="${dy}" r="${dotR || 3.5}" fill="${col}"/>` : '';
+    return `<svg class="${cls}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
+      <defs><linearGradient id="${uid}" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(${rgb},0.22)"/><stop offset="100%" stop-color="rgba(${rgb},0)"/></linearGradient></defs>
+      ${gridSvg}
+      <path d="${area}" fill="url(#${uid})" stroke="none"/>
+      <path d="${line}" fill="none" stroke="${col}" stroke-width="${sw || 2}" stroke-linejoin="round" stroke-linecap="round"/>
+      ${dotSvg}
+    </svg>`;
+  }
+
+  function mktHeadlineCard(item) {
+    const closes = item.history.map(p => p.c);
+    const hi = Math.max(...closes), lo = Math.min(...closes);
+    const pre = item.unit === 'usd' ? '$' : '';
+    return `<div class="mkt-card">
+      <div class="mkt-card-head">
+        <div><span class="mkt-label">${item.label}</span><div class="mkt-value">${mktFormatValue(item)}</div></div>
+        ${mktBadge(item.changePct)}
+      </div>
+      ${mktChart(item.history, { w: 600, h: 190, padL: 6, padR: 10, padT: 16, padB: 10, grid: 3, dot: true, sw: 2.4, dotR: 4, cls: 'mkt-chart' })}
+      <div class="mkt-foot"><span>30-day trend</span><span>H ${pre}${mktCompact(hi)} · L ${pre}${mktCompact(lo)}</span></div>
+    </div>`;
+  }
+
+  function mktSectorCard(item) {
+    const up = (item.changePct ?? 0) >= 0;
+    return `<div class="sector-card">
+      <div class="sector-top">
+        <span class="sector-label">${item.label}</span>
+        <span class="sector-chg ${up ? 'up' : 'down'}">${up ? '+' : ''}${(item.changePct ?? 0).toFixed(2)}%</span>
+      </div>
+      ${mktChart(item.history, { w: 220, h: 66, padL: 2, padR: 3, padT: 6, padB: 4, grid: 0, dot: false, sw: 1.8, cls: 'sector-spark' })}
+    </div>`;
+  }
+
+  function mktStamp(iso) {
+    const d = new Date(iso);
+    const time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
+    const date = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+    return `Updated hourly · as of ${time} UTC, ${date}`;
+  }
+
+  async function loadMarket() {
+    try {
+      const res = await fetch('/.netlify/functions/get-market');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      document.getElementById('mkt-updated-text').textContent = mktStamp(data.updatedAt);
+      const sectors = [...data.sectors].sort((a, b) => (b.changePct ?? -99) - (a.changePct ?? -99));
+      document.getElementById('mkt-content').innerHTML = `
+        <div class="mkt-grid">${data.headline.map(mktHeadlineCard).join('')}</div>
+        <div class="mkt-sub">Sector Trends — Trailing 7 Days (SPDR Select ETFs)</div>
+        <div class="sector-grid">${sectors.map(mktSectorCard).join('')}</div>`;
+    } catch (e) {
+      document.getElementById('mkt-updated-text').textContent = 'Data unavailable';
+      document.getElementById('mkt-content').innerHTML = '<div class="mkt-state">Couldn\'t load market data right now. Please try again shortly.</div>';
+      console.warn('Could not load market data:', e);
+    }
+  }
+
+  loadMarket();
 
   function shareOnLinkedIn(title, text) {
     const url = encodeURIComponent('https://pollacchini.com');
