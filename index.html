@@ -231,49 +231,49 @@
     /* ── MARKETS ── */
     #markets { background: var(--paper); }
     .mkt-updated {
-      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 40px;
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;
       font-family: var(--font-mono); font-size: 12px; color: var(--muted);
       padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--card);
     }
     .mkt-updated .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
 
-    .mkt-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 22px; }
-    .mkt-card {
-      background: var(--card); border: 1px solid var(--border); border-radius: 16px;
-      padding: 26px 26px 20px; transition: box-shadow .2s, border-color .2s;
-    }
-    .mkt-card:hover { border-color: #cfcbc1; box-shadow: 0 8px 30px rgba(17,17,16,0.06); }
-    .mkt-card-head { display: flex; justify-content: space-between; align-items: flex-start; }
-    .mkt-label { font-size: 13px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 500; }
-    .mkt-value { font-family: var(--font-display); font-weight: 700; font-size: 40px; letter-spacing: -.02em; line-height: 1.05; margin-top: 8px; }
-    .mkt-value .suffix { font-size: 16px; color: var(--muted); font-family: var(--font-body); font-weight: 400; }
-    .mkt-badge { font-family: var(--font-mono); font-size: 14px; padding: 6px 11px; border-radius: 8px; white-space: nowrap; }
-    .mkt-badge span { opacity: .55; font-size: 11px; margin-left: 3px; }
-    .mkt-badge.up { color: var(--up); background: var(--up-bg); }
-    .mkt-badge.down { color: var(--down); background: var(--down-bg); }
-    .mkt-chart { width: 100%; height: auto; display: block; margin-top: 14px; }
-    .mkt-foot { display: flex; justify-content: space-between; gap: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); margin-top: 12px; letter-spacing: .04em; }
-
     .mkt-sub {
       font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--muted); margin: 56px 0 22px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+      color: var(--muted); margin: 48px 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
     }
-    .sector-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 16px; }
-    .sector-card { background: var(--card); border: 1px solid var(--border); border-radius: 12px; padding: 16px 16px 12px; transition: border-color .2s; }
-    .sector-card:hover { border-color: #cfcbc1; }
-    .sector-top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 4px; }
-    .sector-label { font-size: 13px; font-weight: 500; }
-    .sector-chg { font-family: var(--font-mono); font-size: 13px; }
-    .sector-chg.up { color: var(--up); }
-    .sector-chg.down { color: var(--down); }
-    .sector-spark { width: 100%; height: auto; display: block; }
+    .mkt-group:first-of-type .mkt-sub { margin-top: 24px; }
+
+    /* Uniform card grid — every metric renders at the same compact size. */
+    .mkt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 16px; }
+    .mkt-card {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 16px 16px 12px; transition: box-shadow .2s, border-color .2s;
+    }
+    .mkt-card:hover { border-color: #cfcbc1; box-shadow: 0 6px 22px rgba(17,17,16,0.05); }
+    .mkt-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .mkt-label { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 500; line-height: 1.35; }
+    .mkt-value { font-family: var(--font-display); font-weight: 700; font-size: 25px; letter-spacing: -.02em; line-height: 1.1; margin-top: 4px; }
+    .mkt-value .suffix { font-size: 12px; color: var(--muted); font-family: var(--font-body); font-weight: 400; }
+    .mkt-badge { font-family: var(--font-mono); font-size: 12px; padding: 4px 8px; border-radius: 7px; white-space: nowrap; flex-shrink: 0; }
+    .mkt-badge span { opacity: .55; font-size: 10px; margin-left: 2px; }
+    .mkt-badge.up { color: var(--up); background: var(--up-bg); }
+    .mkt-badge.down { color: var(--down); background: var(--down-bg); }
+    .mkt-foot { display: flex; justify-content: space-between; gap: 16px; font-family: var(--font-mono); font-size: 11px; color: var(--muted); letter-spacing: .04em; }
+
+    /* Chart + hover tooltip */
+    .chart-wrap { position: relative; margin-top: 10px; }
+    .chart-wrap svg { width: 100%; height: auto; display: block; cursor: crosshair; -webkit-tap-highlight-color: transparent; }
+    .mkt-axis { font-family: var(--font-mono); fill: var(--muted); }
+    .chart-tip {
+      position: absolute; pointer-events: none; z-index: 5;
+      background: var(--ink); color: var(--paper);
+      font-family: var(--font-mono); font-size: 11px; line-height: 1.4;
+      padding: 5px 8px; border-radius: 6px; white-space: nowrap;
+      transform: translate(-50%, -122%); opacity: 0; transition: opacity .12s;
+    }
+    .chart-tip b { color: var(--yellow); font-weight: 400; }
 
     .mkt-state { color: var(--muted); padding: 40px 0; font-size: 15px; }
-    @media (max-width: 900px) {
-      .mkt-grid { grid-template-columns: 1fr; }
-      .sector-grid { grid-template-columns: repeat(2, 1fr); }
-      .mkt-value { font-size: 34px; }
-    }
 
     /* ── ABOUT ── */
     #about { background: var(--card); border-top: 1px solid var(--border); }
@@ -746,7 +746,9 @@
   loadContent();
 
   // ── MARKETS ──
-  function mktFormatValue(item) {
+  const MKT = { W: 300, H: 156, padL: 40, padR: 10, padT: 12, padB: 20 };
+
+  function mktValue(item) {
     const v = item.current;
     if (v == null) return '—';
     if (item.unit === 'percent') return v.toFixed(2) + '%';
@@ -754,76 +756,109 @@
     if (item.unit === 'usd') return `$${n}<span class="suffix">${item.suffix || ''}</span>`;
     return n;
   }
-  function mktCompact(v) {
-    if (v == null) return '—';
-    return v.toLocaleString('en-US', { minimumFractionDigits: v < 100 ? 2 : 0, maximumFractionDigits: v < 100 ? 2 : 0 });
+  function mktNum(v, item) {
+    if (item.unit === 'percent') return v.toFixed(2) + '%';
+    return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
-  function mktBadge(changePct) {
-    if (changePct == null) return '';
-    const up = changePct >= 0;
-    return `<span class="mkt-badge ${up ? 'up' : 'down'}">${up ? '▲ +' : '▼ '}${changePct.toFixed(2)}%<span>7d</span></span>`;
+  function mktAxisNum(v, item) {
+    if (item.unit === 'percent') return v.toFixed(2);
+    if (Math.abs(v) >= 1000) return Math.round(v).toLocaleString('en-US');
+    return v.toFixed(2);
   }
-
-  // Finance-style line chart: gridlines, gradient fill, latest-point marker.
-  function mktChart(history, o) {
-    const pts = history.map(p => p.c);
-    if (pts.length < 2) return '';
-    const { w, h, padL, padR, padT, padB, grid, dot, sw, dotR, cls } = o;
-    const min = Math.min(...pts), max = Math.max(...pts), span = (max - min) || 1;
-    const x = i => padL + (w - padL - padR) * (i / (pts.length - 1));
-    const y = v => padT + (h - padT - padB) * (1 - (v - min) / span);
-    const line = pts.map((v, i) => `${i ? 'L' : 'M'}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join(' ');
-    const area = `${line} L${x(pts.length - 1).toFixed(1)},${(h - padB).toFixed(1)} L${x(0).toFixed(1)},${(h - padB).toFixed(1)} Z`;
-    const rising = pts.at(-1) >= pts[0];
-    const col = rising ? 'var(--up)' : 'var(--down)';
-    const rgb = rising ? '22,121,76' : '192,57,43';
-    const uid = 'g' + Math.round(Math.abs(min) + pts.length * 97 + (rising ? 1 : 0));
-    let gridSvg = '';
-    if (grid) for (let g = 0; g <= grid; g++) {
-      const gy = (padT + (h - padT - padB) * g / grid).toFixed(1);
-      gridSvg += `<line x1="${padL}" y1="${gy}" x2="${w - padR}" y2="${gy}" stroke="var(--border)" stroke-width="1"${g && g < grid ? ' stroke-dasharray="2 5"' : ''}/>`;
-    }
-    const dx = x(pts.length - 1).toFixed(1), dy = y(pts.at(-1)).toFixed(1);
-    const dotSvg = dot ? `<circle cx="${dx}" cy="${dy}" r="${(dotR || 3.5) + 3}" fill="rgba(${rgb},0.16)"/><circle cx="${dx}" cy="${dy}" r="${dotR || 3.5}" fill="${col}"/>` : '';
-    return `<svg class="${cls}" viewBox="0 0 ${w} ${h}" preserveAspectRatio="xMidYMid meet" role="img" aria-hidden="true">
-      <defs><linearGradient id="${uid}" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(${rgb},0.22)"/><stop offset="100%" stop-color="rgba(${rgb},0)"/></linearGradient></defs>
-      ${gridSvg}
-      <path d="${area}" fill="url(#${uid})" stroke="none"/>
-      <path d="${line}" fill="none" stroke="${col}" stroke-width="${sw || 2}" stroke-linejoin="round" stroke-linecap="round"/>
-      ${dotSvg}
-    </svg>`;
+  function mktDate(ts) {
+    return new Date(ts * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
   }
-
-  function mktHeadlineCard(item) {
-    const closes = item.history.map(p => p.c);
-    const hi = Math.max(...closes), lo = Math.min(...closes);
-    const pre = item.unit === 'usd' ? '$' : '';
-    return `<div class="mkt-card">
-      <div class="mkt-card-head">
-        <div><span class="mkt-label">${item.label}</span><div class="mkt-value">${mktFormatValue(item)}</div></div>
-        ${mktBadge(item.changePct)}
-      </div>
-      ${mktChart(item.history, { w: 600, h: 190, padL: 6, padR: 10, padT: 16, padB: 10, grid: 3, dot: true, sw: 2.4, dotR: 4, cls: 'mkt-chart' })}
-      <div class="mkt-foot"><span>30-day trend</span><span>H ${pre}${mktCompact(hi)} · L ${pre}${mktCompact(lo)}</span></div>
-    </div>`;
-  }
-
-  function mktSectorCard(item) {
-    const up = (item.changePct ?? 0) >= 0;
-    return `<div class="sector-card">
-      <div class="sector-top">
-        <span class="sector-label">${item.label}</span>
-        <span class="sector-chg ${up ? 'up' : 'down'}">${up ? '+' : ''}${(item.changePct ?? 0).toFixed(2)}%</span>
-      </div>
-      ${mktChart(item.history, { w: 220, h: 66, padL: 2, padR: 3, padT: 6, padB: 4, grid: 0, dot: false, sw: 1.8, cls: 'sector-spark' })}
-    </div>`;
-  }
-
   function mktStamp(iso) {
     const d = new Date(iso);
     const time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
     const date = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
     return `Updated hourly · as of ${time} UTC, ${date}`;
+  }
+
+  // Interactive line chart with x/y axis labels and a hover tooltip.
+  function buildChart(item) {
+    const { W, H, padL, padR, padT, padB } = MKT;
+    const hist = item.history, pts = hist.map(p => p.c);
+    const wrap = document.createElement('div');
+    wrap.className = 'chart-wrap';
+    if (pts.length < 2) { wrap.innerHTML = ''; return wrap; }
+
+    const min = Math.min(...pts), max = Math.max(...pts), span = (max - min) || 1;
+    const X = i => padL + (W - padL - padR) * (i / (pts.length - 1));
+    const Y = v => padT + (H - padT - padB) * (1 - (v - min) / span);
+    const rising = pts.at(-1) >= pts[0];
+    const col = rising ? 'var(--up)' : 'var(--down)';
+    const rgb = rising ? '22,121,76' : '192,57,43';
+    const uid = 'g' + item.symbol.replace(/[^a-z0-9]/gi, '');
+
+    const line = pts.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+    const area = `${line} L${X(pts.length - 1).toFixed(1)},${(H - padB).toFixed(1)} L${X(0).toFixed(1)},${(H - padB).toFixed(1)} Z`;
+
+    // Y axis: max / mid / min gridlines + labels.
+    const yv = [max, (max + min) / 2, min];
+    const yAxis = yv.map((v, k) => {
+      const gy = Y(v).toFixed(1);
+      return `<line x1="${padL}" y1="${gy}" x2="${W - padR}" y2="${gy}" stroke="var(--border)" stroke-width="1"${k === 1 ? ' stroke-dasharray="2 4"' : ''}/>`
+        + `<text class="mkt-axis" x="${padL - 5}" y="${(+gy + 3).toFixed(1)}" text-anchor="end" font-size="8.5">${mktAxisNum(v, item)}</text>`;
+    }).join('');
+
+    // X axis: first / mid / last dates.
+    const xi = [0, Math.floor((pts.length - 1) / 2), pts.length - 1];
+    const xAxis = xi.map((i, k) => {
+      const anchor = k === 0 ? 'start' : k === 2 ? 'end' : 'middle';
+      return `<text class="mkt-axis" x="${X(i).toFixed(1)}" y="${H - 6}" text-anchor="${anchor}" font-size="8.5">${mktDate(hist[i].t)}</text>`;
+    }).join('');
+
+    const dx = X(pts.length - 1).toFixed(1), dy = Y(pts.at(-1)).toFixed(1);
+    wrap.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${item.label} 30-day trend">
+      <defs><linearGradient id="${uid}" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(${rgb},0.22)"/><stop offset="100%" stop-color="rgba(${rgb},0)"/></linearGradient></defs>
+      ${yAxis}${xAxis}
+      <path d="${area}" fill="url(#${uid})" stroke="none"/>
+      <path d="${line}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${dx}" cy="${dy}" r="6" fill="rgba(${rgb},0.16)"/><circle cx="${dx}" cy="${dy}" r="3" fill="${col}"/>
+      <line class="xh" x1="0" y1="${padT}" x2="0" y2="${H - padB}" stroke="${col}" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+      <circle class="xh-dot" r="3.5" fill="${col}" stroke="var(--card)" stroke-width="1.5" opacity="0"/>
+    </svg><div class="chart-tip"></div>`;
+
+    const svg = wrap.querySelector('svg');
+    const xh = wrap.querySelector('.xh'), xhDot = wrap.querySelector('.xh-dot'), tip = wrap.querySelector('.chart-tip');
+    const pre = item.unit === 'usd' ? '$' : '';
+
+    function move(clientX) {
+      const r = svg.getBoundingClientRect();
+      const vx = (clientX - r.left) / r.width * W;
+      let i = Math.round((vx - padL) / (W - padL - padR) * (pts.length - 1));
+      i = Math.max(0, Math.min(pts.length - 1, i));
+      const cx = X(i), cy = Y(pts[i]);
+      xh.setAttribute('x1', cx); xh.setAttribute('x2', cx); xh.setAttribute('opacity', '0.6');
+      xhDot.setAttribute('cx', cx); xhDot.setAttribute('cy', cy); xhDot.setAttribute('opacity', '1');
+      tip.innerHTML = `${mktDate(hist[i].t)} · <b>${pre}${mktNum(pts[i], item)}</b>`;
+      tip.style.left = (cx / W * 100) + '%';
+      tip.style.top = (cy / H * 100) + '%';
+      tip.style.opacity = '1';
+    }
+    function leave() {
+      xh.setAttribute('opacity', '0'); xhDot.setAttribute('opacity', '0'); tip.style.opacity = '0';
+    }
+    svg.addEventListener('mousemove', e => move(e.clientX));
+    svg.addEventListener('mouseleave', leave);
+    svg.addEventListener('touchmove', e => { if (e.touches[0]) move(e.touches[0].clientX); }, { passive: true });
+    svg.addEventListener('touchend', leave);
+    return wrap;
+  }
+
+  function mktCard(item) {
+    const card = document.createElement('div');
+    card.className = 'mkt-card';
+    const up = (item.changePct ?? 0) >= 0;
+    const badge = item.changePct == null ? ''
+      : `<span class="mkt-badge ${up ? 'up' : 'down'}">${up ? '▲ +' : '▼ '}${item.changePct.toFixed(2)}%<span>7d</span></span>`;
+    const head = document.createElement('div');
+    head.className = 'mkt-card-head';
+    head.innerHTML = `<div><div class="mkt-label">${item.label}</div><div class="mkt-value">${mktValue(item)}</div></div>${badge}`;
+    card.appendChild(head);
+    card.appendChild(buildChart(item));
+    return card;
   }
 
   async function loadMarket() {
@@ -832,11 +867,31 @@
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
       document.getElementById('mkt-updated-text').textContent = mktStamp(data.updatedAt);
-      const sectors = [...data.sectors].sort((a, b) => (b.changePct ?? -99) - (a.changePct ?? -99));
-      document.getElementById('mkt-content').innerHTML = `
-        <div class="mkt-grid">${data.headline.map(mktHeadlineCard).join('')}</div>
-        <div class="mkt-sub">Sector Trends — Trailing 7 Days (SPDR Select ETFs)</div>
-        <div class="sector-grid">${sectors.map(mktSectorCard).join('')}</div>`;
+      const root = document.getElementById('mkt-content');
+      root.innerHTML = '';
+      for (const g of data.groups) {
+        const items = g.key === 'sectors'
+          ? [...g.items].sort((a, b) => (b.changePct ?? -99) - (a.changePct ?? -99))
+          : g.items;
+        const group = document.createElement('div');
+        group.className = 'mkt-group';
+        const sub = document.createElement('div');
+        sub.className = 'mkt-sub';
+        sub.textContent = g.label;
+        group.appendChild(sub);
+        const grid = document.createElement('div');
+        grid.className = 'mkt-grid';
+        items.forEach(it => grid.appendChild(mktCard(it)));
+        group.appendChild(grid);
+        root.appendChild(group);
+      }
+      if (data.failed && data.failed.length) {
+        const p = document.createElement('p');
+        p.className = 'mkt-foot';
+        p.style.cssText = 'color:var(--down);margin-top:20px;';
+        p.textContent = 'Temporarily unavailable: ' + data.failed.join(', ');
+        root.appendChild(p);
+      }
     } catch (e) {
       document.getElementById('mkt-updated-text').textContent = 'Data unavailable';
       document.getElementById('mkt-content').innerHTML = '<div class="mkt-state">Couldn\'t load market data right now. Please try again shortly.</div>';

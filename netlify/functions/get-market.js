@@ -1,5 +1,5 @@
 // netlify/functions/get-market.js
-// Fetches live market data from Yahoo Finance for the /dashboard page.
+// Fetches live market data from Yahoo Finance for the homepage Markets section.
 // Dependency-free (native fetch, ESM handler) to match the other functions.
 //
 // Freshness: the response carries `s-maxage=3600`, so Netlify's CDN serves a
@@ -15,33 +15,51 @@ const RANGE = "1mo";
 const INTERVAL = "1d";
 const SEVEN_DAYS = 7 * 24 * 60 * 60; // seconds — change window
 
-// ── Symbol config ── the ONLY place tickers/labels/units live.
-// Add a metric here and both the API and the page pick it up. `unit`:
-//   "index"   → plain number, 2 decimals            (S&P, Nasdaq)
-//   "usd"     → $ prefix                             (Bitcoin, Gold, Brent)
-//   "percent" → value is already a percentage yield  (10Y)
-const HEADLINE = [
-  { symbol: "^GSPC",   label: "S&P 500",     unit: "index" },
-  { symbol: "^IXIC",   label: "Nasdaq",      unit: "index" },
-  { symbol: "BTC-USD", label: "Bitcoin",     unit: "usd"   },
-  { symbol: "GC=F",    label: "Gold",        unit: "usd", suffix: "/oz"  },
-  { symbol: "BZ=F",    label: "Brent Crude", unit: "usd", suffix: "/bbl" },
-  { symbol: "^TNX",    label: "US 10Y Yield", unit: "percent" },
+// ── Symbol config ── the ONLY place tickers/labels/units/groups live.
+// Add a metric here and the API + page pick it up automatically.
+//   unit "index"   → plain number, 2 decimals       (indices)
+//   unit "usd"     → $ prefix (+ optional suffix)    (ETFs, commodities, crypto)
+//   unit "percent" → value is already a % yield       (10Y)
+//   cat            → which group the card renders under (see GROUPS below)
+const SYMBOLS = [
+  // Markets — broad equity indices, global
+  { symbol: "^GSPC",   label: "S&P 500",            unit: "index", cat: "markets" },
+  { symbol: "^IXIC",   label: "Nasdaq",             unit: "index", cat: "markets" },
+  { symbol: "^STOXX",  label: "STOXX Europe 600",   unit: "index", cat: "markets" },
+  { symbol: "^N225",   label: "Nikkei 225 · Asia",  unit: "index", cat: "markets" },
+  { symbol: "EEM",     label: "MSCI Emerging Mkts", unit: "usd",   cat: "markets" },
+
+  // Commodities
+  { symbol: "GC=F",    label: "Gold",        unit: "usd", suffix: "/oz",  cat: "commodities" },
+  { symbol: "BZ=F",    label: "Brent Crude", unit: "usd", suffix: "/bbl", cat: "commodities" },
+
+  // Crypto
+  { symbol: "BTC-USD", label: "Bitcoin",     unit: "usd", cat: "crypto" },
+
+  // Rates
+  { symbol: "^TNX",    label: "US 10Y Yield", unit: "percent", cat: "rates" },
+
+  // Sectors — SPDR select-sector ETFs
+  { symbol: "XLK",  label: "Technology",       unit: "usd", cat: "sectors" },
+  { symbol: "XLV",  label: "Health Care",      unit: "usd", cat: "sectors" },
+  { symbol: "XLF",  label: "Financials",       unit: "usd", cat: "sectors" },
+  { symbol: "XLY",  label: "Consumer Disc.",   unit: "usd", cat: "sectors" },
+  { symbol: "XLC",  label: "Communication",    unit: "usd", cat: "sectors" },
+  { symbol: "XLI",  label: "Industrials",      unit: "usd", cat: "sectors" },
+  { symbol: "XLP",  label: "Consumer Staples", unit: "usd", cat: "sectors" },
+  { symbol: "XLE",  label: "Energy",           unit: "usd", cat: "sectors" },
+  { symbol: "XLU",  label: "Utilities",        unit: "usd", cat: "sectors" },
+  { symbol: "XLRE", label: "Real Estate",      unit: "usd", cat: "sectors" },
+  { symbol: "XLB",  label: "Materials",        unit: "usd", cat: "sectors" },
 ];
 
-// SPDR sector ETFs — the "industries trend" heatmap.
-const SECTORS = [
-  { symbol: "XLK",  label: "Technology" },
-  { symbol: "XLV",  label: "Health Care" },
-  { symbol: "XLF",  label: "Financials" },
-  { symbol: "XLY",  label: "Consumer Disc." },
-  { symbol: "XLC",  label: "Communication" },
-  { symbol: "XLI",  label: "Industrials" },
-  { symbol: "XLP",  label: "Consumer Staples" },
-  { symbol: "XLE",  label: "Energy" },
-  { symbol: "XLU",  label: "Utilities" },
-  { symbol: "XLRE", label: "Real Estate" },
-  { symbol: "XLB",  label: "Materials" },
+// Group order + display labels for the page.
+const GROUPS = [
+  { key: "markets",     label: "Markets — Global Equity Indices" },
+  { key: "commodities", label: "Commodities" },
+  { key: "crypto",      label: "Crypto" },
+  { key: "rates",       label: "Rates" },
+  { key: "sectors",     label: "Sectors — SPDR Select ETFs" },
 ];
 
 async function fetchSymbol(cfg) {
@@ -82,42 +100,38 @@ async function fetchSymbol(cfg) {
     label: cfg.label,
     unit: cfg.unit || "index",
     suffix: cfg.suffix || "",
+    cat: cfg.cat,
     current,
     changePct: changePct != null ? Number(changePct.toFixed(2)) : null,
     history,
   };
 }
 
-async function fetchGroup(configs) {
-  const settled = await Promise.allSettled(configs.map(fetchSymbol));
-  const ok = [];
-  const failed = [];
-  settled.forEach((r, i) => {
-    if (r.status === "fulfilled") ok.push(r.value);
-    else { failed.push(configs[i].symbol); console.error("get-market:", r.reason?.message); }
-  });
-  return { ok, failed };
-}
-
 export const handler = async () => {
   try {
-    const [headline, sectors] = await Promise.all([
-      fetchGroup(HEADLINE),
-      fetchGroup(SECTORS),
-    ]);
+    const settled = await Promise.allSettled(SYMBOLS.map(fetchSymbol));
+    const ok = [];
+    const failed = [];
+    settled.forEach((r, i) => {
+      if (r.status === "fulfilled") ok.push(r.value);
+      else { failed.push(SYMBOLS[i].symbol); console.error("get-market:", r.reason?.message); }
+    });
+
+    // Bucket into groups, preserving GROUPS order; drop empty groups.
+    const groups = GROUPS
+      .map(g => ({ key: g.key, label: g.label, items: ok.filter(it => it.cat === g.key) }))
+      .filter(g => g.items.length);
 
     return {
       statusCode: 200,
       headers: {
         "Content-Type": "application/json",
-        // 1h fresh at the CDN, plus a day of stale-while-revalidate as a safety net.
         "Cache-Control": "public, s-maxage=3600, stale-while-revalidate=86400",
       },
       body: JSON.stringify({
         updatedAt: new Date().toISOString(),
-        headline: headline.ok,
-        sectors: sectors.ok,
-        failed: [...headline.failed, ...sectors.failed],
+        groups,
+        failed,
       }),
     };
   } catch (err) {
