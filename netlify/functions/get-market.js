@@ -27,17 +27,19 @@ const SYMBOLS = [
   { symbol: "^IXIC",   label: "Nasdaq",             unit: "index", cat: "markets" },
   { symbol: "^STOXX",  label: "STOXX Europe 600",   unit: "index", cat: "markets" },
   { symbol: "^N225",   label: "Nikkei 225 · Asia",  unit: "index", cat: "markets" },
-  { symbol: "EEM",     label: "MSCI Emerging Mkts", unit: "usd",   cat: "markets" },
+  { symbol: "^BVSP",   label: "Bovespa · Brazil",   unit: "index", cat: "markets" },
 
-  // Commodities
+  // Commodities (incl. crypto)
   { symbol: "GC=F",    label: "Gold",        unit: "usd", suffix: "/oz",  cat: "commodities" },
+  { symbol: "SI=F",    label: "Silver",      unit: "usd", suffix: "/oz",  cat: "commodities" },
+  { symbol: "HG=F",    label: "Copper",      unit: "usd", suffix: "/lb",  cat: "commodities" },
   { symbol: "BZ=F",    label: "Brent Crude", unit: "usd", suffix: "/bbl", cat: "commodities" },
+  { symbol: "BTC-USD", label: "Bitcoin",     unit: "usd", cat: "commodities" },
 
-  // Crypto
-  { symbol: "BTC-USD", label: "Bitcoin",     unit: "usd", cat: "crypto" },
-
-  // Rates
+  // Rates — US Treasury yields
+  { symbol: "2YY=F",   label: "US 2Y Yield",  unit: "percent", cat: "rates" },
   { symbol: "^TNX",    label: "US 10Y Yield", unit: "percent", cat: "rates" },
+  { symbol: "^TYX",    label: "US 30Y Yield", unit: "percent", cat: "rates" },
 
   // Sectors — SPDR select-sector ETFs
   { symbol: "XLK",  label: "Technology",       unit: "usd", cat: "sectors" },
@@ -57,8 +59,7 @@ const SYMBOLS = [
 const GROUPS = [
   { key: "markets",     label: "Markets — Global Equity Indices" },
   { key: "commodities", label: "Commodities" },
-  { key: "crypto",      label: "Crypto" },
-  { key: "rates",       label: "Rates" },
+  { key: "rates",       label: "Rates — US Treasury Yields" },
   { key: "sectors",     label: "Sectors — SPDR Select ETFs" },
 ];
 
