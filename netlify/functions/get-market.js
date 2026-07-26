@@ -84,7 +84,13 @@ const INFO = {
   "COPPER_GOLD": "Copper (which rises when growth is strong) divided by gold (which rises when people are fearful). Together they make a simple 'growth vs. fear' gauge: rising means optimism, falling means caution.",
   "COPPER_BRENT": "Copper compared with oil — two things that both get more expensive when the economy is strong. Looking at them together helps show whether growth is genuinely strong, or whether prices are just being pushed up by costly energy.",
   "^VIX": "Often called the market's 'fear gauge.' It measures how big a swing investors expect in the stock market over the next month. Low means calm and confident; a spike means fear — and when fear is high, it gets harder to raise money or get deals done.",
+  "EU_HICP": "Eurozone inflation — how much prices for everyday goods and services have risen over the past year across the countries that use the euro. It's the number the European Central Bank tries to keep near 2%, and it drives interest-rate decisions, pay expectations, and how fast your own costs and prices move. Official figure, updated monthly.",
+  "EU_HICP_CORE": "The same Eurozone inflation, but leaving out food and energy — the parts that jump around a lot month to month. Stripping them out shows the steadier underlying trend, which is what central banks watch most closely when deciding where interest rates go next. Official figure, updated monthly.",
 };
+
+// Eurozone inflation (HICP, annual % change) from the ECB — official, monthly.
+const ECB_BASE = "https://data-api.ecb.europa.eu/service/data/ICP/";
+const ECB_SERIES = { headline: "M.U2.N.000000.4.ANR", core: "M.U2.N.XEF000.4.ANR" };
 
 // Fetch JSON with a hard per-request timeout + one retry. Without the timeout,
 // a single hanging Yahoo request would stall the whole function past Netlify's
@@ -196,7 +202,7 @@ function deriveCurve(ten, two, meta) {
   const current = Number(((ten.current - two.current) * 100).toFixed(1));
   const changes = {};
   for (const [k, days] of Object.entries(WINDOWS)) changes[k] = absChange(history, current, days);
-  return { symbol: meta.symbol, label: meta.label, info: meta.info, unit: "bps", changeAbs: true, cat: meta.cat, current, changePct: changes.d30, changes, history };
+  return { symbol: meta.symbol, label: meta.label, info: meta.info, unit: "bps", changeAbs: true, changeUnit: "bps", cat: meta.cat, current, changePct: changes.d30, changes, history };
 }
 
 // Commodity ratio (growth-vs-fear barometer); change shown as %. Scaled to a
@@ -212,9 +218,56 @@ function deriveRatio(num, den, meta, scale = 1) {
   return { symbol: meta.symbol, label: meta.label, info: meta.info, unit: "ratio", cat: meta.cat, current, changePct: changes.d30, changes, history };
 }
 
+// Fetch an ECB monthly series → [{ month: "2025-12", value: 1.9 }] ascending.
+async function fetchEcbMonthly(seriesKey) {
+  const json = await fetchJson(`${ECB_BASE}${seriesKey}?format=jsondata&lastNObservations=18`);
+  const series = Object.values(json.dataSets[0].series)[0];
+  const times = json.structure.dimensions.observation[0].values.map(v => v.id || v.name);
+  const obs = series.observations;
+  const out = [];
+  for (const k of Object.keys(obs)) {
+    const v = obs[k]?.[0];
+    if (v != null) out.push({ month: times[k], value: Number(v) });
+  }
+  return out.sort((a, b) => (a.month < b.month ? -1 : 1));
+}
+
+function monthKey(ts) {
+  const d = new Date(ts * 1000);
+  return `${d.getUTCFullYear()}-${String(d.getUTCMonth() + 1).padStart(2, "0")}`;
+}
+
+// Turn a monthly series into a daily step series aligned to a reference (market)
+// series' trading days: each day carries the latest print for its month, so the
+// chart is flat within a month and steps when a new month's figure lands.
+function buildInflation(monthly, ref, meta) {
+  if (!monthly || monthly.length < 2 || !ref || !ref.history.length) return null;
+  const byMonth = new Map(monthly.map(m => [m.month, m.value]));
+  const monthsAsc = monthly.map(m => m.month);
+  const latestFor = mk => {
+    let v = null;
+    for (const m of monthsAsc) { if (m <= mk) v = byMonth.get(m); else break; }
+    return v;
+  };
+  const history = [];
+  for (const p of ref.history) {
+    const v = latestFor(monthKey(p.t));
+    if (v != null) history.push({ t: p.t, c: v });
+  }
+  if (history.length < 2) return null;
+  const current = history.at(-1).c;
+  const changes = {};
+  for (const [k, days] of Object.entries(WINDOWS)) changes[k] = absChange(history, current, days);
+  return { symbol: meta.symbol, label: meta.label, info: meta.info, unit: "percent", changeAbs: true, changeUnit: "pp", cat: "macro", current, changePct: changes.d30, changes, history };
+}
+
 export const handler = async () => {
   try {
-    const settled = await Promise.allSettled(SYMBOLS.map(fetchSymbol));
+    const [settled, ecbHead, ecbCore] = await Promise.all([
+      Promise.allSettled(SYMBOLS.map(fetchSymbol)),
+      fetchEcbMonthly(ECB_SERIES.headline).catch(() => null),
+      fetchEcbMonthly(ECB_SERIES.core).catch(() => null),
+    ]);
     const ok = [];
     const failed = [];
     settled.forEach((r, i) => {
@@ -230,6 +283,12 @@ export const handler = async () => {
     if (cgRatio) ok.push(cgRatio); else failed.push("COPPER_GOLD");
     const cbRatio = deriveRatio(bySym["HG=F"], bySym["BZ=F"], { symbol: "COPPER_BRENT", label: "Copper / Brent", cat: "macro", info: INFO.COPPER_BRENT }, 100);
     if (cbRatio) ok.push(cbRatio); else failed.push("COPPER_BRENT");
+
+    // Eurozone inflation (ECB, monthly) forward-filled onto S&P trading days.
+    const infH = buildInflation(ecbHead, bySym["^GSPC"], { symbol: "EU_HICP", label: "EU Inflation", info: INFO.EU_HICP });
+    if (infH) ok.push(infH); else failed.push("EU_HICP");
+    const infC = buildInflation(ecbCore, bySym["^GSPC"], { symbol: "EU_HICP_CORE", label: "EU Core Inflation", info: INFO.EU_HICP_CORE });
+    if (infC) ok.push(infC); else failed.push("EU_HICP_CORE");
 
     // Bucket into groups, preserving GROUPS order; drop empty groups.
     // (Items with cat "hidden", e.g. copper, match no group and drop out.)

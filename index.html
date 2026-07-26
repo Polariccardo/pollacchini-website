@@ -898,11 +898,13 @@
     if (Math.abs(v) >= 1000) return Math.round(v).toLocaleString('en-US');
     return v.toFixed(2);
   }
-  // Change badge/table cell: absolute (bps) for spread metrics, else %.
+  // Change badge/table cell: absolute (bps / pp) for spread & rate metrics, else %.
   function fmtChange(item, val) {
     if (item.changeAbs) {
+      const u = item.changeUnit || 'bps';
       if (val == null) return { cls: 'flat', t: '—' };
-      return { cls: val >= 0 ? 'up' : 'down', t: (val >= 0 ? '▲ +' : '▼ ') + Math.abs(val) + ' bps' };
+      if (val === 0) return { cls: 'flat', t: '±0 ' + u };
+      return { cls: val > 0 ? 'up' : 'down', t: (val > 0 ? '▲ +' : '▼ ') + Math.abs(val) + ' ' + u };
     }
     return fmtPct(val);
   }
@@ -917,7 +919,8 @@
   }
   function fmtPct(pct) {
     if (pct == null) return { cls: 'flat', t: '—' };
-    return { cls: pct >= 0 ? 'up' : 'down', t: (pct >= 0 ? '▲ +' : '▼ ') + Math.abs(pct).toFixed(2) + '%' };
+    if (pct === 0) return { cls: 'flat', t: '±0.00%' };
+    return { cls: pct > 0 ? 'up' : 'down', t: (pct > 0 ? '▲ +' : '▼ ') + Math.abs(pct).toFixed(2) + '%' };
   }
 
   // Slice full history to the selected window (min 2 points so a line always draws).
