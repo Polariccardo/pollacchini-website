@@ -21,27 +21,29 @@ const WINDOWS = { d1: 1, d7: 7, d30: 30, m3: 91, m6: 182, m12: 365 };
 // Add a metric here and the API + page pick it up automatically.
 //   unit "index"   → plain number, 2 decimals       (indices)
 //   unit "usd"     → $ prefix (+ optional suffix)    (ETFs, commodities, crypto)
-//   unit "percent" → value is already a % yield       (10Y)
-//   cat            → which group the card renders under (see GROUPS below)
+//   unit "percent" → value is already a % yield       (yields)
+//   unit "fx"      → 4-decimal rate, no symbol         (EUR/USD)
+//   unit "bps"     → basis points, absolute change     (2s10s curve — derived)
+//   unit "ratio"   → plain ratio, % change             (copper/gold — derived)
+//   cat "hidden"   → fetched but not displayed (feeds a derived metric)
 const SYMBOLS = [
-  // Markets — broad equity indices, global
-  { symbol: "^GSPC",   label: "S&P 500",            unit: "index", cat: "markets" },
-  { symbol: "^IXIC",   label: "Nasdaq",             unit: "index", cat: "markets" },
-  { symbol: "^STOXX",  label: "STOXX Europe 600",   unit: "index", cat: "markets" },
-  { symbol: "^N225",   label: "Nikkei 225 · Asia",  unit: "index", cat: "markets" },
-  { symbol: "^BVSP",   label: "Bovespa · Brazil",   unit: "index", cat: "markets" },
+  // Cost of Capital — yields + credit
+  { symbol: "2YY=F", label: "US 2Y Yield",  unit: "percent", cat: "cost-of-capital" },
+  { symbol: "^TNX",  label: "US 10Y Yield", unit: "percent", cat: "cost-of-capital" },
+  { symbol: "^TYX",  label: "US 30Y Yield", unit: "percent", cat: "cost-of-capital" },
+  { symbol: "HYG",   label: "High-Yield Credit",       unit: "usd", cat: "cost-of-capital" },
+  { symbol: "LQD",   label: "Investment-Grade Credit", unit: "usd", cat: "cost-of-capital" },
 
-  // Commodities (incl. crypto)
-  { symbol: "GC=F",    label: "Gold",        unit: "usd", suffix: "/oz",  cat: "commodities" },
-  { symbol: "SI=F",    label: "Silver",      unit: "usd", suffix: "/oz",  cat: "commodities" },
-  { symbol: "HG=F",    label: "Copper",      unit: "usd", suffix: "/lb",  cat: "commodities" },
-  { symbol: "BZ=F",    label: "Brent Crude", unit: "usd", suffix: "/bbl", cat: "commodities" },
-  { symbol: "BTC-USD", label: "Bitcoin",     unit: "usd", cat: "commodities" },
+  // Macro
+  { symbol: "^GSPC",    label: "S&P 500",          unit: "index", cat: "macro" },
+  { symbol: "^STOXX",   label: "STOXX Europe 600", unit: "index", cat: "macro" },
+  { symbol: "GC=F",     label: "Gold",             unit: "usd", suffix: "/oz",  cat: "macro" },
+  { symbol: "BZ=F",     label: "Brent Crude",      unit: "usd", suffix: "/bbl", cat: "macro" },
+  { symbol: "BTC-USD",  label: "Bitcoin",          unit: "usd", cat: "macro" },
+  { symbol: "EURUSD=X", label: "EUR / USD",        unit: "fx",  cat: "macro" },
 
-  // Rates — US Treasury yields
-  { symbol: "2YY=F",   label: "US 2Y Yield",  unit: "percent", cat: "rates" },
-  { symbol: "^TNX",    label: "US 10Y Yield", unit: "percent", cat: "rates" },
-  { symbol: "^TYX",    label: "US 30Y Yield", unit: "percent", cat: "rates" },
+  // Fetched only to feed the copper/gold ratio (not shown on its own).
+  { symbol: "HG=F", label: "Copper", unit: "usd", suffix: "/lb", cat: "hidden" },
 
   // Sectors — SPDR select-sector ETFs
   { symbol: "XLK",  label: "Technology",       unit: "usd", cat: "sectors" },
@@ -59,10 +61,9 @@ const SYMBOLS = [
 
 // Group order + display labels for the page.
 const GROUPS = [
-  { key: "markets",     label: "Markets — Global Equity Indices" },
-  { key: "commodities", label: "Commodities" },
-  { key: "rates",       label: "Rates — US Treasury Yields" },
-  { key: "sectors",     label: "Sectors — SPDR Select ETFs" },
+  { key: "cost-of-capital", label: "Cost of Capital" },
+  { key: "macro",           label: "Macro" },
+  { key: "sectors",         label: "Sectors — SPDR Select ETFs" },
 ];
 
 // Fetch JSON with a hard per-request timeout + one retry. Without the timeout,
@@ -139,6 +140,58 @@ function pctChange(history, current, days) {
   return Number(((current - base) / base * 100).toFixed(2));
 }
 
+// Absolute change (current − past), in the series' own units. Used for spreads
+// where a percentage change would be meaningless (e.g. a 0.5→0.6pp curve move).
+function absChange(history, current, days) {
+  if (current == null || !history.length) return null;
+  const cutoff = history.at(-1).t - days * DAY;
+  let base = history[0].c;
+  for (let i = history.length - 1; i >= 0; i--) {
+    if (history[i].t <= cutoff) { base = history[i].c; break; }
+  }
+  return Number((current - base).toFixed(1));
+}
+
+// Pair two series by calendar day → [{t, a, b}]. Day-bucketing (not exact
+// timestamp) is required because different exchanges stamp their daily bars at
+// different times (e.g. ^TNX vs the 2Y yield future).
+function align(a, b) {
+  if (!a || !b) return [];
+  const bMap = new Map(b.history.map(p => [Math.floor(p.t / DAY), p.c]));
+  const out = [];
+  for (const p of a.history) {
+    const bc = bMap.get(Math.floor(p.t / DAY));
+    if (bc != null) out.push({ t: p.t, a: p.c, b: bc });
+  }
+  return out;
+}
+
+// 2s10s curve = 10Y − 2Y, expressed in basis points; change shown absolutely.
+function deriveCurve(ten, two, meta) {
+  if (!ten || !two || ten.current == null || two.current == null) return null;
+  const al = align(ten, two);
+  if (al.length < 2) return null;
+  const history = al.map(x => ({ t: x.t, c: Number(((x.a - x.b) * 100).toFixed(1)) }));
+  const current = Number(((ten.current - two.current) * 100).toFixed(1));
+  const changes = {};
+  for (const [k, days] of Object.entries(WINDOWS)) changes[k] = absChange(history, current, days);
+  return { symbol: meta.symbol, label: meta.label, unit: "bps", changeAbs: true, cat: meta.cat, current, changePct: changes.d30, changes, history };
+}
+
+// Copper/Gold ratio — a growth-vs-fear barometer; change shown as %.
+// Scaled ×1000 so the value reads as a clean number (~1.5) instead of ~0.0015.
+const CG_SCALE = 1000;
+function deriveRatio(num, den, meta) {
+  if (!num || !den || num.current == null || den.current == null) return null;
+  const al = align(num, den);
+  if (al.length < 2) return null;
+  const history = al.map(x => ({ t: x.t, c: Number((x.a / x.b * CG_SCALE).toFixed(3)) }));
+  const current = Number((num.current / den.current * CG_SCALE).toFixed(3));
+  const changes = {};
+  for (const [k, days] of Object.entries(WINDOWS)) changes[k] = pctChange(history, current, days);
+  return { symbol: meta.symbol, label: meta.label, unit: "ratio", cat: meta.cat, current, changePct: changes.d30, changes, history };
+}
+
 export const handler = async () => {
   try {
     const settled = await Promise.allSettled(SYMBOLS.map(fetchSymbol));
@@ -149,7 +202,15 @@ export const handler = async () => {
       else { failed.push(SYMBOLS[i].symbol); console.error("get-market:", r.reason?.message); }
     });
 
+    // Derived metrics, appended to the end of their group.
+    const bySym = Object.fromEntries(ok.map(it => [it.symbol, it]));
+    const curve = deriveCurve(bySym["^TNX"], bySym["2YY=F"], { symbol: "CURVE_2S10S", label: "2s10s Curve", cat: "cost-of-capital" });
+    if (curve) ok.push(curve); else failed.push("CURVE_2S10S");
+    const cgRatio = deriveRatio(bySym["HG=F"], bySym["GC=F"], { symbol: "COPPER_GOLD", label: "Copper / Gold", cat: "macro" });
+    if (cgRatio) ok.push(cgRatio); else failed.push("COPPER_GOLD");
+
     // Bucket into groups, preserving GROUPS order; drop empty groups.
+    // (Items with cat "hidden", e.g. copper, match no group and drop out.)
     const groups = GROUPS
       .map(g => ({ key: g.key, label: g.label, items: ok.filter(it => it.cat === g.key) }))
       .filter(g => g.items.length);

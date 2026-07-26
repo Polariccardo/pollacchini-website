@@ -646,7 +646,7 @@
     </div>
   </div>
   <div id="mkt-content"><div class="mkt-state">Fetching the latest market data…</div></div>
-  <p class="mkt-foot" style="margin-top:28px;max-width:820px;line-height:1.7;">Prices via Yahoo Finance, cached and refreshed hourly. Data is end-of-day, so a 1D chart is a single prev-close→now segment; 7D–12M draw the full daily trend. US Treasury yields (2Y / 10Y / 30Y); sectors are the SPDR select-sector ETFs. For information only — not investment advice.</p>
+  <p class="mkt-foot" style="margin-top:28px;max-width:860px;line-height:1.7;">Prices via Yahoo Finance, cached and refreshed hourly. Data is end-of-day, so a 1D chart is a single prev-close→now segment; 7D–12M draw the full daily trend. Cost of capital: US Treasury yields (2Y / 10Y / 30Y), the 2s10s curve, and credit ETFs (HYG / LQD, whose price moves inverse to spreads). Copper/Gold is scaled ×1000; sectors are the SPDR select-sector ETFs. For information only — not investment advice.</p>
 </section>
 
 <!-- ── ARTICLES ── -->
@@ -838,18 +838,35 @@
     const v = item.current;
     if (v == null) return '—';
     if (item.unit === 'percent') return v.toFixed(2) + '%';
+    if (item.unit === 'bps') return `${v >= 0 ? '+' : '−'}${Math.abs(Math.round(v))}<span class="suffix"> bps</span>`;
+    if (item.unit === 'ratio') return v.toFixed(3);
+    if (item.unit === 'fx') return v.toFixed(4);
     const n = v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
     if (item.unit === 'usd') return `$${n}<span class="suffix">${item.suffix || ''}</span>`;
     return n;
   }
   function mktNum(v, item) {
     if (item.unit === 'percent') return v.toFixed(2) + '%';
+    if (item.unit === 'bps') return `${v >= 0 ? '+' : '−'}${Math.abs(Math.round(v))} bps`;
+    if (item.unit === 'ratio') return v.toFixed(3);
+    if (item.unit === 'fx') return v.toFixed(4);
     return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
   }
   function mktAxisNum(v, item) {
     if (item.unit === 'percent') return v.toFixed(2);
+    if (item.unit === 'bps') return Math.round(v);
+    if (item.unit === 'ratio') return v.toFixed(2);
+    if (item.unit === 'fx') return v.toFixed(3);
     if (Math.abs(v) >= 1000) return Math.round(v).toLocaleString('en-US');
     return v.toFixed(2);
+  }
+  // Change badge/table cell: absolute (bps) for spread metrics, else %.
+  function fmtChange(item, val) {
+    if (item.changeAbs) {
+      if (val == null) return { cls: 'flat', t: '—' };
+      return { cls: val >= 0 ? 'up' : 'down', t: (val >= 0 ? '▲ +' : '▼ ') + Math.abs(val) + ' bps' };
+    }
+    return fmtPct(val);
   }
   function mktDate(ts) {
     return new Date(ts * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
@@ -967,7 +984,7 @@
     btnF.innerHTML = TABLE_ICON;
     headF.appendChild(btnF);
     const chg = item.changes ? item.changes[TF] : null;
-    const c = fmtPct(chg);
+    const c = fmtChange(item, chg);
     const valRow = document.createElement('div');
     valRow.className = 'mkt-value-row';
     valRow.innerHTML = `<span class="mkt-value">${mktValue(item)}</span>`
@@ -988,7 +1005,7 @@
     btnB.innerHTML = CHART_ICON;
     headB.appendChild(btnB);
     const rows = TF_ALL.map(([k, , , long]) => {
-      const p = fmtPct(item.changes ? item.changes[k] : null);
+      const p = fmtChange(item, item.changes ? item.changes[k] : null);
       return `<tr><td>${long}</td><td class="${p.cls}">${p.t}</td></tr>`;
     }).join('');
     const table = document.createElement('table');
