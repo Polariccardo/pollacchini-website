@@ -89,8 +89,10 @@ const INFO = {
 };
 
 // Eurozone inflation (HICP, annual % change) from the ECB — official, monthly.
-const ECB_BASE = "https://data-api.ecb.europa.eu/service/data/ICP/";
-const ECB_SERIES = { headline: "M.U2.N.000000.4.ANR", core: "M.U2.N.XEF000.4.ANR" };
+// The HICP dataflow with the 4D0 suffix is the live series (the old ICP…4
+// series was frozen at Dec 2025); this one carries the current 2026 prints.
+const ECB_BASE = "https://data-api.ecb.europa.eu/service/data/HICP/";
+const ECB_SERIES = { headline: "M.U2.N.000000.4D0.ANR", core: "M.U2.N.XEF000.4D0.ANR" };
 
 // Fetch JSON with a hard per-request timeout + one retry. Without the timeout,
 // a single hanging Yahoo request would stall the whole function past Netlify's
