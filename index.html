@@ -9,10 +9,10 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://pollacchini.com/" />
   <meta property="og:title" content="Riccardo Pollacchini — Head of Business Finance" />
-  <meta property="og:description" content="Finance leader helping teams grow with clarity, data, and a bit of fun. Weekly insights, articles, and real thinking on business finance." />
+  <meta property="og:description" content="Finance leader helping scale-ups grow with clarity, data, and a bit of fun. Articles and real thinking on business finance." />
   <meta property="og:image" content="https://pollacchini.com/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="description" content="Finance leader helping teams grow with clarity, data, and a bit of fun. Weekly insights, articles, and real thinking on business finance." />
+  <meta name="description" content="Finance leader helping scale-ups grow with clarity, data, and a bit of fun. Articles and real thinking on business finance." />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -344,6 +344,7 @@
 
     /* ── ABOUT ── */
     #about { background: var(--card); border-top: 1px solid var(--border); }
+    #articles { background: var(--card); }
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
     .about-text p { font-size: 16px; color: var(--muted); line-height: 1.9; margin-bottom: 20px; }
     .about-text strong { color: var(--ink); font-weight: 500; }
@@ -537,7 +538,7 @@
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#articles">Articles</a></li>
-    <li><a href="#weekly">Weekly</a></li>
+    <!-- <li><a href="#weekly">Weekly</a></li> hidden for now -->
     <li><a href="#markets">Markets</a></li>
     <li><a href="#services">Collaborate</a></li>
   </ul>
@@ -550,7 +551,7 @@
 <div class="nav-mobile-menu" id="nav-mobile-menu">
   <a href="#about" onclick="closeMobileMenu()">About</a>
   <a href="#articles" onclick="closeMobileMenu()">Articles</a>
-  <a href="#weekly" onclick="closeMobileMenu()">Weekly</a>
+  <!-- <a href="#weekly" onclick="closeMobileMenu()">Weekly</a> hidden for now -->
   <a href="#markets" onclick="closeMobileMenu()">Markets</a>
   <a href="#services" onclick="closeMobileMenu()">Collaborate</a>
 </div>
@@ -561,7 +562,7 @@
     <div class="hero-tag">Made for more</div>
     <h1 class="hero-h1">The <em style="font-style:italic;color:#2E2EFF;">engine</em><br>behind <span style="background:#FFFF00;color:#111110;padding:0 4px;display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone;line-height:1;"><span style="display:inline;">growth.</span></span></h1>
     <p class="hero-sub">
-      I'm Riccardo and I help subscription companies from seed to €50M ARR build finance and operations functions that actually move the business. Sharp analytics, stable processes, and predictable outcomes.
+      I'm Riccardo and I help fast-growing scale-ups build finance and operations functions that actually move the business. Sharp analytics, stable processes, and predictable outcomes.
     </p>
     <div class="hero-cta">
       <a href="#services" class="btn-primary">Get in touch</a>
@@ -596,7 +597,7 @@
   <div class="about-grid">
     <div class="about-text">
       <p>
-        I'm based in Copenhagen, and I've spent the last five years inside SaaS scale-ups trying to answer one question: how do you efficiently scale an organisation without losing sight of what matters? I've sat at the table with founders and C-level in scaled complexity — and learned that although the question is always the same, the answer keeps changing.
+        I'm based in Copenhagen, and I've spent the last five years inside fast-growing scale-ups trying to answer one question: how do you efficiently scale an organisation without losing sight of what matters? I've sat at the table with founders and C-level in scaled complexity — and learned that although the question is always the same, the answer keeps changing.
       </p>
       <p>
         That's meant working across the full breadth of finance and operations — from strategy to controlling. My work spans the full picture — from the financial model to the process that makes it run, and the project management that makes it land. I care about the output, but I care just as much about building something that gets sharper every quarter, not just busier.
@@ -617,8 +618,8 @@
       <div class="value-item">
         <div class="value-icon">📊</div>
         <div>
-          <div class="value-title">SaaS Analytics</div>
-          <div class="value-desc">Fluent in the metrics that matter — ARR, retention, unit economics — and how they connect to real operational decisions.</div>
+          <div class="value-title">Growth Analytics</div>
+          <div class="value-desc">Fluent in the metrics that matter — unit economics, cohorts, margin and cash — and how they connect to real operational decisions.</div>
         </div>
       </div>
       <div class="value-item">
@@ -635,7 +636,7 @@
 <!-- ── MARKETS ── -->
 <section id="markets">
   <div class="section-eyebrow">Markets</div>
-  <h2 class="section-h2">The numbers<br>I watch.</h2>
+  <h2 class="section-h2">The numbers I watch.</h2>
   <p class="section-lead">Indices, commodities, crypto, rates and sector trends — the macro picture I keep an eye on, refreshed hourly. Pick a timeframe below; it drives every chart, change and the sector bars.</p>
   <div class="mkt-topbar">
     <div class="mkt-updated" id="mkt-updated"><span class="dot"></span><span id="mkt-updated-text">Loading market data…</span></div>
@@ -651,7 +652,7 @@
 <!-- ── ARTICLES ── -->
 <section id="articles">
   <div class="section-eyebrow">Articles</div>
-  <h2 class="section-h2">My business<br>view.</h2>
+  <h2 class="section-h2">My business view.</h2>
   <p class="section-lead">
     My perspective on finance, business, and leadership. I write about the things I see, the patterns I notice, and the ideas I keep coming back to. Opinions grounded in real experience, and always in progress.
   </p>
@@ -664,7 +665,7 @@
 </section>
 
 <!-- ── WEEKLY UPDATES ── -->
-<section id="weekly" style="background: var(--card);">
+<section id="weekly" style="background: var(--card); display: none;">
   <div class="section-eyebrow">Weekly brief</div>
   <h2 class="section-h2">External signals,<br>every week.</h2>
   <p class="section-lead">
@@ -683,7 +684,7 @@
 <!-- ── SERVICES ── -->
 <section id="services" style="background: var(--ink); color: var(--paper);">
   <div class="section-eyebrow" style="color: var(--yellow); --warm: var(--yellow);">How I can help</div>
-  <h2 class="section-h2" style="color: var(--paper);">Where I can<br>add value.</h2>
+  <h2 class="section-h2" style="color: var(--paper);">Where I can add value.</h2>
   <div class="services-grid">
     <div class="service-card">
       <div class="service-header"><span class="service-num">01</span><span class="service-title">Data</span></div>
@@ -691,7 +692,7 @@
     </div>
     <div class="service-card">
       <div class="service-header"><span class="service-num">02</span><span class="service-title">Analytics</span></div>
-      <div class="service-desc">Turning data into decisions — KPI hierarchy, cohort analysis, CAC, LTV, NRR, and the metrics that actually drive growth.</div>
+      <div class="service-desc">Turning data into decisions — KPI hierarchy, cohort analysis, unit economics, and the metrics that actually drive growth.</div>
     </div>
     <div class="service-card">
       <div class="service-header"><span class="service-num">03</span><span class="service-title">Strategy</span></div>
