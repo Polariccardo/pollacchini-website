@@ -329,7 +329,8 @@
 
     /* Sector bar chart — diverging bars, compact to fit one card cell */
     .mkt-grid { align-items: start; }
-    .sector-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px 6px; }
+    .sector-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px 8px; display: flex; flex-direction: column; align-self: stretch; }
+    .sp-bars { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
     .sp-title { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 5px; line-height: 1; }
     .bar-row { display: grid; grid-template-columns: 66px 1fr 44px; align-items: center; gap: 6px; padding: 2.5px 0; line-height: 1; }
     .bar-label { font-size: 10px; line-height: 1; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
@@ -673,7 +674,7 @@
 <!-- ── MARKETS ── -->
 <section id="markets">
   <div class="section-eyebrow">Markets</div>
-  <h2 class="section-h2">The numbers I watch.</h2>
+  <h2 class="section-h2">The numbers I watch and why.</h2>
   <p class="section-lead">Indices, commodities, crypto, rates and sector trends — the macro picture I keep an eye on, refreshed hourly. Pick a timeframe below; it drives every chart, change and the sector bars.</p>
   <div class="mkt-topbar">
     <div class="mkt-updated" id="mkt-updated"><span class="dot"></span><span id="mkt-updated-text">Loading market data…</span></div>
@@ -1042,7 +1043,7 @@
     back.className = 'mkt-face mkt-back';
     const headB = document.createElement('div');
     headB.className = 'mkt-card-head';
-    headB.innerHTML = `<div class="mkt-label">${item.label} · Returns</div>`;
+    headB.innerHTML = `<div class="mkt-label">${item.label}</div>`;
     const btnB = document.createElement('button');
     btnB.className = 'flip-btn'; btnB.type = 'button';
     btnB.setAttribute('aria-label', 'Back to chart'); btnB.title = 'Back to chart';
@@ -1078,6 +1079,8 @@
     title.className = 'sp-title';
     title.textContent = `All sectors · ${tfMeta(TF)[1].toLowerCase()}`;
     panel.appendChild(title);
+    const bars = document.createElement('div');
+    bars.className = 'sp-bars';
     vals.forEach(x => {
       const up = x.v >= 0;
       const w = (Math.abs(x.v) / maxAbs * 50).toFixed(1);
@@ -1086,8 +1089,9 @@
       row.innerHTML = `<span class="bar-label" title="${x.label}">${x.label}</span>`
         + `<div class="bar-track"><div class="bar-fill ${up ? 'up' : 'down'}" style="width:${w}%"></div></div>`
         + `<span class="bar-val ${up ? 'up' : 'down'}">${up ? '+' : ''}${x.v.toFixed(2)}%</span>`;
-      panel.appendChild(row);
+      bars.appendChild(row);
     });
+    panel.appendChild(bars);
     return panel;
   }
 
