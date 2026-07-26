@@ -598,10 +598,10 @@
 <section id="markets">
   <div class="section-eyebrow">Markets</div>
   <h2 class="section-h2">The numbers<br>I watch.</h2>
-  <p class="section-lead">Indices, commodities, crypto, rates and sector trends — the macro picture I keep an eye on, refreshed hourly. Moves shown over the trailing 7 days.</p>
+  <p class="section-lead">Indices, commodities, crypto, rates and sector trends — the macro picture I keep an eye on, refreshed hourly. Headline moves are over the trailing 30 days; flip any card for 1D–12M returns.</p>
   <div class="mkt-updated" id="mkt-updated"><span class="dot"></span><span id="mkt-updated-text">Loading market data…</span></div>
   <div id="mkt-content"><div class="mkt-state">Fetching the latest market data…</div></div>
-  <p class="mkt-foot" style="margin-top:28px;max-width:760px;line-height:1.7;">Prices via Yahoo Finance, cached and refreshed hourly. Change is measured over the trailing 7 days. Yields shown for the US 10-year Treasury (^TNX); sectors are the SPDR select-sector ETFs. For information only — not investment advice.</p>
+  <p class="mkt-foot" style="margin-top:28px;max-width:760px;line-height:1.7;">Prices via Yahoo Finance, cached and refreshed hourly. Headline change is over the trailing 30 days; flip a card for 1D / 7D / 30D / 3M / 6M / 12M returns. US Treasury yields (2Y / 10Y / 30Y); sectors are the SPDR select-sector ETFs. For information only — not investment advice.</p>
 </section>
 
 <!-- ── ARTICLES ── -->
@@ -947,6 +947,7 @@
       const res = await fetch('/.netlify/functions/get-market');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
+      if (!data.groups || !data.groups.length) throw new Error('no data');
       document.getElementById('mkt-updated-text').textContent = mktStamp(data.updatedAt);
       const root = document.getElementById('mkt-content');
       root.innerHTML = '';

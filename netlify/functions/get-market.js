@@ -66,12 +66,34 @@ const GROUPS = [
   { key: "sectors",     label: "Sectors — SPDR Select ETFs" },
 ];
 
+// Fetch JSON with a hard per-request timeout + one retry. Without the timeout,
+// a single hanging Yahoo request would stall the whole function past Netlify's
+// ~10s limit and surface as a 5xx ("Data unavailable") on the page.
+async function fetchJson(url, { attempts = 2, timeoutMs = 3500 } = {}) {
+  let lastErr;
+  for (let i = 0; i < attempts; i++) {
+    const ctrl = new AbortController();
+    const timer = setTimeout(() => ctrl.abort(), timeoutMs);
+    try {
+      const res = await fetch(url, {
+        headers: { "User-Agent": "Mozilla/5.0", "Accept": "application/json" },
+        signal: ctrl.signal,
+      });
+      if (!res.ok) throw new Error(`HTTP ${res.status}`);
+      return await res.json();
+    } catch (e) {
+      lastErr = e;
+      if (i < attempts - 1) await new Promise(r => setTimeout(r, 250));
+    } finally {
+      clearTimeout(timer);
+    }
+  }
+  throw lastErr;
+}
+
 async function fetchSymbol(cfg) {
   const url = `${YAHOO}/${encodeURIComponent(cfg.symbol)}?range=${RANGE}&interval=${INTERVAL}`;
-  const res = await fetch(url, { headers: { "User-Agent": "Mozilla/5.0" } });
-  if (!res.ok) throw new Error(`Yahoo ${res.status} for ${cfg.symbol}`);
-
-  const json = await res.json();
+  const json = await fetchJson(url);
   const result = json?.chart?.result?.[0];
   if (!result) throw new Error(`No chart data for ${cfg.symbol}`);
 
