@@ -331,7 +331,6 @@
     .mkt-grid { align-items: start; }
     .sector-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px 6px; }
     .sp-title { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 5px; line-height: 1; }
-    .sector-scale { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 9px; color: var(--muted); margin: 0 0 4px; padding: 0 44px 0 66px; line-height: 1; }
     .bar-row { display: grid; grid-template-columns: 66px 1fr 44px; align-items: center; gap: 6px; padding: 2.5px 0; line-height: 1; }
     .bar-label { font-size: 10px; line-height: 1; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
     .bar-track { position: relative; height: 11px; background: linear-gradient(90deg, transparent calc(50% - 0.5px), var(--border) calc(50% - 0.5px), var(--border) calc(50% + 0.5px), transparent calc(50% + 0.5px)); border-radius: 2px; }
@@ -1077,10 +1076,6 @@
     title.className = 'sp-title';
     title.textContent = `All sectors · ${tfMeta(TF)[1].toLowerCase()}`;
     panel.appendChild(title);
-    const scale = document.createElement('div');
-    scale.className = 'sector-scale';
-    scale.innerHTML = `<span>−${maxAbs.toFixed(1)}%</span><span>0</span><span>+${maxAbs.toFixed(1)}%</span>`;
-    panel.appendChild(scale);
     vals.forEach(x => {
       const up = x.v >= 0;
       const w = (Math.abs(x.v) / maxAbs * 50).toFixed(1);
@@ -1096,7 +1091,7 @@
 
   function updateFlipAllBtn() {
     const btn = document.getElementById('flip-all');
-    btn.innerHTML = (allFlipped ? CHART_ICON : TABLE_ICON) + `<span>${allFlipped ? 'Charts' : 'Returns'}</span>`;
+    btn.innerHTML = (allFlipped ? CHART_ICON : TABLE_ICON) + `<span>${allFlipped ? 'Charts' : 'Tables'}</span>`;
     btn.title = allFlipped ? 'Show all charts' : 'Show all returns tables';
   }
   function setupFlipAll() {
