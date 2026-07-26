@@ -868,7 +868,7 @@
   ];
   const TF_OPTIONS = TF_ALL.filter(o => o[0] !== 'd1');
   let MARKET = null;    // fetched payload
-  let TF = 'd30';       // active timeframe key
+  let TF = 'm12';       // active timeframe key (default view)
   let allFlipped = false; // flip-all toggle state
   const tfMeta = k => TF_ALL.find(o => o[0] === k);
 
