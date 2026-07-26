@@ -41,6 +41,7 @@ const SYMBOLS = [
   { symbol: "BZ=F",     label: "Brent Crude",      unit: "usd", suffix: "/bbl", cat: "macro" },
   { symbol: "HG=F",     label: "Copper",           unit: "usd", suffix: "/lb",  cat: "macro" },
   { symbol: "BTC-USD",  label: "Bitcoin",          unit: "usd", cat: "macro" },
+  { symbol: "^VIX",     label: "VIX",              unit: "index", cat: "macro" },
   { symbol: "EURUSD=X", label: "EUR / USD",        unit: "fx",  cat: "macro" },
 
   // Sectors — SPDR select-sector ETFs
@@ -64,24 +65,25 @@ const GROUPS = [
   { key: "sectors",         label: "Sectors — SPDR Select ETFs" },
 ];
 
-// Why each metric matters from a corporate-finance lens (shown in the "?" card).
+// Why each metric matters, in plain language anyone new to finance can follow.
 // Keyed by symbol; sectors deliberately have none.
 const INFO = {
-  "2YY=F": "The 2-year tracks where the market expects short-term policy rates to sit. It's your near-term cost of floating-rate debt and the discount rate on short-horizon cash flows — and the fastest-moving read on where monetary policy is heading.",
-  "^TNX": "The 10-year is the anchor risk-free rate in most valuation and WACC work. When it rises, discount rates rise and long-duration assets — growth equity, the terminal value in your DCF — are worth less. It's arguably the single most important number for what a company is worth.",
-  "^TYX": "The long bond reflects structural expectations for growth and inflation. It matters for very long-dated liabilities and as a sanity check on whether the market believes today's inflation is temporary or permanent.",
-  "HYG": "A live read on the cost and availability of riskier debt. When this ETF falls, high-yield spreads are widening — leverage is getting expensive and the window for refinancing or debt-funded deals is closing. It's an early-warning gauge for credit stress.",
-  "LQD": "Tracks the cost of high-quality corporate borrowing. It sets the backdrop for what a solid balance sheet pays to raise debt, and a sharp drop flags tightening financial conditions before they hit the real economy.",
-  "CURVE_2S10S": "The gap between 10- and 2-year yields. A steep (positive) curve signals expected growth; an inverted (negative) one has preceded most recessions and warns that financing conditions are tight. A one-number regime indicator for planning, hiring and capital allocation.",
-  "^GSPC": "The broad benchmark for US equity risk appetite and the reference point for equity cost of capital and public comps. Its level and trend shape the valuation multiples applied across both public and private markets.",
-  "^STOXX": "The broad European equity benchmark — the home-market read for a Europe-based company. It frames regional risk sentiment and the multiples European peers and acquirers trade on.",
-  "GC=F": "A store of value and fear gauge. Rising gold often signals concern about inflation, currency debasement or geopolitical risk, and it moves inversely to real rates — useful context for how defensive capital is positioned.",
-  "BZ=F": "The global oil benchmark and a direct input to input costs, logistics and inflation. For most businesses it's a swing factor in the cost base and a real-time read on global demand.",
-  "HG=F": "'Dr. Copper' — industrial demand makes it a real-time barometer of global growth. Rising copper suggests expansion and pricing power; falling copper warns of slowing demand ahead of the official data.",
-  "BTC-USD": "A high-beta proxy for global liquidity and speculative risk appetite. It tends to lead when easy money is flowing and to sell off first when liquidity tightens — a fast, if noisy, sentiment gauge.",
-  "EURUSD=X": "The most important FX rate for a euro-area company with dollar exposure. It drives the translation of USD revenue and costs, hedging decisions, and the euro value of dollar-denominated assets and liabilities.",
-  "COPPER_GOLD": "Growth versus fear in one ratio: industrial copper over safe-haven gold. It tracks closely with bond yields and is a clean read on whether the market is pricing expansion or caution.",
-  "COPPER_BRENT": "Two cyclical commodities, one growth signal filtered for energy. Copper relative to oil helps separate genuine demand strength from energy-driven cost pressure — a read on whether growth is real or just inflationary.",
+  "2YY=F": "This is what the US government pays to borrow money for 2 years. It moves with what people expect central banks to do with interest rates soon, so it's the quickest hint of where borrowing costs are heading. If a company has loans whose rate can change, this is roughly what they follow.",
+  "^TNX": "What the US government pays to borrow for 10 years. It's treated as the 'safe' baseline interest rate that everything else is compared against. When it rises, borrowing gets more expensive everywhere and companies — especially fast-growing ones — are worth a bit less. It's one of the most-watched numbers in all of finance.",
+  "^TYX": "What the government pays to borrow for a very long time — 30 years. Because it looks so far ahead, it reflects what people expect for growth and inflation over the long run, and whether today's inflation is seen as temporary or here to stay.",
+  "HYG": "A fund holding bonds from riskier companies. When its price falls, it means lenders want to be paid more to lend to weaker borrowers — a sign that money is getting harder and pricier to raise. A useful early warning that lending conditions are tightening.",
+  "LQD": "A fund holding bonds from financially strong companies. It shows what safe, solid businesses pay to borrow. A sharp drop means even reliable borrowers face higher costs — a signal that financial conditions are tightening across the board.",
+  "CURVE_2S10S": "The gap between the 10-year and 2-year government interest rates. Normally longer loans cost more, so the gap is positive. When it flips negative (short-term costs more than long-term), it has warned of nearly every past recession. A quick one-number health check on the economy.",
+  "^GSPC": "The index of the 500 biggest US companies — the main scoreboard for how the US stock market is doing. When it's rising, investors are optimistic and companies tend to be valued more generously, which matters whether you're public or raising money privately.",
+  "^STOXX": "A broad index of 600 large European companies — basically Europe's version of the S&P 500. It's the home-market scoreboard for a Europe-based business and a read on how European investors are feeling.",
+  "GC=F": "The classic 'safe haven.' People buy gold when they worry about inflation, the value of currencies, or global instability. So a rising gold price is a handy hint that investors are getting nervous.",
+  "BZ=F": "The main global oil price. It feeds straight into fuel, shipping and manufacturing costs, so it affects most companies' expenses — and it's a live read on how strong global demand is.",
+  "HG=F": "Copper goes into almost everything that gets built, so its price rises and falls with the health of the global economy — that's why it's nicknamed 'Dr. Copper.' Rising copper usually means growth is picking up; falling copper hints at a slowdown before the official data shows it.",
+  "BTC-USD": "The largest cryptocurrency, and a fast (if jumpy) gauge of how much appetite investors have for risk. It tends to climb when money is cheap and plentiful, and to fall first when conditions tighten — a quick sentiment thermometer.",
+  "EURUSD=X": "How many dollars one euro buys — the most important exchange rate for a European company that earns or spends in dollars. It changes what your dollar sales and costs are worth back in euros, which is why it matters for pricing and planning.",
+  "COPPER_GOLD": "Copper (which rises when growth is strong) divided by gold (which rises when people are fearful). Together they make a simple 'growth vs. fear' gauge: rising means optimism, falling means caution.",
+  "COPPER_BRENT": "Copper compared with oil — two things that both get more expensive when the economy is strong. Looking at them together helps show whether growth is genuinely strong, or whether prices are just being pushed up by costly energy.",
+  "^VIX": "Often called the market's 'fear gauge.' It measures how big a swing investors expect in the stock market over the next month. Low means calm and confident; a spike means fear — and when fear is high, it gets harder to raise money or get deals done.",
 };
 
 // Fetch JSON with a hard per-request timeout + one retry. Without the timeout,
