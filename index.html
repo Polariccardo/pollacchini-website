@@ -939,7 +939,9 @@
     wrap.className = 'chart-wrap';
     if (pts.length < 2) { wrap.innerHTML = ''; return wrap; }
 
-    const min = Math.min(...pts), max = Math.max(...pts), span = (max - min) || 1;
+    let min = Math.min(...pts), max = Math.max(...pts);
+    if (max === min) { const pad = Math.abs(max) * 0.02 || 0.1; min -= pad; max += pad; } // flat series → centre it
+    const span = (max - min) || 1;
     const X = i => padL + (W - padL - padR) * (i / (pts.length - 1));
     const Y = v => padT + (H - padT - padB) * (1 - (v - min) / span);
     const rising = pts.at(-1) >= pts[0];
