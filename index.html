@@ -9,10 +9,10 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://pollacchini.com/" />
   <meta property="og:title" content="Riccardo Pollacchini — Head of Business Finance" />
-  <meta property="og:description" content="Finance leader helping teams grow with clarity, data, and a bit of fun. Weekly insights, articles, and real thinking on business finance." />
+  <meta property="og:description" content="Finance leader helping scale-ups grow with clarity, data, and a bit of fun. Articles and real thinking on business finance." />
   <meta property="og:image" content="https://pollacchini.com/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="description" content="Finance leader helping teams grow with clarity, data, and a bit of fun. Weekly insights, articles, and real thinking on business finance." />
+  <meta name="description" content="Finance leader helping scale-ups grow with clarity, data, and a bit of fun. Articles and real thinking on business finance." />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,6 +29,10 @@
       --muted: #7A7870;
       --border: #E2DFD8;
       --card: #FFFFFF;
+      --up: #16794C;
+      --up-bg: #E7F1EC;
+      --down: #C0392B;
+      --down-bg: #F6E7E4;
       --font-display: 'Playfair Display', Georgia, serif;
       --font-body: 'DM Sans', sans-serif;
       --font-mono: 'DM Mono', monospace;
@@ -224,8 +228,161 @@
       max-width: 560px; line-height: 1.8; margin-bottom: 56px;
     }
 
+    /* ── MARKETS ── */
+    #markets { background: var(--paper); }
+    .mkt-updated {
+      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;
+      font-family: var(--font-mono); font-size: 12px; color: var(--muted);
+      padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--card);
+    }
+    .mkt-updated .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
+
+    .mkt-sub {
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
+      color: var(--muted); margin: 48px 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    }
+    .mkt-group:first-of-type .mkt-sub { margin-top: 24px; }
+
+    /* Uniform card grid — every metric renders at the same compact size. */
+    .mkt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 16px; }
+
+    /* Flip card: .mkt-card is the perspective shell; front is in flow (sets
+       height), back is absolutely overlaid and rotated. */
+    .mkt-card { perspective: 1200px; }
+    .mkt-flip { position: relative; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,.2,.2,1); }
+    .mkt-card.flipped .mkt-flip { transform: rotateY(180deg); }
+    .mkt-face {
+      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
+      padding: 16px 16px 12px; transition: box-shadow .2s, border-color .2s;
+      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    }
+    .mkt-front { position: relative; }
+    .mkt-back { position: absolute; inset: 0; transform: rotateY(180deg); display: flex; flex-direction: column; }
+    .mkt-card:hover .mkt-face { border-color: #cfcbc1; box-shadow: 0 6px 22px rgba(17,17,16,0.05); }
+
+    .mkt-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
+    .mkt-label { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 500; line-height: 1.35; }
+    .mkt-value-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
+    .mkt-value { font-family: var(--font-display); font-weight: 700; font-size: 25px; letter-spacing: -.02em; line-height: 1.1; }
+    .mkt-value .suffix { font-size: 12px; color: var(--muted); font-family: var(--font-body); font-weight: 400; }
+    .mkt-chg { font-family: var(--font-mono); font-size: 13px; white-space: nowrap; }
+    .mkt-chg .win { color: var(--muted); font-size: 10px; margin-left: 2px; }
+    .mkt-chg.up { color: var(--up); }
+    .mkt-chg.down { color: var(--down); }
+
+    .flip-btn {
+      flex-shrink: 0; width: 28px; height: 28px; padding: 0; cursor: pointer;
+      display: flex; align-items: center; justify-content: center;
+      background: transparent; border: 1px solid var(--border); border-radius: 8px;
+      color: var(--muted); transition: color .2s, border-color .2s;
+    }
+    .flip-btn:hover { color: var(--warm); border-color: var(--warm); }
+
+    /* Back face — multi-timeframe returns table */
+    .mkt-back .mkt-label { color: var(--warm); }
+
+    /* Chart + hover tooltip */
+    .chart-wrap { position: relative; margin-top: 10px; }
+    .chart-wrap svg { width: 100%; height: auto; display: block; cursor: crosshair; -webkit-tap-highlight-color: transparent; }
+    .mkt-axis { font-family: var(--font-mono); fill: var(--muted); }
+    .chart-tip {
+      position: absolute; pointer-events: none; z-index: 5;
+      background: var(--ink); color: var(--paper);
+      font-family: var(--font-mono); font-size: 11px; line-height: 1.4;
+      padding: 5px 8px; border-radius: 6px; white-space: nowrap;
+      transform: translate(-50%, -122%); opacity: 0; transition: opacity .12s;
+    }
+    .chart-tip b { color: var(--yellow); font-weight: 400; }
+
+    .mkt-state { color: var(--muted); padding: 40px 0; font-size: 15px; }
+
+    /* Top bar: updated stamp + timeframe selector + flip-all */
+    .mkt-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .mkt-updated { margin-bottom: 0; }
+    .mkt-controls-right { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
+    .tf-selector { display: inline-flex; gap: 4px; padding: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; }
+    .tf-btn {
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em;
+      padding: 6px 12px; border: none; border-radius: 999px; cursor: pointer;
+      background: transparent; color: var(--muted); transition: background .18s, color .18s;
+    }
+    .tf-btn:hover { color: var(--ink); }
+    .tf-btn.active { background: var(--warm); color: #fff; }
+    .flip-all-btn {
+      display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em;
+      padding: 8px 13px; border: 1px solid var(--border); border-radius: 999px;
+      background: var(--card); color: var(--muted); transition: color .18s, border-color .18s;
+    }
+    .flip-all-btn:hover { color: var(--warm); border-color: var(--warm); }
+    .flip-all-btn svg { flex-shrink: 0; }
+
+    /* Returns table (card back) — striped rows, like a returns sheet */
+    .ret-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-family: var(--font-mono); }
+    .ret-table td { padding: 5px 5px; font-size: 11.5px; }
+    .ret-table td:first-child { color: var(--ink); }
+    .ret-table td:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+    .ret-table tr:nth-child(odd) { background: rgba(17,17,16,0.035); }
+    .ret-table td.up { color: var(--up); }
+    .ret-table td.down { color: var(--down); }
+    .ret-table td.flat { color: var(--muted); }
+
+    /* Sector bar chart — diverging bars, compact to fit one card cell */
+    .mkt-grid { align-items: start; }
+    .sector-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px 8px; display: flex; flex-direction: column; align-self: stretch; }
+    .sp-bars { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
+    .sp-title { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 5px; line-height: 1; }
+    .bar-row { display: grid; grid-template-columns: 66px 1fr 44px; align-items: center; gap: 6px; padding: 2.5px 0; line-height: 1; }
+    .bar-label { font-size: 10px; line-height: 1; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track { position: relative; height: 11px; background: linear-gradient(90deg, transparent calc(50% - 0.5px), var(--border) calc(50% - 0.5px), var(--border) calc(50% + 0.5px), transparent calc(50% + 0.5px)); border-radius: 2px; }
+    .bar-fill { position: absolute; top: 2px; height: 7px; border-radius: 2px; }
+    .bar-fill.up { left: 50%; background: var(--up); }
+    .bar-fill.down { right: 50%; background: var(--down); }
+    .bar-val { font-family: var(--font-mono); font-size: 10px; text-align: right; font-variant-numeric: tabular-nums; }
+    .bar-val.up { color: var(--up); }
+    .bar-val.down { color: var(--down); }
+
+    /* "?" explainer button + modal */
+    .info-btn {
+      display: inline-flex; align-items: center; justify-content: center;
+      width: 15px; height: 15px; margin-left: 5px; padding: 0; vertical-align: middle;
+      font-family: var(--font-mono); font-size: 10px; line-height: 1; cursor: pointer;
+      border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--muted);
+      transition: color .2s, border-color .2s;
+    }
+    .info-btn:hover { color: var(--warm); border-color: var(--warm); }
+    .info-modal-backdrop {
+      position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center;
+      background: rgba(17,17,16,0.55); backdrop-filter: blur(3px); padding: 24px;
+      opacity: 0; transition: opacity .2s;
+    }
+    .info-modal-backdrop.open { opacity: 1; }
+    .info-modal-backdrop[hidden] { display: none; }
+    .info-modal {
+      background: var(--card); border: 1px solid var(--border); border-radius: 18px;
+      max-width: 560px; width: 100%; max-height: 88vh; overflow-y: auto;
+      padding: 28px 30px 24px; position: relative;
+      transform: scale(.96); transition: transform .2s;
+    }
+    .info-modal-backdrop.open .info-modal { transform: scale(1); }
+    .info-modal-close {
+      position: absolute; top: 16px; right: 16px; width: 30px; height: 30px; padding: 0; cursor: pointer;
+      border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--muted);
+      font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center;
+      transition: color .2s, border-color .2s;
+    }
+    .info-modal-close:hover { color: var(--ink); border-color: var(--ink); }
+    .info-modal-name { font-family: var(--font-display); font-weight: 700; font-size: 26px; letter-spacing: -.02em; padding-right: 36px; line-height: 1.1; }
+    .info-modal-value { font-family: var(--font-mono); font-size: 15px; color: var(--muted); margin-top: 8px; }
+    .info-modal-value .up { color: var(--up); }
+    .info-modal-value .down { color: var(--down); }
+    .info-modal-text { font-size: 15px; line-height: 1.7; color: var(--ink); margin: 20px 0 22px; }
+    .info-modal-chart { border-top: 1px solid var(--border); padding-top: 18px; }
+    .info-modal-chart .chart-wrap { margin-top: 0; }
+
     /* ── ABOUT ── */
     #about { background: var(--card); border-top: 1px solid var(--border); }
+    #articles { background: var(--card); }
     .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
     .about-text p { font-size: 16px; color: var(--muted); line-height: 1.9; margin-bottom: 20px; }
     .about-text strong { color: var(--ink); font-weight: 500; }
@@ -419,7 +576,8 @@
   <ul class="nav-links">
     <li><a href="#about">About</a></li>
     <li><a href="#articles">Articles</a></li>
-    <li><a href="#weekly">Weekly</a></li>
+    <!-- <li><a href="#weekly">Weekly</a></li> hidden for now -->
+    <li><a href="#markets">Markets</a></li>
     <li><a href="#services">Collaborate</a></li>
   </ul>
   <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
@@ -431,7 +589,8 @@
 <div class="nav-mobile-menu" id="nav-mobile-menu">
   <a href="#about" onclick="closeMobileMenu()">About</a>
   <a href="#articles" onclick="closeMobileMenu()">Articles</a>
-  <a href="#weekly" onclick="closeMobileMenu()">Weekly</a>
+  <!-- <a href="#weekly" onclick="closeMobileMenu()">Weekly</a> hidden for now -->
+  <a href="#markets" onclick="closeMobileMenu()">Markets</a>
   <a href="#services" onclick="closeMobileMenu()">Collaborate</a>
 </div>
 
@@ -441,7 +600,7 @@
     <div class="hero-tag">Made for more</div>
     <h1 class="hero-h1">The <em style="font-style:italic;color:#2E2EFF;">engine</em><br>behind <span style="background:#FFFF00;color:#111110;padding:0 4px;display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone;line-height:1;"><span style="display:inline;">growth.</span></span></h1>
     <p class="hero-sub">
-      I'm Riccardo and I help subscription companies from seed to €50M ARR build finance and operations functions that actually move the business. Sharp analytics, stable processes, and predictable outcomes.
+      I'm Riccardo and I help fast-growing scale-ups build finance and operations functions that actually move the business. Sharp analytics, stable processes, and predictable outcomes.
     </p>
     <div class="hero-cta">
       <a href="#services" class="btn-primary">Get in touch</a>
@@ -476,7 +635,7 @@
   <div class="about-grid">
     <div class="about-text">
       <p>
-        I'm based in Copenhagen, and I've spent the last five years inside SaaS scale-ups trying to answer one question: how do you efficiently scale an organisation without losing sight of what matters? I've sat at the table with founders and C-level in scaled complexity — and learned that although the question is always the same, the answer keeps changing.
+        I'm based in Copenhagen, and I've spent the last five years inside fast-growing scale-ups trying to answer one question: how do you efficiently scale an organisation without losing sight of what matters? I've sat at the table with founders and C-level in scaled complexity — and learned that although the question is always the same, the answer keeps changing.
       </p>
       <p>
         That's meant working across the full breadth of finance and operations — from strategy to controlling. My work spans the full picture — from the financial model to the process that makes it run, and the project management that makes it land. I care about the output, but I care just as much about building something that gets sharper every quarter, not just busier.
@@ -497,8 +656,8 @@
       <div class="value-item">
         <div class="value-icon">📊</div>
         <div>
-          <div class="value-title">SaaS Analytics</div>
-          <div class="value-desc">Fluent in the metrics that matter — ARR, retention, unit economics — and how they connect to real operational decisions.</div>
+          <div class="value-title">Growth Analytics</div>
+          <div class="value-desc">Fluent in the metrics that matter — unit economics, cohorts, margin and cash — and how they connect to real operational decisions.</div>
         </div>
       </div>
       <div class="value-item">
@@ -512,10 +671,26 @@
   </div>
 </section>
 
+<!-- ── MARKETS ── -->
+<section id="markets">
+  <div class="section-eyebrow">Markets</div>
+  <h2 class="section-h2">The numbers I watch and why.</h2>
+  <p class="section-lead">Indices, commodities, crypto, rates and sector trends — the macro picture I keep an eye on, refreshed hourly. Pick a timeframe below; it drives every chart, change and the sector bars.</p>
+  <div class="mkt-topbar">
+    <div class="mkt-updated" id="mkt-updated"><span class="dot"></span><span id="mkt-updated-text">Loading market data…</span></div>
+    <div class="mkt-controls-right">
+      <div class="tf-selector" id="tf-selector" role="tablist" aria-label="Timeframe"></div>
+      <button class="flip-all-btn" id="flip-all" type="button"></button>
+    </div>
+  </div>
+  <div id="mkt-content"><div class="mkt-state">Fetching the latest market data…</div></div>
+  <p class="mkt-foot" style="margin-top:28px;max-width:860px;line-height:1.6;font-size:9.5px;">Prices via Yahoo Finance, cached and refreshed hourly. Data is end-of-day, so a 1D chart is a single prev-close→now segment; 7D–12M draw the full daily trend. For information only — not investment advice.</p>
+</section>
+
 <!-- ── ARTICLES ── -->
 <section id="articles">
   <div class="section-eyebrow">Articles</div>
-  <h2 class="section-h2">My business<br>view.</h2>
+  <h2 class="section-h2">My business view.</h2>
   <p class="section-lead">
     My perspective on finance, business, and leadership. I write about the things I see, the patterns I notice, and the ideas I keep coming back to. Opinions grounded in real experience, and always in progress.
   </p>
@@ -528,7 +703,7 @@
 </section>
 
 <!-- ── WEEKLY UPDATES ── -->
-<section id="weekly" style="background: var(--card);">
+<section id="weekly" style="background: var(--card); display: none;">
   <div class="section-eyebrow">Weekly brief</div>
   <h2 class="section-h2">External signals,<br>every week.</h2>
   <p class="section-lead">
@@ -547,7 +722,7 @@
 <!-- ── SERVICES ── -->
 <section id="services" style="background: var(--ink); color: var(--paper);">
   <div class="section-eyebrow" style="color: var(--yellow); --warm: var(--yellow);">How I can help</div>
-  <h2 class="section-h2" style="color: var(--paper);">Where I can<br>add value.</h2>
+  <h2 class="section-h2" style="color: var(--paper);">Where I can add value.</h2>
   <div class="services-grid">
     <div class="service-card">
       <div class="service-header"><span class="service-num">01</span><span class="service-title">Data</span></div>
@@ -555,7 +730,7 @@
     </div>
     <div class="service-card">
       <div class="service-header"><span class="service-num">02</span><span class="service-title">Analytics</span></div>
-      <div class="service-desc">Turning data into decisions — KPI hierarchy, cohort analysis, CAC, LTV, NRR, and the metrics that actually drive growth.</div>
+      <div class="service-desc">Turning data into decisions — KPI hierarchy, cohort analysis, unit economics, and the metrics that actually drive growth.</div>
     </div>
     <div class="service-card">
       <div class="service-header"><span class="service-num">03</span><span class="service-title">Strategy</span></div>
@@ -681,6 +856,369 @@
   }
 
   loadContent();
+
+  // ── MARKETS ──
+  const MKT = { W: 300, H: 156, padL: 40, padR: 10, padT: 12, padB: 20 };
+  // [key, short label, chart-window days, long label]. TF_ALL is used by the
+  // returns table; the selector (TF_OPTIONS) drops 1D — the data is end-of-day
+  // so a 1-day chart isn't meaningful, but the 1-day number stays in the table.
+  const TF_ALL = [
+    ['d1', '1D', 1, '1 Day'], ['d7', '7D', 7, '7 Days'], ['d30', '30D', 30, '30 Days'],
+    ['m3', '3M', 91, '3 Months'], ['m6', '6M', 182, '6 Months'], ['m12', '12M', 365, '12 Months'],
+  ];
+  const TF_OPTIONS = TF_ALL.filter(o => o[0] !== 'd1');
+  let MARKET = null;    // fetched payload
+  let TF = 'm12';       // active timeframe key (default view)
+  let allFlipped = false; // flip-all toggle state
+  const tfMeta = k => TF_ALL.find(o => o[0] === k);
+
+  function mktValue(item) {
+    const v = item.current;
+    if (v == null) return '—';
+    if (item.unit === 'percent') return v.toFixed(2) + '%';
+    if (item.unit === 'bps') return `${v >= 0 ? '+' : '−'}${Math.abs(Math.round(v))}<span class="suffix"> bps</span>`;
+    if (item.unit === 'ratio') return v.toFixed(3);
+    if (item.unit === 'fx') return v.toFixed(4);
+    const n = v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+    if (item.unit === 'usd') return `$${n}<span class="suffix">${item.suffix || ''}</span>`;
+    return n;
+  }
+  function mktNum(v, item) {
+    if (item.unit === 'percent') return v.toFixed(2) + '%';
+    if (item.unit === 'bps') return `${v >= 0 ? '+' : '−'}${Math.abs(Math.round(v))} bps`;
+    if (item.unit === 'ratio') return v.toFixed(3);
+    if (item.unit === 'fx') return v.toFixed(4);
+    return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+  function mktAxisNum(v, item) {
+    if (item.unit === 'percent') return v.toFixed(2);
+    if (item.unit === 'bps') return Math.round(v);
+    if (item.unit === 'ratio') return v.toFixed(2);
+    if (item.unit === 'fx') return v.toFixed(3);
+    if (Math.abs(v) >= 1000) return Math.round(v).toLocaleString('en-US');
+    return v.toFixed(2);
+  }
+  // Change badge/table cell: absolute (bps / pp) for spread & rate metrics, else %.
+  function fmtChange(item, val) {
+    if (item.changeAbs) {
+      const u = item.changeUnit || 'bps';
+      if (val == null) return { cls: 'flat', t: '—' };
+      if (val === 0) return { cls: 'flat', t: '±0 ' + u };
+      return { cls: val > 0 ? 'up' : 'down', t: (val > 0 ? '▲ +' : '▼ ') + Math.abs(val) + ' ' + u };
+    }
+    return fmtPct(val);
+  }
+  function mktDate(ts) {
+    return new Date(ts * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
+  }
+  function mktStamp(iso) {
+    const d = new Date(iso);
+    const time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
+    const date = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
+    return `Updated hourly · as of ${time} UTC, ${date}`;
+  }
+  function fmtPct(pct) {
+    if (pct == null) return { cls: 'flat', t: '—' };
+    if (pct === 0) return { cls: 'flat', t: '±0.00%' };
+    return { cls: pct > 0 ? 'up' : 'down', t: (pct > 0 ? '▲ +' : '▼ ') + Math.abs(pct).toFixed(2) + '%' };
+  }
+
+  // Slice full history to the selected window (min 2 points so a line always draws).
+  function windowHistory(history, days) {
+    if (!history || !history.length) return [];
+    const cutoff = history[history.length - 1].t - days * 86400;
+    let s = history.filter(p => p.t >= cutoff);
+    if (s.length < 2) s = history.slice(-2);
+    return s;
+  }
+
+  // Interactive line chart (windowed) with x/y axis labels and a hover tooltip.
+  function buildChart(item, days) {
+    const { W, H, padL, padR, padT, padB } = MKT;
+    const hist = windowHistory(item.history, days), pts = hist.map(p => p.c);
+    const wrap = document.createElement('div');
+    wrap.className = 'chart-wrap';
+    if (pts.length < 2) { wrap.innerHTML = ''; return wrap; }
+
+    let min = Math.min(...pts), max = Math.max(...pts);
+    if (max === min) { const pad = Math.abs(max) * 0.02 || 0.1; min -= pad; max += pad; } // flat series → centre it
+    const span = (max - min) || 1;
+    const X = i => padL + (W - padL - padR) * (i / (pts.length - 1));
+    const Y = v => padT + (H - padT - padB) * (1 - (v - min) / span);
+    const rising = pts.at(-1) >= pts[0];
+    const col = rising ? 'var(--up)' : 'var(--down)';
+    const rgb = rising ? '22,121,76' : '192,57,43';
+    const uid = 'g' + item.symbol.replace(/[^a-z0-9]/gi, '') + TF;
+
+    const line = pts.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
+    const area = `${line} L${X(pts.length - 1).toFixed(1)},${(H - padB).toFixed(1)} L${X(0).toFixed(1)},${(H - padB).toFixed(1)} Z`;
+
+    const yv = [max, (max + min) / 2, min];
+    const yAxis = yv.map((v, k) => {
+      const gy = Y(v).toFixed(1);
+      return `<line x1="${padL}" y1="${gy}" x2="${W - padR}" y2="${gy}" stroke="var(--border)" stroke-width="1"${k === 1 ? ' stroke-dasharray="2 4"' : ''}/>`
+        + `<text class="mkt-axis" x="${padL - 5}" y="${(+gy + 3).toFixed(1)}" text-anchor="end" font-size="8.5">${mktAxisNum(v, item)}</text>`;
+    }).join('');
+
+    const xi = pts.length > 2 ? [0, Math.floor((pts.length - 1) / 2), pts.length - 1] : [0, pts.length - 1];
+    const xAxis = xi.map((i, k) => {
+      const anchor = i === 0 ? 'start' : i === pts.length - 1 ? 'end' : 'middle';
+      return `<text class="mkt-axis" x="${X(i).toFixed(1)}" y="${H - 6}" text-anchor="${anchor}" font-size="8.5">${mktDate(hist[i].t)}</text>`;
+    }).join('');
+
+    const dx = X(pts.length - 1).toFixed(1), dy = Y(pts.at(-1)).toFixed(1);
+    wrap.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${item.label} trend">
+      <defs><linearGradient id="${uid}" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(${rgb},0.22)"/><stop offset="100%" stop-color="rgba(${rgb},0)"/></linearGradient></defs>
+      ${yAxis}${xAxis}
+      <path d="${area}" fill="url(#${uid})" stroke="none"/>
+      <path d="${line}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+      <circle cx="${dx}" cy="${dy}" r="6" fill="rgba(${rgb},0.16)"/><circle cx="${dx}" cy="${dy}" r="3" fill="${col}"/>
+      <line class="xh" x1="0" y1="${padT}" x2="0" y2="${H - padB}" stroke="${col}" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
+      <circle class="xh-dot" r="3.5" fill="${col}" stroke="var(--card)" stroke-width="1.5" opacity="0"/>
+    </svg><div class="chart-tip"></div>`;
+
+    const svg = wrap.querySelector('svg');
+    const xh = wrap.querySelector('.xh'), xhDot = wrap.querySelector('.xh-dot'), tip = wrap.querySelector('.chart-tip');
+    const pre = item.unit === 'usd' ? '$' : '';
+
+    function move(clientX) {
+      const r = svg.getBoundingClientRect();
+      const vx = (clientX - r.left) / r.width * W;
+      let i = Math.round((vx - padL) / (W - padL - padR) * (pts.length - 1));
+      i = Math.max(0, Math.min(pts.length - 1, i));
+      const cx = X(i), cy = Y(pts[i]);
+      xh.setAttribute('x1', cx); xh.setAttribute('x2', cx); xh.setAttribute('opacity', '0.6');
+      xhDot.setAttribute('cx', cx); xhDot.setAttribute('cy', cy); xhDot.setAttribute('opacity', '1');
+      tip.innerHTML = `${mktDate(hist[i].t)} · <b>${pre}${mktNum(pts[i], item)}</b>`;
+      tip.style.left = (cx / W * 100) + '%';
+      tip.style.top = (cy / H * 100) + '%';
+      tip.style.opacity = '1';
+    }
+    function leave() {
+      xh.setAttribute('opacity', '0'); xhDot.setAttribute('opacity', '0'); tip.style.opacity = '0';
+    }
+    svg.addEventListener('mousemove', e => move(e.clientX));
+    svg.addEventListener('mouseleave', leave);
+    svg.addEventListener('touchmove', e => { if (e.touches[0]) move(e.touches[0].clientX); }, { passive: true });
+    svg.addEventListener('touchend', leave);
+    return wrap;
+  }
+
+  // Front → flip to the returns table (table icon); back → flip to the chart (line-chart icon).
+  const TABLE_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>';
+  const CHART_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>';
+
+  function mktCard(item) {
+    const meta = tfMeta(TF);
+    const card = document.createElement('div');
+    card.className = 'mkt-card';
+    const flip = document.createElement('div');
+    flip.className = 'mkt-flip';
+
+    // ── Front: value + inline change (selected timeframe) + windowed chart ──
+    const front = document.createElement('div');
+    front.className = 'mkt-face mkt-front';
+    const headF = document.createElement('div');
+    headF.className = 'mkt-card-head';
+    headF.innerHTML = `<div class="mkt-label">${item.label}${item.info ? ' <button class="info-btn" type="button" aria-label="Why this matters" title="Why this matters">?</button>' : ''}</div>`;
+    const infoBtn = headF.querySelector('.info-btn');
+    if (infoBtn) infoBtn.addEventListener('click', e => { e.stopPropagation(); openInfoModal(item); });
+    const btnF = document.createElement('button');
+    btnF.className = 'flip-btn'; btnF.type = 'button';
+    btnF.setAttribute('aria-label', 'Show returns table'); btnF.title = 'Returns table';
+    btnF.innerHTML = TABLE_ICON;
+    headF.appendChild(btnF);
+    const chg = item.changes ? item.changes[TF] : null;
+    const c = fmtChange(item, chg);
+    const valRow = document.createElement('div');
+    valRow.className = 'mkt-value-row';
+    valRow.innerHTML = `<span class="mkt-value">${mktValue(item)}</span>`
+      + (chg == null ? '' : `<span class="mkt-chg ${c.cls}">${c.t}<span class="win">${meta[1].toLowerCase()}</span></span>`);
+    front.appendChild(headF);
+    front.appendChild(valRow);
+    front.appendChild(buildChart(item, meta[2]));
+
+    // ── Back: striped returns table across all timeframes ──
+    const back = document.createElement('div');
+    back.className = 'mkt-face mkt-back';
+    const headB = document.createElement('div');
+    headB.className = 'mkt-card-head';
+    headB.innerHTML = `<div class="mkt-label">${item.label}</div>`;
+    const btnB = document.createElement('button');
+    btnB.className = 'flip-btn'; btnB.type = 'button';
+    btnB.setAttribute('aria-label', 'Back to chart'); btnB.title = 'Back to chart';
+    btnB.innerHTML = CHART_ICON;
+    headB.appendChild(btnB);
+    const rows = TF_ALL.map(([k, , , long]) => {
+      const p = fmtChange(item, item.changes ? item.changes[k] : null);
+      return `<tr><td>${long}</td><td class="${p.cls}">${p.t}</td></tr>`;
+    }).join('');
+    const table = document.createElement('table');
+    table.className = 'ret-table';
+    table.innerHTML = `<tbody>${rows}</tbody>`;
+    back.appendChild(headB);
+    back.appendChild(table);
+
+    flip.appendChild(front);
+    flip.appendChild(back);
+    card.appendChild(flip);
+    btnF.addEventListener('click', () => card.classList.add('flipped'));
+    btnB.addEventListener('click', () => card.classList.remove('flipped'));
+    return card;
+  }
+
+  // Sectors rendered as a diverging bar chart for the selected timeframe.
+  function sectorBars(items) {
+    const vals = items.map(it => ({ label: it.label, v: it.changes ? it.changes[TF] : null }))
+      .filter(x => x.v != null)
+      .sort((a, b) => b.v - a.v);
+    const maxAbs = Math.max(0.1, ...vals.map(x => Math.abs(x.v)));
+    const panel = document.createElement('div');
+    panel.className = 'sector-panel';
+    const title = document.createElement('div');
+    title.className = 'sp-title';
+    title.textContent = `All sectors · ${tfMeta(TF)[1].toLowerCase()}`;
+    panel.appendChild(title);
+    const bars = document.createElement('div');
+    bars.className = 'sp-bars';
+    vals.forEach(x => {
+      const up = x.v >= 0;
+      const w = (Math.abs(x.v) / maxAbs * 50).toFixed(1);
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = `<span class="bar-label" title="${x.label}">${x.label}</span>`
+        + `<div class="bar-track"><div class="bar-fill ${up ? 'up' : 'down'}" style="width:${w}%"></div></div>`
+        + `<span class="bar-val ${up ? 'up' : 'down'}">${up ? '+' : ''}${x.v.toFixed(2)}%</span>`;
+      bars.appendChild(row);
+    });
+    panel.appendChild(bars);
+    return panel;
+  }
+
+  function updateFlipAllBtn() {
+    const btn = document.getElementById('flip-all');
+    btn.innerHTML = (allFlipped ? CHART_ICON : TABLE_ICON) + `<span>${allFlipped ? 'Charts' : 'Tables'}</span>`;
+    btn.title = allFlipped ? 'Show all charts' : 'Show all returns tables';
+  }
+  function setupFlipAll() {
+    const btn = document.getElementById('flip-all');
+    btn.addEventListener('click', () => {
+      const cards = [...document.querySelectorAll('.mkt-card')];
+      allFlipped = cards.some(c => !c.classList.contains('flipped')); // any showing chart → flip all to tables
+      cards.forEach(c => c.classList.toggle('flipped', allFlipped));
+      updateFlipAllBtn();
+    });
+    updateFlipAllBtn();
+  }
+
+  function buildSelector() {
+    const el = document.getElementById('tf-selector');
+    el.innerHTML = '';
+    TF_OPTIONS.forEach(([k, short]) => {
+      const b = document.createElement('button');
+      b.className = 'tf-btn' + (k === TF ? ' active' : '');
+      b.type = 'button'; b.dataset.tf = k; b.textContent = short;
+      b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', k === TF);
+      b.addEventListener('click', () => { if (TF !== k) { TF = k; renderAll(); } });
+      el.appendChild(b);
+    });
+  }
+
+  function renderAll() {
+    const data = MARKET;
+    if (!data) return;
+    const root = document.getElementById('mkt-content');
+    root.innerHTML = '';
+    for (const g of data.groups) {
+      const group = document.createElement('div');
+      group.className = 'mkt-group';
+      const sub = document.createElement('div');
+      sub.className = 'mkt-sub';
+      sub.textContent = g.label;
+      group.appendChild(sub);
+      const grid = document.createElement('div');
+      grid.className = 'mkt-grid';
+      if (g.key === 'sectors') {
+        // Sectors: the diverging bar chart (as one card cell) AND the cards.
+        grid.appendChild(sectorBars(g.items));
+        const sorted = [...g.items].sort((a, b) => ((b.changes && b.changes[TF]) ?? -99) - ((a.changes && a.changes[TF]) ?? -99));
+        sorted.forEach(it => grid.appendChild(mktCard(it)));
+      } else {
+        g.items.forEach(it => grid.appendChild(mktCard(it)));
+      }
+      group.appendChild(grid);
+      root.appendChild(group);
+    }
+    if (data.failed && data.failed.length) {
+      const p = document.createElement('p');
+      p.className = 'mkt-foot';
+      p.style.cssText = 'color:var(--down);margin-top:20px;';
+      p.textContent = 'Temporarily unavailable: ' + data.failed.join(', ');
+      root.appendChild(p);
+    }
+    document.querySelectorAll('.tf-btn').forEach(b => {
+      const on = b.dataset.tf === TF;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on);
+    });
+    // Preserve the flip-all state across re-renders (timeframe changes).
+    if (allFlipped) document.querySelectorAll('.mkt-card').forEach(c => c.classList.add('flipped'));
+  }
+
+  // Explainer modal: name (top) · corporate-finance rationale (middle) · chart (bottom).
+  function setupInfoModal() {
+    if (document.getElementById('info-modal')) return;
+    const bd = document.createElement('div');
+    bd.className = 'info-modal-backdrop'; bd.id = 'info-modal'; bd.hidden = true;
+    bd.innerHTML = '<div class="info-modal"><button class="info-modal-close" aria-label="Close">×</button>'
+      + '<div class="info-modal-name"></div><div class="info-modal-value"></div>'
+      + '<div class="info-modal-text"></div><div class="info-modal-chart"></div></div>';
+    document.body.appendChild(bd);
+    const close = () => {
+      bd.classList.remove('open');
+      setTimeout(() => { bd.hidden = true; bd.querySelector('.info-modal-chart').innerHTML = ''; }, 200);
+    };
+    bd.addEventListener('click', e => { if (e.target === bd) close(); });
+    bd.querySelector('.info-modal-close').addEventListener('click', close);
+    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !bd.hidden) close(); });
+  }
+  function openInfoModal(item) {
+    const bd = document.getElementById('info-modal');
+    if (!bd) return;
+    const meta = tfMeta(TF);
+    bd.querySelector('.info-modal-name').textContent = item.label;
+    const chg = item.changes ? item.changes[TF] : null;
+    const c = fmtChange(item, chg);
+    bd.querySelector('.info-modal-value').innerHTML = `<span>${mktValue(item)}</span>`
+      + (chg == null ? '' : ` &nbsp; <span class="${c.cls}">${c.t}</span> <span style="opacity:.55">${meta[1].toLowerCase()}</span>`);
+    bd.querySelector('.info-modal-text').textContent = item.info || '';
+    const chartBox = bd.querySelector('.info-modal-chart');
+    chartBox.innerHTML = '';
+    chartBox.appendChild(buildChart(item, meta[2]));
+    bd.hidden = false;
+    requestAnimationFrame(() => bd.classList.add('open'));
+  }
+
+  async function loadMarket() {
+    try {
+      const res = await fetch('/.netlify/functions/get-market');
+      if (!res.ok) throw new Error('HTTP ' + res.status);
+      const data = await res.json();
+      if (!data.groups || !data.groups.length) throw new Error('no data');
+      MARKET = data;
+      document.getElementById('mkt-updated-text').textContent = mktStamp(data.updatedAt);
+      buildSelector();
+      setupFlipAll();
+      setupInfoModal();
+      renderAll();
+    } catch (e) {
+      document.getElementById('mkt-updated-text').textContent = 'Data unavailable';
+      document.getElementById('mkt-content').innerHTML = '<div class="mkt-state">Couldn\'t load market data right now. Please try again shortly.</div>';
+      console.warn('Could not load market data:', e);
+    }
+  }
+
+  loadMarket();
 
   function shareOnLinkedIn(title, text) {
     const url = encodeURIComponent('https://pollacchini.com');
