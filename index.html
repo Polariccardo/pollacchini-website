@@ -278,16 +278,8 @@
     }
     .flip-btn:hover { color: var(--warm); border-color: var(--warm); }
 
-    /* Back face — multi-timeframe returns */
+    /* Back face — multi-timeframe returns table */
     .mkt-back .mkt-label { color: var(--warm); }
-    .returns { display: grid; grid-template-columns: repeat(3, 1fr); gap: 14px 10px; margin-top: 16px; }
-    .ret-item { display: flex; flex-direction: column; gap: 3px; }
-    .ret-win { font-family: var(--font-mono); font-size: 10px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); }
-    .ret-val { font-family: var(--font-mono); font-size: 16px; }
-    .ret-val.up { color: var(--up); }
-    .ret-val.down { color: var(--down); }
-    .ret-val.flat { color: var(--muted); }
-    .mkt-back .ret-caption { margin-top: auto; padding-top: 12px; font-family: var(--font-mono); font-size: 10px; color: var(--muted); letter-spacing: .04em; }
 
     /* Chart + hover tooltip */
     .chart-wrap { position: relative; margin-top: 10px; }
@@ -303,6 +295,47 @@
     .chart-tip b { color: var(--yellow); font-weight: 400; }
 
     .mkt-state { color: var(--muted); padding: 40px 0; font-size: 15px; }
+
+    /* Top bar: updated stamp + timeframe selector */
+    .mkt-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
+    .mkt-updated { margin-bottom: 0; }
+    .tf-selector { display: inline-flex; gap: 4px; padding: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; }
+    .tf-btn {
+      font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em;
+      padding: 6px 12px; border: none; border-radius: 999px; cursor: pointer;
+      background: transparent; color: var(--muted); transition: background .18s, color .18s;
+    }
+    .tf-btn:hover { color: var(--ink); }
+    .tf-btn.active { background: var(--warm); color: #fff; }
+
+    /* Returns table (card back) — striped rows, like a returns sheet */
+    .ret-table { width: 100%; border-collapse: collapse; margin-top: 14px; font-family: var(--font-mono); }
+    .ret-table td { padding: 7px 8px; font-size: 13px; }
+    .ret-table td:first-child { color: var(--ink); }
+    .ret-table td:last-child { text-align: right; font-variant-numeric: tabular-nums; }
+    .ret-table tr:nth-child(odd) { background: rgba(17,17,16,0.035); }
+    .ret-table tr.active-tf { background: var(--warm-light); }
+    .ret-table tr.active-tf td:first-child { color: var(--warm); font-weight: 500; }
+    .ret-table td.up { color: var(--up); }
+    .ret-table td.down { color: var(--down); }
+    .ret-table td.flat { color: var(--muted); }
+
+    /* Sector bar chart — diverging bars around a centre zero line */
+    .sector-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; }
+    .bar-row { display: grid; grid-template-columns: 128px 1fr 62px; align-items: center; gap: 12px; padding: 5px 0; }
+    .bar-label { font-size: 13px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track { position: relative; height: 18px; background: linear-gradient(90deg, transparent calc(50% - 0.5px), var(--border) calc(50% - 0.5px), var(--border) calc(50% + 0.5px), transparent calc(50% + 0.5px)); border-radius: 3px; }
+    .bar-fill { position: absolute; top: 3px; height: 12px; border-radius: 2px; }
+    .bar-fill.up { left: 50%; background: var(--up); }
+    .bar-fill.down { right: 50%; background: var(--down); }
+    .bar-val { font-family: var(--font-mono); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+    .bar-val.up { color: var(--up); }
+    .bar-val.down { color: var(--down); }
+    .sector-scale { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin: 4px 0 10px; padding: 0 62px 0 128px; }
+    @media (max-width: 560px) {
+      .bar-row { grid-template-columns: 96px 1fr 52px; gap: 8px; }
+      .sector-scale { padding: 0 52px 0 96px; }
+    }
 
     /* ── ABOUT ── */
     #about { background: var(--card); border-top: 1px solid var(--border); }
@@ -598,10 +631,13 @@
 <section id="markets">
   <div class="section-eyebrow">Markets</div>
   <h2 class="section-h2">The numbers<br>I watch.</h2>
-  <p class="section-lead">Indices, commodities, crypto, rates and sector trends — the macro picture I keep an eye on, refreshed hourly. Headline moves are over the trailing 30 days; flip any card for 1D–12M returns.</p>
-  <div class="mkt-updated" id="mkt-updated"><span class="dot"></span><span id="mkt-updated-text">Loading market data…</span></div>
+  <p class="section-lead">Indices, commodities, crypto, rates and sector trends — the macro picture I keep an eye on, refreshed hourly. Pick a timeframe below; it drives every chart, change and the sector bars.</p>
+  <div class="mkt-topbar">
+    <div class="mkt-updated" id="mkt-updated"><span class="dot"></span><span id="mkt-updated-text">Loading market data…</span></div>
+    <div class="tf-selector" id="tf-selector" role="tablist" aria-label="Timeframe"></div>
+  </div>
   <div id="mkt-content"><div class="mkt-state">Fetching the latest market data…</div></div>
-  <p class="mkt-foot" style="margin-top:28px;max-width:760px;line-height:1.7;">Prices via Yahoo Finance, cached and refreshed hourly. Headline change is over the trailing 30 days; flip a card for 1D / 7D / 30D / 3M / 6M / 12M returns. US Treasury yields (2Y / 10Y / 30Y); sectors are the SPDR select-sector ETFs. For information only — not investment advice.</p>
+  <p class="mkt-foot" style="margin-top:28px;max-width:820px;line-height:1.7;">Prices via Yahoo Finance, cached and refreshed hourly. Data is end-of-day, so a 1D chart is a single prev-close→now segment; 7D–12M draw the full daily trend. US Treasury yields (2Y / 10Y / 30Y); sectors are the SPDR select-sector ETFs. For information only — not investment advice.</p>
 </section>
 
 <!-- ── ARTICLES ── -->
@@ -776,6 +812,14 @@
 
   // ── MARKETS ──
   const MKT = { W: 300, H: 156, padL: 40, padR: 10, padT: 12, padB: 20 };
+  // [key, short label, chart-window days, long label]
+  const TF_OPTIONS = [
+    ['d1', '1D', 1, '1 Day'], ['d7', '7D', 7, '7 Days'], ['d30', '30D', 30, '30 Days'],
+    ['m3', '3M', 91, '3 Months'], ['m6', '6M', 182, '6 Months'], ['m12', '12M', 365, '12 Months'],
+  ];
+  let MARKET = null;   // fetched payload
+  let TF = 'd30';      // active timeframe key
+  const tfMeta = k => TF_OPTIONS.find(o => o[0] === k);
 
   function mktValue(item) {
     const v = item.current;
@@ -803,11 +847,24 @@
     const date = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
     return `Updated hourly · as of ${time} UTC, ${date}`;
   }
+  function fmtPct(pct) {
+    if (pct == null) return { cls: 'flat', t: '—' };
+    return { cls: pct >= 0 ? 'up' : 'down', t: (pct >= 0 ? '▲ +' : '▼ ') + Math.abs(pct).toFixed(2) + '%' };
+  }
 
-  // Interactive line chart with x/y axis labels and a hover tooltip.
-  function buildChart(item) {
+  // Slice full history to the selected window (min 2 points so a line always draws).
+  function windowHistory(history, days) {
+    if (!history || !history.length) return [];
+    const cutoff = history[history.length - 1].t - days * 86400;
+    let s = history.filter(p => p.t >= cutoff);
+    if (s.length < 2) s = history.slice(-2);
+    return s;
+  }
+
+  // Interactive line chart (windowed) with x/y axis labels and a hover tooltip.
+  function buildChart(item, days) {
     const { W, H, padL, padR, padT, padB } = MKT;
-    const hist = item.history, pts = hist.map(p => p.c);
+    const hist = windowHistory(item.history, days), pts = hist.map(p => p.c);
     const wrap = document.createElement('div');
     wrap.className = 'chart-wrap';
     if (pts.length < 2) { wrap.innerHTML = ''; return wrap; }
@@ -818,12 +875,11 @@
     const rising = pts.at(-1) >= pts[0];
     const col = rising ? 'var(--up)' : 'var(--down)';
     const rgb = rising ? '22,121,76' : '192,57,43';
-    const uid = 'g' + item.symbol.replace(/[^a-z0-9]/gi, '');
+    const uid = 'g' + item.symbol.replace(/[^a-z0-9]/gi, '') + TF;
 
     const line = pts.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
     const area = `${line} L${X(pts.length - 1).toFixed(1)},${(H - padB).toFixed(1)} L${X(0).toFixed(1)},${(H - padB).toFixed(1)} Z`;
 
-    // Y axis: max / mid / min gridlines + labels.
     const yv = [max, (max + min) / 2, min];
     const yAxis = yv.map((v, k) => {
       const gy = Y(v).toFixed(1);
@@ -831,15 +887,14 @@
         + `<text class="mkt-axis" x="${padL - 5}" y="${(+gy + 3).toFixed(1)}" text-anchor="end" font-size="8.5">${mktAxisNum(v, item)}</text>`;
     }).join('');
 
-    // X axis: first / mid / last dates.
-    const xi = [0, Math.floor((pts.length - 1) / 2), pts.length - 1];
+    const xi = pts.length > 2 ? [0, Math.floor((pts.length - 1) / 2), pts.length - 1] : [0, pts.length - 1];
     const xAxis = xi.map((i, k) => {
-      const anchor = k === 0 ? 'start' : k === 2 ? 'end' : 'middle';
+      const anchor = i === 0 ? 'start' : i === pts.length - 1 ? 'end' : 'middle';
       return `<text class="mkt-axis" x="${X(i).toFixed(1)}" y="${H - 6}" text-anchor="${anchor}" font-size="8.5">${mktDate(hist[i].t)}</text>`;
     }).join('');
 
     const dx = X(pts.length - 1).toFixed(1), dy = Y(pts.at(-1)).toFixed(1);
-    wrap.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${item.label} 30-day trend">
+    wrap.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${item.label} trend">
       <defs><linearGradient id="${uid}" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(${rgb},0.22)"/><stop offset="100%" stop-color="rgba(${rgb},0)"/></linearGradient></defs>
       ${yAxis}${xAxis}
       <path d="${area}" fill="url(#${uid})" stroke="none"/>
@@ -877,20 +932,15 @@
   }
 
   const FLIP_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"/><polyline points="1 20 1 14 7 14"/><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"/></svg>';
-  const WIN_LABELS = [['d1', '1D'], ['d7', '7D'], ['d30', '30D'], ['m3', '3M'], ['m6', '6M'], ['m12', '12M']];
-
-  function fmtPct(pct) {
-    if (pct == null) return { cls: 'flat', t: '—' };
-    return { cls: pct >= 0 ? 'up' : 'down', t: (pct >= 0 ? '▲ +' : '▼ ') + Math.abs(pct).toFixed(2) + '%' };
-  }
 
   function mktCard(item) {
+    const meta = tfMeta(TF);
     const card = document.createElement('div');
     card.className = 'mkt-card';
     const flip = document.createElement('div');
     flip.className = 'mkt-flip';
 
-    // ── Front: value + inline 30d change + chart ──
+    // ── Front: value + inline change (selected timeframe) + windowed chart ──
     const front = document.createElement('div');
     front.className = 'mkt-face mkt-front';
     const headF = document.createElement('div');
@@ -898,19 +948,20 @@
     headF.innerHTML = `<div class="mkt-label">${item.label}</div>`;
     const btnF = document.createElement('button');
     btnF.className = 'flip-btn'; btnF.type = 'button';
-    btnF.setAttribute('aria-label', 'Show returns over time'); btnF.title = 'Returns over time';
+    btnF.setAttribute('aria-label', 'Show returns table'); btnF.title = 'Returns table';
     btnF.innerHTML = FLIP_ICON;
     headF.appendChild(btnF);
-    const c = fmtPct(item.changePct);
+    const chg = item.changes ? item.changes[TF] : null;
+    const c = fmtPct(chg);
     const valRow = document.createElement('div');
     valRow.className = 'mkt-value-row';
     valRow.innerHTML = `<span class="mkt-value">${mktValue(item)}</span>`
-      + (item.changePct == null ? '' : `<span class="mkt-chg ${c.cls}">${c.t}<span class="win">30d</span></span>`);
+      + (chg == null ? '' : `<span class="mkt-chg ${c.cls}">${c.t}<span class="win">${meta[1].toLowerCase()}</span></span>`);
     front.appendChild(headF);
     front.appendChild(valRow);
-    front.appendChild(buildChart(item));
+    front.appendChild(buildChart(item, meta[2]));
 
-    // ── Back: returns across timeframes ──
+    // ── Back: striped returns table across all timeframes ──
     const back = document.createElement('div');
     back.className = 'mkt-face mkt-back';
     const headB = document.createElement('div');
@@ -921,18 +972,15 @@
     btnB.setAttribute('aria-label', 'Back to chart'); btnB.title = 'Back to chart';
     btnB.innerHTML = FLIP_ICON;
     headB.appendChild(btnB);
-    const rets = document.createElement('div');
-    rets.className = 'returns';
-    rets.innerHTML = WIN_LABELS.map(([k, lab]) => {
+    const rows = TF_OPTIONS.map(([k, , , long]) => {
       const p = fmtPct(item.changes ? item.changes[k] : null);
-      return `<div class="ret-item"><span class="ret-win">${lab}</span><span class="ret-val ${p.cls}">${p.t}</span></div>`;
+      return `<tr class="${k === TF ? 'active-tf' : ''}"><td>${long}</td><td class="${p.cls}">${p.t}</td></tr>`;
     }).join('');
-    const cap = document.createElement('div');
-    cap.className = 'ret-caption';
-    cap.textContent = 'Total return over period';
+    const table = document.createElement('table');
+    table.className = 'ret-table';
+    table.innerHTML = `<tbody>${rows}</tbody>`;
     back.appendChild(headB);
-    back.appendChild(rets);
-    back.appendChild(cap);
+    back.appendChild(table);
 
     flip.appendChild(front);
     flip.appendChild(back);
@@ -942,38 +990,90 @@
     return card;
   }
 
+  // Sectors rendered as a diverging bar chart for the selected timeframe.
+  function sectorBars(items) {
+    const vals = items.map(it => ({ label: it.label, v: it.changes ? it.changes[TF] : null }))
+      .filter(x => x.v != null)
+      .sort((a, b) => b.v - a.v);
+    const maxAbs = Math.max(0.1, ...vals.map(x => Math.abs(x.v)));
+    const panel = document.createElement('div');
+    panel.className = 'sector-panel';
+    const scale = document.createElement('div');
+    scale.className = 'sector-scale';
+    scale.innerHTML = `<span>−${maxAbs.toFixed(1)}%</span><span>0</span><span>+${maxAbs.toFixed(1)}%</span>`;
+    panel.appendChild(scale);
+    vals.forEach(x => {
+      const up = x.v >= 0;
+      const w = (Math.abs(x.v) / maxAbs * 50).toFixed(1);
+      const row = document.createElement('div');
+      row.className = 'bar-row';
+      row.innerHTML = `<span class="bar-label" title="${x.label}">${x.label}</span>`
+        + `<div class="bar-track"><div class="bar-fill ${up ? 'up' : 'down'}" style="width:${w}%"></div></div>`
+        + `<span class="bar-val ${up ? 'up' : 'down'}">${up ? '+' : ''}${x.v.toFixed(2)}%</span>`;
+      panel.appendChild(row);
+    });
+    return panel;
+  }
+
+  function buildSelector() {
+    const el = document.getElementById('tf-selector');
+    el.innerHTML = '';
+    TF_OPTIONS.forEach(([k, short]) => {
+      const b = document.createElement('button');
+      b.className = 'tf-btn' + (k === TF ? ' active' : '');
+      b.type = 'button'; b.dataset.tf = k; b.textContent = short;
+      b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', k === TF);
+      b.addEventListener('click', () => { if (TF !== k) { TF = k; renderAll(); } });
+      el.appendChild(b);
+    });
+  }
+
+  function renderAll() {
+    const data = MARKET;
+    if (!data) return;
+    const root = document.getElementById('mkt-content');
+    root.innerHTML = '';
+    for (const g of data.groups) {
+      const group = document.createElement('div');
+      group.className = 'mkt-group';
+      const sub = document.createElement('div');
+      sub.className = 'mkt-sub';
+      sub.textContent = g.label;
+      group.appendChild(sub);
+      if (g.key === 'sectors') {
+        group.appendChild(sectorBars(g.items));
+      } else {
+        const grid = document.createElement('div');
+        grid.className = 'mkt-grid';
+        g.items.forEach(it => grid.appendChild(mktCard(it)));
+        group.appendChild(grid);
+      }
+      root.appendChild(group);
+    }
+    if (data.failed && data.failed.length) {
+      const p = document.createElement('p');
+      p.className = 'mkt-foot';
+      p.style.cssText = 'color:var(--down);margin-top:20px;';
+      p.textContent = 'Temporarily unavailable: ' + data.failed.join(', ');
+      root.appendChild(p);
+    }
+    document.querySelectorAll('.tf-btn').forEach(b => {
+      const on = b.dataset.tf === TF;
+      b.classList.toggle('active', on);
+      b.setAttribute('aria-selected', on);
+    });
+  }
+
   async function loadMarket() {
     try {
       const res = await fetch('/.netlify/functions/get-market');
       if (!res.ok) throw new Error('HTTP ' + res.status);
       const data = await res.json();
       if (!data.groups || !data.groups.length) throw new Error('no data');
+      MARKET = data;
       document.getElementById('mkt-updated-text').textContent = mktStamp(data.updatedAt);
-      const root = document.getElementById('mkt-content');
-      root.innerHTML = '';
-      for (const g of data.groups) {
-        const items = g.key === 'sectors'
-          ? [...g.items].sort((a, b) => (b.changePct ?? -99) - (a.changePct ?? -99))
-          : g.items;
-        const group = document.createElement('div');
-        group.className = 'mkt-group';
-        const sub = document.createElement('div');
-        sub.className = 'mkt-sub';
-        sub.textContent = g.label;
-        group.appendChild(sub);
-        const grid = document.createElement('div');
-        grid.className = 'mkt-grid';
-        items.forEach(it => grid.appendChild(mktCard(it)));
-        group.appendChild(grid);
-        root.appendChild(group);
-      }
-      if (data.failed && data.failed.length) {
-        const p = document.createElement('p');
-        p.className = 'mkt-foot';
-        p.style.cssText = 'color:var(--down);margin-top:20px;';
-        p.textContent = 'Temporarily unavailable: ' + data.failed.join(', ');
-        root.appendChild(p);
-      }
+      buildSelector();
+      renderAll();
     } catch (e) {
       document.getElementById('mkt-updated-text').textContent = 'Data unavailable';
       document.getElementById('mkt-content').innerHTML = '<div class="mkt-state">Couldn\'t load market data right now. Please try again shortly.</div>';

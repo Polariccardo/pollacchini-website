@@ -14,8 +14,7 @@ const YAHOO = "https://query1.finance.yahoo.com/v8/finance/chart";
 const RANGE = "1y";       // fetch a year so we can compute up to 12-month change
 const INTERVAL = "1d";
 const DAY = 24 * 60 * 60; // seconds
-const CHART_DAYS = 31;    // front chart shows ~last 30 days (aligns with 30d change)
-// Timeframes shown on the back of each card.
+// Timeframes for the headline change, returns table, and global selector.
 const WINDOWS = { d1: 1, d7: 7, d30: 30, m3: 91, m6: 182, m12: 365 };
 
 // ── Symbol config ── the ONLY place tickers/labels/units/groups live.
@@ -114,12 +113,6 @@ async function fetchSymbol(cfg) {
   const changes = {};
   for (const [k, days] of Object.entries(WINDOWS)) changes[k] = pctChange(history, current, days);
 
-  // Front chart only carries the most recent ~30 days (keeps payload small and
-  // aligns the line with the 30-day headline change).
-  const chartHistory = history.length
-    ? history.filter(p => p.t >= history.at(-1).t - CHART_DAYS * DAY)
-    : history;
-
   return {
     symbol: cfg.symbol,
     label: cfg.label,
@@ -127,9 +120,9 @@ async function fetchSymbol(cfg) {
     suffix: cfg.suffix || "",
     cat: cfg.cat,
     current,
-    changePct: changes.d30, // headline change, aligned with the chart window
+    changePct: changes.d30, // default headline change (the client can switch timeframe)
     changes,
-    history: chartHistory,
+    history, // full ~1y daily series; the client slices it to the selected window
   };
 }
 
