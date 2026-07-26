@@ -39,11 +39,9 @@ const SYMBOLS = [
   { symbol: "^STOXX",   label: "STOXX Europe 600", unit: "index", cat: "macro" },
   { symbol: "GC=F",     label: "Gold",             unit: "usd", suffix: "/oz",  cat: "macro" },
   { symbol: "BZ=F",     label: "Brent Crude",      unit: "usd", suffix: "/bbl", cat: "macro" },
+  { symbol: "HG=F",     label: "Copper",           unit: "usd", suffix: "/lb",  cat: "macro" },
   { symbol: "BTC-USD",  label: "Bitcoin",          unit: "usd", cat: "macro" },
   { symbol: "EURUSD=X", label: "EUR / USD",        unit: "fx",  cat: "macro" },
-
-  // Fetched only to feed the copper/gold ratio (not shown on its own).
-  { symbol: "HG=F", label: "Copper", unit: "usd", suffix: "/lb", cat: "hidden" },
 
   // Sectors — SPDR select-sector ETFs
   { symbol: "XLK",  label: "Technology",       unit: "usd", cat: "sectors" },
@@ -65,6 +63,26 @@ const GROUPS = [
   { key: "macro",           label: "Macro" },
   { key: "sectors",         label: "Sectors — SPDR Select ETFs" },
 ];
+
+// Why each metric matters from a corporate-finance lens (shown in the "?" card).
+// Keyed by symbol; sectors deliberately have none.
+const INFO = {
+  "2YY=F": "The 2-year tracks where the market expects short-term policy rates to sit. It's your near-term cost of floating-rate debt and the discount rate on short-horizon cash flows — and the fastest-moving read on where monetary policy is heading.",
+  "^TNX": "The 10-year is the anchor risk-free rate in most valuation and WACC work. When it rises, discount rates rise and long-duration assets — growth equity, the terminal value in your DCF — are worth less. It's arguably the single most important number for what a company is worth.",
+  "^TYX": "The long bond reflects structural expectations for growth and inflation. It matters for very long-dated liabilities and as a sanity check on whether the market believes today's inflation is temporary or permanent.",
+  "HYG": "A live read on the cost and availability of riskier debt. When this ETF falls, high-yield spreads are widening — leverage is getting expensive and the window for refinancing or debt-funded deals is closing. It's an early-warning gauge for credit stress.",
+  "LQD": "Tracks the cost of high-quality corporate borrowing. It sets the backdrop for what a solid balance sheet pays to raise debt, and a sharp drop flags tightening financial conditions before they hit the real economy.",
+  "CURVE_2S10S": "The gap between 10- and 2-year yields. A steep (positive) curve signals expected growth; an inverted (negative) one has preceded most recessions and warns that financing conditions are tight. A one-number regime indicator for planning, hiring and capital allocation.",
+  "^GSPC": "The broad benchmark for US equity risk appetite and the reference point for equity cost of capital and public comps. Its level and trend shape the valuation multiples applied across both public and private markets.",
+  "^STOXX": "The broad European equity benchmark — the home-market read for a Europe-based company. It frames regional risk sentiment and the multiples European peers and acquirers trade on.",
+  "GC=F": "A store of value and fear gauge. Rising gold often signals concern about inflation, currency debasement or geopolitical risk, and it moves inversely to real rates — useful context for how defensive capital is positioned.",
+  "BZ=F": "The global oil benchmark and a direct input to input costs, logistics and inflation. For most businesses it's a swing factor in the cost base and a real-time read on global demand.",
+  "HG=F": "'Dr. Copper' — industrial demand makes it a real-time barometer of global growth. Rising copper suggests expansion and pricing power; falling copper warns of slowing demand ahead of the official data.",
+  "BTC-USD": "A high-beta proxy for global liquidity and speculative risk appetite. It tends to lead when easy money is flowing and to sell off first when liquidity tightens — a fast, if noisy, sentiment gauge.",
+  "EURUSD=X": "The most important FX rate for a euro-area company with dollar exposure. It drives the translation of USD revenue and costs, hedging decisions, and the euro value of dollar-denominated assets and liabilities.",
+  "COPPER_GOLD": "Growth versus fear in one ratio: industrial copper over safe-haven gold. It tracks closely with bond yields and is a clean read on whether the market is pricing expansion or caution.",
+  "COPPER_BRENT": "Two cyclical commodities, one growth signal filtered for energy. Copper relative to oil helps separate genuine demand strength from energy-driven cost pressure — a read on whether growth is real or just inflationary.",
+};
 
 // Fetch JSON with a hard per-request timeout + one retry. Without the timeout,
 // a single hanging Yahoo request would stall the whole function past Netlify's
@@ -120,6 +138,7 @@ async function fetchSymbol(cfg) {
     unit: cfg.unit || "index",
     suffix: cfg.suffix || "",
     cat: cfg.cat,
+    info: INFO[cfg.symbol],
     current,
     changePct: changes.d30, // default headline change (the client can switch timeframe)
     changes,
@@ -175,21 +194,20 @@ function deriveCurve(ten, two, meta) {
   const current = Number(((ten.current - two.current) * 100).toFixed(1));
   const changes = {};
   for (const [k, days] of Object.entries(WINDOWS)) changes[k] = absChange(history, current, days);
-  return { symbol: meta.symbol, label: meta.label, unit: "bps", changeAbs: true, cat: meta.cat, current, changePct: changes.d30, changes, history };
+  return { symbol: meta.symbol, label: meta.label, info: meta.info, unit: "bps", changeAbs: true, cat: meta.cat, current, changePct: changes.d30, changes, history };
 }
 
-// Copper/Gold ratio — a growth-vs-fear barometer; change shown as %.
-// Scaled ×1000 so the value reads as a clean number (~1.5) instead of ~0.0015.
-const CG_SCALE = 1000;
-function deriveRatio(num, den, meta) {
+// Commodity ratio (growth-vs-fear barometer); change shown as %. Scaled to a
+// readable magnitude (the absolute level of a cross-unit ratio is arbitrary).
+function deriveRatio(num, den, meta, scale = 1) {
   if (!num || !den || num.current == null || den.current == null) return null;
   const al = align(num, den);
   if (al.length < 2) return null;
-  const history = al.map(x => ({ t: x.t, c: Number((x.a / x.b * CG_SCALE).toFixed(3)) }));
-  const current = Number((num.current / den.current * CG_SCALE).toFixed(3));
+  const history = al.map(x => ({ t: x.t, c: Number((x.a / x.b * scale).toFixed(3)) }));
+  const current = Number((num.current / den.current * scale).toFixed(3));
   const changes = {};
   for (const [k, days] of Object.entries(WINDOWS)) changes[k] = pctChange(history, current, days);
-  return { symbol: meta.symbol, label: meta.label, unit: "ratio", cat: meta.cat, current, changePct: changes.d30, changes, history };
+  return { symbol: meta.symbol, label: meta.label, info: meta.info, unit: "ratio", cat: meta.cat, current, changePct: changes.d30, changes, history };
 }
 
 export const handler = async () => {
@@ -204,10 +222,12 @@ export const handler = async () => {
 
     // Derived metrics, appended to the end of their group.
     const bySym = Object.fromEntries(ok.map(it => [it.symbol, it]));
-    const curve = deriveCurve(bySym["^TNX"], bySym["2YY=F"], { symbol: "CURVE_2S10S", label: "2s10s Curve", cat: "cost-of-capital" });
+    const curve = deriveCurve(bySym["^TNX"], bySym["2YY=F"], { symbol: "CURVE_2S10S", label: "2s10s Curve", cat: "cost-of-capital", info: INFO.CURVE_2S10S });
     if (curve) ok.push(curve); else failed.push("CURVE_2S10S");
-    const cgRatio = deriveRatio(bySym["HG=F"], bySym["GC=F"], { symbol: "COPPER_GOLD", label: "Copper / Gold", cat: "macro" });
+    const cgRatio = deriveRatio(bySym["HG=F"], bySym["GC=F"], { symbol: "COPPER_GOLD", label: "Copper / Gold", cat: "macro", info: INFO.COPPER_GOLD }, 1000);
     if (cgRatio) ok.push(cgRatio); else failed.push("COPPER_GOLD");
+    const cbRatio = deriveRatio(bySym["HG=F"], bySym["BZ=F"], { symbol: "COPPER_BRENT", label: "Copper / Brent", cat: "macro", info: INFO.COPPER_BRENT }, 100);
+    if (cbRatio) ok.push(cbRatio); else failed.push("COPPER_BRENT");
 
     // Bucket into groups, preserving GROUPS order; drop empty groups.
     // (Items with cat "hidden", e.g. copper, match no group and drop out.)
