@@ -327,23 +327,20 @@
     .ret-table td.down { color: var(--down); }
     .ret-table td.flat { color: var(--muted); }
 
-    /* Sector bar chart — diverging bars around a centre zero line */
-    .sector-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 20px 22px; }
-    .sector-panel + .mkt-grid { margin-top: 16px; }
-    .bar-row { display: grid; grid-template-columns: 128px 1fr 62px; align-items: center; gap: 12px; padding: 5px 0; }
-    .bar-label { font-size: 13px; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .bar-track { position: relative; height: 18px; background: linear-gradient(90deg, transparent calc(50% - 0.5px), var(--border) calc(50% - 0.5px), var(--border) calc(50% + 0.5px), transparent calc(50% + 0.5px)); border-radius: 3px; }
-    .bar-fill { position: absolute; top: 3px; height: 12px; border-radius: 2px; }
+    /* Sector bar chart — diverging bars, compact to fit one card cell */
+    .mkt-grid { align-items: start; }
+    .sector-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px 6px; }
+    .sp-title { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 5px; line-height: 1; }
+    .sector-scale { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 9px; color: var(--muted); margin: 0 0 4px; padding: 0 44px 0 66px; line-height: 1; }
+    .bar-row { display: grid; grid-template-columns: 66px 1fr 44px; align-items: center; gap: 6px; padding: 2.5px 0; line-height: 1; }
+    .bar-label { font-size: 10px; line-height: 1; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+    .bar-track { position: relative; height: 11px; background: linear-gradient(90deg, transparent calc(50% - 0.5px), var(--border) calc(50% - 0.5px), var(--border) calc(50% + 0.5px), transparent calc(50% + 0.5px)); border-radius: 2px; }
+    .bar-fill { position: absolute; top: 2px; height: 7px; border-radius: 2px; }
     .bar-fill.up { left: 50%; background: var(--up); }
     .bar-fill.down { right: 50%; background: var(--down); }
-    .bar-val { font-family: var(--font-mono); font-size: 12px; text-align: right; font-variant-numeric: tabular-nums; }
+    .bar-val { font-family: var(--font-mono); font-size: 10px; text-align: right; font-variant-numeric: tabular-nums; }
     .bar-val.up { color: var(--up); }
     .bar-val.down { color: var(--down); }
-    .sector-scale { display: flex; justify-content: space-between; font-family: var(--font-mono); font-size: 10px; color: var(--muted); margin: 4px 0 10px; padding: 0 62px 0 128px; }
-    @media (max-width: 560px) {
-      .bar-row { grid-template-columns: 96px 1fr 52px; gap: 8px; }
-      .sector-scale { padding: 0 52px 0 96px; }
-    }
 
     /* ── ABOUT ── */
     #about { background: var(--card); border-top: 1px solid var(--border); }
@@ -1015,6 +1012,10 @@
     const maxAbs = Math.max(0.1, ...vals.map(x => Math.abs(x.v)));
     const panel = document.createElement('div');
     panel.className = 'sector-panel';
+    const title = document.createElement('div');
+    title.className = 'sp-title';
+    title.textContent = `All sectors · ${tfMeta(TF)[1].toLowerCase()}`;
+    panel.appendChild(title);
     const scale = document.createElement('div');
     scale.className = 'sector-scale';
     scale.innerHTML = `<span>−${maxAbs.toFixed(1)}%</span><span>0</span><span>+${maxAbs.toFixed(1)}%</span>`;
@@ -1076,8 +1077,8 @@
       const grid = document.createElement('div');
       grid.className = 'mkt-grid';
       if (g.key === 'sectors') {
-        // Sectors: the diverging bar chart overview AND the individual cards.
-        group.appendChild(sectorBars(g.items));
+        // Sectors: the diverging bar chart (as one card cell) AND the cards.
+        grid.appendChild(sectorBars(g.items));
         const sorted = [...g.items].sort((a, b) => ((b.changes && b.changes[TF]) ?? -99) - ((a.changes && a.changes[TF]) ?? -99));
         sorted.forEach(it => grid.appendChild(mktCard(it)));
       } else {
