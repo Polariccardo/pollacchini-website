@@ -9,10 +9,10 @@
   <meta property="og:type" content="website" />
   <meta property="og:url" content="https://pollacchini.com/" />
   <meta property="og:title" content="Riccardo Pollacchini — Head of Business Finance" />
-  <meta property="og:description" content="Finance leader helping scale-ups grow with clarity, data, and a bit of fun. Articles and real thinking on business finance." />
+  <meta property="og:description" content="Head of Business Finance at Lenus. I build the planning, analytics and decision systems that connect revenue, cost, cash and execution." />
   <meta property="og:image" content="https://pollacchini.com/og-image.jpg" />
   <meta name="twitter:card" content="summary_large_image" />
-  <meta name="description" content="Finance leader helping scale-ups grow with clarity, data, and a bit of fun. Articles and real thinking on business finance." />
+  <meta name="description" content="Head of Business Finance at Lenus. I build the planning, analytics and decision systems that connect revenue, cost, cash and execution." />
 
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -25,17 +25,15 @@
       --paper: #F7F5F0;
       --warm: #2E2EFF;
       --yellow: #FFFF00;
-      --warm-light: #EDEDFF;
       --muted: #7A7870;
       --border: #E2DFD8;
       --card: #FFFFFF;
-      --up: #16794C;
-      --up-bg: #E7F1EC;
-      --down: #C0392B;
-      --down-bg: #F6E7E4;
       --font-display: 'Playfair Display', Georgia, serif;
       --font-body: 'DM Sans', sans-serif;
       --font-mono: 'DM Mono', monospace;
+      --on-ink: rgba(247, 245, 240, 0.6);
+      --on-ink-faint: rgba(247, 245, 240, 0.3);
+      --on-ink-line: rgba(255, 255, 255, 0.12);
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -137,7 +135,7 @@
     }
     .hero-h1 {
       font-family: var(--font-display);
-      font-size: clamp(48px, 6vw, 80px);
+      font-size: clamp(36px, 5vw, 66px);
       font-weight: 900;
       line-height: 1.15;
       letter-spacing: -0.03em;
@@ -149,7 +147,7 @@
     }
     .hero-sub {
       font-size: 17px; color: var(--muted);
-      max-width: 420px; line-height: 1.8;
+      max-width: 460px; line-height: 1.8;
       margin-bottom: 28px;
     }
     .hero-cta {
@@ -177,33 +175,20 @@
       padding: 80px 80px 80px 40px;
       position: relative;
     }
-    .hero-stats {
-      display: grid; grid-template-columns: 1fr 1fr;
-      grid-template-rows: 1fr 1fr;
-      aspect-ratio: 1;
-      gap: 2px; width: 100%; max-width: 400px;
+    .hero-photo {
+      width: 100%; max-width: 400px; aspect-ratio: 4 / 5;
+      border-radius: 28px; overflow: hidden; background: var(--card);
+      box-shadow: 0 24px 60px rgba(17, 17, 16, 0.10);
     }
-    .stat-card {
-      background: var(--card); padding: 32px 28px;
-      border: 1px solid var(--border);
-      display: flex; flex-direction: column;
-      justify-content: center; align-items: flex-start;
-      text-align: left;
+    .hero-photo img { width: 100%; height: 100%; object-fit: cover; object-position: center 15%; display: block; }
+
+    .hero-path {
+      display: flex; flex-wrap: wrap; gap: 4px 10px; list-style: none; margin-top: 16px;
+      font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted);
     }
-    .stat-card:first-child { border-radius: 12px 0 0 0; }
-    .stat-card:nth-child(2) { border-radius: 0 12px 0 0; background: var(--yellow); }
-    .stat-card:nth-child(3) { border-radius: 0 0 0 12px; }
-    .stat-card:last-child { border-radius: 0 0 12px 0; }
-    .stat-num {
-      font-family: var(--font-display);
-      font-size: 44px; font-weight: 900;
-      letter-spacing: -0.04em;
-      color: var(--ink); margin-bottom: 6px;
-    }
-    .stat-card:nth-child(2) .stat-num,
-    .stat-card:nth-child(2) .stat-label { color: var(--ink); }
-    .stat-label { font-size: 12px; color: var(--muted); letter-spacing: 0.05em; text-transform: uppercase; }
-    .stat-card:nth-child(2) .stat-label { color: rgba(0,0,0,0.6); }
+    .hero-path li + li::before { content: '→'; margin-right: 10px; color: var(--warm); }
+    .hero-path li:last-child { color: var(--ink); }
+    .hero-thread { margin: 6px 0 18px; font-size: 13px; line-height: 1.6; color: var(--muted); max-width: 460px; }
 
     /* ── SECTION SHARED ── */
     section { padding: 100px 80px; }
@@ -228,206 +213,58 @@
       max-width: 560px; line-height: 1.8; margin-bottom: 56px;
     }
 
-    /* ── MARKETS ── */
-    #markets { background: var(--paper); }
-    .mkt-updated {
-      display: inline-flex; align-items: center; gap: 8px; margin-bottom: 8px;
-      font-family: var(--font-mono); font-size: 12px; color: var(--muted);
-      padding: 6px 12px; border: 1px solid var(--border); border-radius: 999px; background: var(--card);
+    /* ── WORK ── */
+    #work { background: var(--card); border-top: 1px solid var(--border); }
+    .questions-grid { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: 16px; }
+    .question-card {
+      background: var(--paper); border: 1px solid var(--border); border-radius: 8px;
+      padding: 26px 24px; transition: background 0.2s, border-color 0.2s;
     }
-    .mkt-updated .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--up); }
-
-    .mkt-sub {
-      font-family: var(--font-mono); font-size: 12px; letter-spacing: .14em; text-transform: uppercase;
-      color: var(--muted); margin: 48px 0 20px; padding-bottom: 12px; border-bottom: 1px solid var(--border);
+    .question {
+      font-family: var(--font-display); font-style: italic; font-weight: 700;
+      font-size: 21px; line-height: 1.25; letter-spacing: -0.02em; color: var(--ink);
+      margin-bottom: 10px; text-wrap: balance;
     }
-    .mkt-group:first-of-type .mkt-sub { margin-top: 24px; }
+    .question-how { font-size: 14px; color: var(--muted); line-height: 1.7; }
 
-    /* Uniform card grid — every metric renders at the same compact size. */
-    .mkt-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(248px, 1fr)); gap: 16px; }
+    /* Question, principle and article cards: the hovered card turns yellow. In Work and
+       Thinking one card is lit by default and steps back while another is hovered. */
+    .question-card:hover, .principle-box:hover,
+    .question-card.is-highlight, .principle-box.is-highlight { background: var(--yellow); border-color: var(--warm); }
+    .question-card:hover .question-how, .principle-box:hover .principle-desc, .article-tile:hover .article-meta,
+    .is-highlight .question-how, .is-highlight .principle-desc { color: var(--ink); }
+    #work .questions-grid:has(.question-card:hover) .is-highlight:not(:hover) { background: var(--paper); border-color: var(--border); }
+    .principle-stack:has(.principle-box:hover) .is-highlight:not(:hover) { background: var(--card); border-color: var(--border); }
+    #work .questions-grid:has(.question-card:hover) .is-highlight:not(:hover) .question-how,
+    .principle-stack:has(.principle-box:hover) .is-highlight:not(:hover) .principle-desc { color: var(--muted); }
 
-    /* Flip card: .mkt-card is the perspective shell; front is in flow (sets
-       height), back is absolutely overlaid and rotated. */
-    .mkt-card { perspective: 1200px; }
-    .mkt-flip { position: relative; transform-style: preserve-3d; transition: transform .55s cubic-bezier(.4,.2,.2,1); }
-    .mkt-card.flipped .mkt-flip { transform: rotateY(180deg); }
-    .mkt-face {
-      background: var(--card); border: 1px solid var(--border); border-radius: 14px;
-      padding: 16px 16px 12px; transition: box-shadow .2s, border-color .2s;
-      backface-visibility: hidden; -webkit-backface-visibility: hidden;
+    /* ── THINKING ── */
+    #thinking { background: var(--paper); border-top: 1px solid var(--border); }
+    #thinking .section-lead { margin-bottom: 0; }
+    .thinking-grid { display: grid; grid-template-columns: minmax(0, 5fr) minmax(0, 6fr); gap: 72px; align-items: center; }
+    .principle-stack { display: flex; flex-direction: column; gap: 6px; list-style: none; }
+    .principle-box {
+      display: grid; grid-template-columns: 34px minmax(0, 1fr); gap: 14px; align-items: baseline;
+      padding: 20px; background: var(--card); border: 1px solid var(--border); border-radius: 8px;
+      transition: background 0.2s, border-color 0.2s;
     }
-    .mkt-front { position: relative; }
-    .mkt-back { position: absolute; inset: 0; transform: rotateY(180deg); display: flex; flex-direction: column; }
-    .mkt-card:hover .mkt-face { border-color: #cfcbc1; box-shadow: 0 6px 22px rgba(17,17,16,0.05); }
-
-    .mkt-card-head { display: flex; justify-content: space-between; align-items: flex-start; gap: 8px; }
-    .mkt-label { font-size: 12px; letter-spacing: .05em; text-transform: uppercase; color: var(--muted); font-weight: 500; line-height: 1.35; }
-    .mkt-value-row { display: flex; align-items: baseline; gap: 8px; flex-wrap: wrap; margin-top: 4px; }
-    .mkt-value { font-family: var(--font-display); font-weight: 700; font-size: 25px; letter-spacing: -.02em; line-height: 1.1; }
-    .mkt-value .suffix { font-size: 12px; color: var(--muted); font-family: var(--font-body); font-weight: 400; }
-    .mkt-chg { font-family: var(--font-mono); font-size: 13px; white-space: nowrap; }
-    .mkt-chg .win { color: var(--muted); font-size: 10px; margin-left: 2px; }
-    .mkt-chg.up { color: var(--up); }
-    .mkt-chg.down { color: var(--down); }
-
-    .flip-btn {
-      flex-shrink: 0; width: 28px; height: 28px; padding: 0; cursor: pointer;
-      display: flex; align-items: center; justify-content: center;
-      background: transparent; border: 1px solid var(--border); border-radius: 8px;
-      color: var(--muted); transition: color .2s, border-color .2s;
-    }
-    .flip-btn:hover { color: var(--warm); border-color: var(--warm); }
-
-    /* Back face — multi-timeframe returns table */
-    .mkt-back .mkt-label { color: var(--warm); }
-
-    /* Chart + hover tooltip */
-    .chart-wrap { position: relative; margin-top: 10px; }
-    .chart-wrap svg { width: 100%; height: auto; display: block; cursor: crosshair; -webkit-tap-highlight-color: transparent; }
-    .mkt-axis { font-family: var(--font-mono); fill: var(--muted); }
-    .chart-tip {
-      position: absolute; pointer-events: none; z-index: 5;
-      background: var(--ink); color: var(--paper);
-      font-family: var(--font-mono); font-size: 11px; line-height: 1.4;
-      padding: 5px 8px; border-radius: 6px; white-space: nowrap;
-      transform: translate(-50%, -122%); opacity: 0; transition: opacity .12s;
-    }
-    .chart-tip b { color: var(--yellow); font-weight: 400; }
-
-    .mkt-state { color: var(--muted); padding: 40px 0; font-size: 15px; }
-
-    /* Top bar: updated stamp + timeframe selector + flip-all */
-    .mkt-topbar { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; margin-bottom: 8px; }
-    .mkt-updated { margin-bottom: 0; }
-    .mkt-controls-right { display: inline-flex; align-items: center; gap: 10px; flex-wrap: wrap; }
-    .tf-selector { display: inline-flex; gap: 4px; padding: 4px; background: var(--card); border: 1px solid var(--border); border-radius: 999px; }
-    .tf-btn {
-      font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em;
-      padding: 6px 12px; border: none; border-radius: 999px; cursor: pointer;
-      background: transparent; color: var(--muted); transition: background .18s, color .18s;
-    }
-    .tf-btn:hover { color: var(--ink); }
-    .tf-btn.active { background: var(--warm); color: #fff; }
-    .flip-all-btn {
-      display: inline-flex; align-items: center; gap: 7px; cursor: pointer;
-      font-family: var(--font-mono); font-size: 12px; letter-spacing: .04em;
-      padding: 8px 13px; border: 1px solid var(--border); border-radius: 999px;
-      background: var(--card); color: var(--muted); transition: color .18s, border-color .18s;
-    }
-    .flip-all-btn:hover { color: var(--warm); border-color: var(--warm); }
-    .flip-all-btn svg { flex-shrink: 0; }
-
-    /* Returns table (card back) — striped rows, like a returns sheet */
-    .ret-table { width: 100%; border-collapse: collapse; margin-top: 12px; font-family: var(--font-mono); }
-    .ret-table td { padding: 5px 5px; font-size: 11.5px; }
-    .ret-table td:first-child { color: var(--ink); }
-    .ret-table td:last-child { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
-    .ret-table tr:nth-child(odd) { background: rgba(17,17,16,0.035); }
-    .ret-table td.up { color: var(--up); }
-    .ret-table td.down { color: var(--down); }
-    .ret-table td.flat { color: var(--muted); }
-
-    /* Sector bar chart — diverging bars, compact to fit one card cell */
-    .mkt-grid { align-items: start; }
-    .sector-panel { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 10px 12px 8px; display: flex; flex-direction: column; align-self: stretch; }
-    .sp-bars { flex: 1; display: flex; flex-direction: column; justify-content: space-between; }
-    .sp-title { font-size: 11px; letter-spacing: .04em; text-transform: uppercase; color: var(--muted); font-weight: 500; margin-bottom: 5px; line-height: 1; }
-    .bar-row { display: grid; grid-template-columns: 66px 1fr 44px; align-items: center; gap: 6px; padding: 2.5px 0; line-height: 1; }
-    .bar-label { font-size: 10px; line-height: 1; color: var(--ink); white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-    .bar-track { position: relative; height: 11px; background: linear-gradient(90deg, transparent calc(50% - 0.5px), var(--border) calc(50% - 0.5px), var(--border) calc(50% + 0.5px), transparent calc(50% + 0.5px)); border-radius: 2px; }
-    .bar-fill { position: absolute; top: 2px; height: 7px; border-radius: 2px; }
-    .bar-fill.up { left: 50%; background: var(--up); }
-    .bar-fill.down { right: 50%; background: var(--down); }
-    .bar-val { font-family: var(--font-mono); font-size: 10px; text-align: right; font-variant-numeric: tabular-nums; }
-    .bar-val.up { color: var(--up); }
-    .bar-val.down { color: var(--down); }
-
-    /* "?" explainer button + modal */
-    .info-btn {
-      display: inline-flex; align-items: center; justify-content: center;
-      width: 15px; height: 15px; margin-left: 5px; padding: 0; vertical-align: middle;
-      font-family: var(--font-mono); font-size: 10px; line-height: 1; cursor: pointer;
-      border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--muted);
-      transition: color .2s, border-color .2s;
-    }
-    .info-btn:hover { color: var(--warm); border-color: var(--warm); }
-    .info-modal-backdrop {
-      position: fixed; inset: 0; z-index: 200; display: flex; align-items: center; justify-content: center;
-      background: rgba(17,17,16,0.55); backdrop-filter: blur(3px); padding: 24px;
-      opacity: 0; transition: opacity .2s;
-    }
-    .info-modal-backdrop.open { opacity: 1; }
-    .info-modal-backdrop[hidden] { display: none; }
-    .info-modal {
-      background: var(--card); border: 1px solid var(--border); border-radius: 18px;
-      max-width: 560px; width: 100%; max-height: 88vh; overflow-y: auto;
-      padding: 28px 30px 24px; position: relative;
-      transform: scale(.96); transition: transform .2s;
-    }
-    .info-modal-backdrop.open .info-modal { transform: scale(1); }
-    .info-modal-close {
-      position: absolute; top: 16px; right: 16px; width: 30px; height: 30px; padding: 0; cursor: pointer;
-      border: 1px solid var(--border); border-radius: 50%; background: transparent; color: var(--muted);
-      font-size: 18px; line-height: 1; display: flex; align-items: center; justify-content: center;
-      transition: color .2s, border-color .2s;
-    }
-    .info-modal-close:hover { color: var(--ink); border-color: var(--ink); }
-    .info-modal-name { font-family: var(--font-display); font-weight: 700; font-size: 26px; letter-spacing: -.02em; padding-right: 36px; line-height: 1.1; }
-    .info-modal-value { font-family: var(--font-mono); font-size: 15px; color: var(--muted); margin-top: 8px; }
-    .info-modal-value .up { color: var(--up); }
-    .info-modal-value .down { color: var(--down); }
-    .info-modal-text { font-size: 15px; line-height: 1.7; color: var(--ink); margin: 20px 0 22px; }
-    .info-modal-chart { border-top: 1px solid var(--border); padding-top: 18px; }
-    .info-modal-chart .chart-wrap { margin-top: 0; }
-
-    /* ── ABOUT ── */
-    #about { background: var(--card); border-top: 1px solid var(--border); }
-    #articles { background: var(--card); }
-    .about-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start; }
-    .about-text p { font-size: 16px; color: var(--muted); line-height: 1.9; margin-bottom: 20px; }
-    .about-text strong { color: var(--ink); font-weight: 500; }
-    .about-values { display: flex; flex-direction: column; gap: 20px; }
-    .value-item {
-      display: flex; gap: 20px; align-items: center;
-      padding: 24px; border: 1px solid var(--border); border-radius: 8px;
-      background: var(--paper); transition: border-color 0.2s;
-    }
-    .value-item:hover { border-color: var(--warm); }
-    .value-icon {
-      width: 40px; height: 40px; border-radius: 8px;
-      background: var(--warm-light); display: flex; align-items: center;
-      justify-content: center; font-size: 18px; flex-shrink: 0;
-    }
-    .value-title { font-size: 14px; font-weight: 500; color: var(--ink); margin-bottom: 4px; }
-    .value-desc { font-size: 13px; color: var(--muted); line-height: 1.6; }
+    .principle-box:hover { border-color: var(--warm); }
+    .principle-num { font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.1em; color: var(--warm); }
+    .principle-desc { font-size: 14px; line-height: 1.6; color: var(--muted); margin-top: 5px; }
+    .principle-text { font-family: var(--font-display); font-size: 20px; font-weight: 700; letter-spacing: -0.02em; line-height: 1.25; text-wrap: balance; }
 
     /* ── ARTICLES ── */
-    #articles { border-top: 1px solid var(--border); }
-    .articles-list { display: flex; flex-direction: column; gap: 0; }
-    .article-row {
-      display: grid; grid-template-columns: 80px 1fr auto;
-      gap: 32px; align-items: center;
-      padding: 28px 0; border-bottom: 1px solid var(--border);
-      cursor: pointer; transition: color 0.2s;
+    #articles { background: var(--card); border-top: 1px solid var(--border); }
+    .article-tile { display: flex; flex-direction: column; text-decoration: none; }
+    .article-tile .question { font-size: 19px; }
+    .article-tile.is-loading { opacity: 0.4; pointer-events: none; }
+    .article-foot {
+      display: flex; align-items: flex-end; justify-content: space-between; gap: 16px;
+      margin-top: auto; padding-top: 20px;
     }
-    .article-row:first-child { border-top: 1px solid var(--border); }
-    .article-row:hover .article-title { color: var(--warm); }
-    .article-num {
-      font-family: var(--font-display); font-size: 36px;
-      font-weight: 900; color: var(--border);
-      letter-spacing: -0.04em;
-    }
-    .article-title {
-      font-family: var(--font-display); font-size: 22px;
-      font-weight: 700; color: var(--ink); letter-spacing: -0.02em;
-      line-height: 1.2; margin-bottom: 6px;
-      transition: color 0.2s;
-    }
-    .article-meta-row { display: flex; gap: 16px; align-items: center; }
+    .article-meta { display: flex; flex-wrap: wrap; align-items: baseline; gap: 2px 12px; min-width: 0; font-size: 12px; color: var(--muted); }
     .article-cat { font-size: 10px; font-weight: 500; letter-spacing: 0.08em; text-transform: uppercase; color: var(--warm); }
-    .article-read { font-size: 12px; color: var(--muted); }
-    .article-actions { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-    .article-link { font-size: 13px; color: var(--warm); text-decoration: none; font-weight: 500; }
+    .article-link { font-size: 13px; font-weight: 500; color: var(--warm); white-space: nowrap; }
 
     /* ── WEEKLY UPDATES ── */
     #weekly { background: var(--card); border-top: 1px solid var(--border); }
@@ -460,70 +297,24 @@
       padding-top: 16px; border-top: 1px solid var(--border);
     }
     .weekly-tags { display: flex; gap: 6px; }
-    .tag {
-      font-size: 10px; font-weight: 500; letter-spacing: 0.06em; text-transform: uppercase;
-      padding: 3px 8px; border-radius: 3px;
-      background: var(--paper); color: var(--muted);
-    }
     .weekly-link { font-size: 12px; color: var(--warm); text-decoration: none; font-weight: 500; }
     .weekly-link:hover { text-decoration: underline; }
 
-    /* share button */
-    .share-btn {
-      display: inline-flex; align-items: center; gap: 5px;
-      background: none; border: none;
-      cursor: pointer; transition: opacity 0.2s; padding: 0;
-      opacity: 0.6;
-    }
-    .share-btn:hover { opacity: 1; }
-    .share-btn svg { width: 14px; height: 14px; }
-
-    /* ── SERVICES ── */
-    .services-grid {
-      display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 48px;
-    }
-    .service-card {
-      background: rgba(255,255,255,0.05);
-      border: 1px solid rgba(255,255,255,0.1);
-      border-radius: 8px;
-      padding: 20px;
-      transition: border-color 0.2s;
-    }
-    .service-card:hover { border-color: rgba(255,255,0,0.4); }
-    .service-header {
-      display: flex; align-items: baseline; gap: 10px;
-      margin-bottom: 10px;
-    }
-    .service-num {
-      font-family: var(--font-mono); font-size: 10px;
-      color: var(--yellow); letter-spacing: 0.1em;
-      text-transform: uppercase; flex-shrink: 0;
-    }
-    .service-title {
-      font-family: var(--font-display); font-size: 16px;
-      font-weight: 700; color: var(--paper);
-      letter-spacing: -0.02em; line-height: 1.2;
-    }
-    .service-desc {
-      font-size: 13px;
-      color: rgba(247,245,240,0.55);
-      line-height: 1.65;
-    }
-
     /* ── CONTACT / FOOTER ── */
-    #contact {
-      background: var(--paper); border-top: 1px solid var(--border);
-      padding: 100px 80px 60px;
-    }
+    #contact { background: var(--ink); color: var(--paper); padding: 100px 80px 60px; }
+    #contact .section-eyebrow { color: var(--yellow); --warm: var(--yellow); }
+    #contact .section-h2 { color: var(--paper); }
+    #contact .section-h2 em { font-style: italic; color: var(--yellow); }
+    .contact-row { display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 24px; margin-bottom: 80px; }
+    .contact-row p { font-size: 17px; color: var(--on-ink); max-width: 520px; line-height: 1.8; }
+    .btn-linkedin { display: inline-flex; align-items: center; gap: 10px; background: var(--yellow); color: var(--ink); }
+    .btn-linkedin:hover { background: var(--paper); }
     .footer-bar {
       display: flex; align-items: center; justify-content: space-between;
-      padding-top: 32px; border-top: 1px solid var(--border);
+      padding-top: 32px; border-top: 1px solid var(--on-ink-line);
     }
-    .footer-copy { font-size: 12px; color: var(--muted); }
-    .footer-built { font-family: var(--font-mono); font-size: 10px; color: var(--border); }
+    .footer-copy { font-size: 12px; color: var(--on-ink); }
+    .footer-built { font-family: var(--font-mono); font-size: 10px; color: var(--on-ink-faint); }
 
     /* ── ANIMATIONS ── */
     @keyframes fadeUp {
@@ -533,8 +324,9 @@
     .hero-tag   { animation: fadeUp 0.6s ease both; }
     .hero-h1    { animation: fadeUp 0.6s 0.1s ease both; }
     .hero-sub   { animation: fadeUp 0.6s 0.2s ease both; }
-    .hero-cta   { animation: fadeUp 0.6s 0.3s ease both; }
-    .hero-stats { animation: fadeUp 0.6s 0.4s ease both; }
+    .hero-path, .hero-thread { animation: fadeUp 0.6s 0.3s ease both; }
+    .hero-cta   { animation: fadeUp 0.6s 0.4s ease both; }
+    .hero-photo { animation: fadeUp 0.6s 0.4s ease both; }
 
     /* ── RESPONSIVE ── */
     @media (max-width: 900px) {
@@ -548,22 +340,11 @@
       }
       .hero-left { padding: 100px 24px 40px; }
       .hero-right { padding: 0 24px 60px; }
-      .hero-stats { max-width: 100%; aspect-ratio: auto; grid-auto-rows: auto; }
-      .stat-card { padding: 20px 16px; }
-      .stat-num { font-size: 28px !important; }
-      .stat-label { font-size: 10px; letter-spacing: 0.03em; }
+      .hero-photo { max-width: 100%; }
       section { padding: 60px 24px; }
-      .about-grid { grid-template-columns: 1fr; gap: 40px; }
-      .about-text div[style*="float"] { float: none !important; width: 100% !important; height: auto !important; margin: 0 0 24px 0 !important; }
-      .about-photo { width: 100% !important; height: auto !important; max-height: none !important; object-fit: contain !important; }
+      .thinking-grid { grid-template-columns: 1fr; gap: 40px; }
+      .questions-grid { grid-template-columns: 1fr; }
       .weekly-grid { grid-template-columns: 1fr; }
-      /* Services: 2 columns on mobile */
-      .services-grid { grid-template-columns: repeat(2, 1fr); gap: 10px; }
-      .service-card { padding: 14px; }
-      .service-title { font-size: 14px; }
-      .service-desc { font-size: 11px; }
-      .article-row { grid-template-columns: 1fr; gap: 8px; }
-      .article-num { font-size: 20px; }
       #contact { padding: 60px 24px 40px; }
     }
   </style>
@@ -572,13 +353,12 @@
 
 <!-- ── NAV ── -->
 <nav>
-  <a href="#hero" class="nav-logo">R<span style="color:#2E2EFF;">P</span></a>
+  <a href="#hero" class="nav-logo">R<span>P</span></a>
   <ul class="nav-links">
-    <li><a href="#about">About</a></li>
+    <li><a href="#work">Work</a></li>
+    <li><a href="#thinking">Thinking</a></li>
     <li><a href="#articles">Articles</a></li>
-    <!-- <li><a href="#weekly">Weekly</a></li> hidden for now -->
-    <li><a href="#markets">Markets</a></li>
-    <li><a href="#services">Collaborate</a></li>
+    <li><a href="#contact">Contact</a></li>
   </ul>
   <button class="nav-hamburger" id="nav-hamburger" aria-label="Menu">
     <span></span><span></span><span></span>
@@ -587,117 +367,127 @@
 
 <!-- ── MOBILE NAV MENU ── -->
 <div class="nav-mobile-menu" id="nav-mobile-menu">
-  <a href="#about" onclick="closeMobileMenu()">About</a>
+  <a href="#work" onclick="closeMobileMenu()">Work</a>
+  <a href="#thinking" onclick="closeMobileMenu()">Thinking</a>
   <a href="#articles" onclick="closeMobileMenu()">Articles</a>
-  <!-- <a href="#weekly" onclick="closeMobileMenu()">Weekly</a> hidden for now -->
-  <a href="#markets" onclick="closeMobileMenu()">Markets</a>
-  <a href="#services" onclick="closeMobileMenu()">Collaborate</a>
+  <a href="#contact" onclick="closeMobileMenu()">Contact</a>
 </div>
 
 <!-- ── HERO ── -->
 <section id="hero">
   <div class="hero-left">
-    <div class="hero-tag">Made for more</div>
-    <h1 class="hero-h1">The <em style="font-style:italic;color:#2E2EFF;">engine</em><br>behind <span style="background:#FFFF00;color:#111110;padding:0 4px;display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone;line-height:1;"><span style="display:inline;">growth.</span></span></h1>
+    <div class="hero-tag">Copenhagen</div>
+    <h1 class="hero-h1">Finance as your <em>scaling</em> <span style="background:var(--yellow);color:var(--ink);padding:0 4px;display:inline;-webkit-box-decoration-break:clone;box-decoration-break:clone;line-height:1;"><span style="display:inline;">partner.</span></span></h1>
     <p class="hero-sub">
-      I'm Riccardo and I help fast-growing scale-ups build finance and operations functions that actually move the business. Sharp analytics, stable processes, and predictable outcomes.
+      I'm Riccardo, Head of Business Finance at Lenus, a Nordic health-tech scale-up that has raised more than €80M. I build the planning, analytics and decision systems that connect revenue, cost, cash and execution.
     </p>
+    <ol class="hero-path" aria-label="Career path">
+      <li>Engineering</li>
+      <li>Data</li>
+      <li>FP&amp;A</li>
+      <li>Business Finance</li>
+    </ol>
+    <p class="hero-thread">With every move I've come closer to the decisions behind the numbers.</p>
     <div class="hero-cta">
-      <a href="#services" class="btn-primary">Get in touch</a>
-      <a href="#articles" class="btn-ghost">Read my thinking</a>
+      <a href="#thinking" class="btn-primary">Read my thinking</a>
+      <a href="#contact" class="btn-ghost">Get in touch</a>
     </div>
   </div>
   <div class="hero-right">
-    <div class="hero-stats">
-      <div class="stat-card">
-        <div class="stat-num" style="font-size:36px;">€250M+</div>
-        <div class="stat-label">Budgeted expenses managed</div>
-      </div>
-      <div class="stat-card" style="padding:0;overflow:hidden;border:3px solid var(--yellow);">
-        <img src="/Riccardo_Pollacchini-002_2048px.jpg" alt="Riccardo Pollacchini" style="width:100%;height:100%;object-fit:cover;object-position:center 15%;display:block;" />
-      </div>
-      <div class="stat-card">
-        <div class="stat-num">50+</div>
-        <div class="stat-label">Board & investor decks</div>
-      </div>
-      <div class="stat-card">
-        <div class="stat-num" style="font-size:36px;">€1B+</div>
-        <div class="stat-label">Revenue streams modelled</div>
-      </div>
+    <div class="hero-photo">
+      <img src="/Riccardo_Pollacchini-002_2048px.jpg" alt="Riccardo Pollacchini" />
     </div>
   </div>
 </section>
 
-<!-- ── ABOUT ── -->
-<section id="about">
-  <div class="section-eyebrow">About me</div>
-  <h2 class="section-h2">Sharp on numbers.<br>Clear on purpose.</h2>
-  <div class="about-grid">
-    <div class="about-text">
-      <p>
-        I'm based in Copenhagen, and I've spent the last five years inside fast-growing scale-ups trying to answer one question: how do you efficiently scale an organisation without losing sight of what matters? I've sat at the table with founders and C-level in scaled complexity — and learned that although the question is always the same, the answer keeps changing.
-      </p>
-      <p>
-        That's meant working across the full breadth of finance and operations — from strategy to controlling. My work spans the full picture — from the financial model to the process that makes it run, and the project management that makes it land. I care about the output, but I care just as much about building something that gets sharper every quarter, not just busier.
-      </p>
-      <br/>
-      <a href="https://www.linkedin.com/in/riccardo-pollacchini" target="_blank" class="btn-primary" style="display:inline;">
-        View LinkedIn profile
-      </a>
+<!-- ── WORK ── -->
+<section id="work">
+  <div class="section-eyebrow">Work</div>
+  <h2 class="section-h2">Problems I like to solve.</h2>
+  <p class="section-lead">The questions leadership teams bring to me, and how I go about answering them.</p>
+  <div class="questions-grid">
+    <div class="question-card is-highlight">
+      <div class="question">“Are we ready to scale?”</div>
+      <div class="question-how">The data, models, planning and execution underneath the strategy, checked layer by layer before the capital arrives and the weak spots get expensive to fix.</div>
     </div>
-    <div class="about-values">
-      <div class="value-item">
-        <div class="value-icon">🔥</div>
-        <div>
-          <div class="value-title">People First</div>
-          <div class="value-desc">The best results I've seen don't come from pressure. They come from teams who know where they're going and feel it's worth the effort.</div>
-        </div>
-      </div>
-      <div class="value-item">
-        <div class="value-icon">📊</div>
-        <div>
-          <div class="value-title">Growth Analytics</div>
-          <div class="value-desc">Fluent in the metrics that matter — unit economics, cohorts, margin and cash — and how they connect to real operational decisions.</div>
-        </div>
-      </div>
-      <div class="value-item">
-        <div class="value-icon">⚙️</div>
-        <div>
-          <div class="value-title">Strategy to Execution</div>
-          <div class="value-desc">From the model to the process to the outcome — analytics, project management, and the follow-through to make it stick.</div>
-        </div>
-      </div>
+    <div class="question-card">
+      <div class="question">“Where should the next euro go?”</div>
+      <div class="question-how">Capital allocation sized against the unit economics, with the trade-offs made explicitly and not by default.</div>
+    </div>
+    <div class="question-card">
+      <div class="question">“Why is growth slowing?”</div>
+      <div class="question-how">Cohorts, pricing and channel mix taken apart until the driver is visible, and it is clear whether it is the market or us.</div>
+    </div>
+    <div class="question-card">
+      <div class="question">“How much can we afford to hire?”</div>
+      <div class="question-how">Driver-based forecasts and scenarios that tie headcount to margin and cash.</div>
+    </div>
+    <div class="question-card">
+      <div class="question">“Which number do we trust?”</div>
+      <div class="question-how">One source of truth the whole leadership team can access and question, so the meeting starts with the decision.</div>
+    </div>
+    <div class="question-card">
+      <div class="question">“Are we getting sharper, or just busier?”</div>
+      <div class="question-how">Initiatives tracked against their original logic after the fact, with what was learned fed into the next cycle.</div>
     </div>
   </div>
 </section>
 
-<!-- ── MARKETS ── -->
-<section id="markets">
-  <div class="section-eyebrow">Markets</div>
-  <h2 class="section-h2">The numbers I watch and why.</h2>
-  <p class="section-lead">Indices, commodities, crypto, rates and sector trends — the macro picture I keep an eye on, refreshed hourly. Pick a timeframe below; it drives every chart, change and the sector bars.</p>
-  <div class="mkt-topbar">
-    <div class="mkt-updated" id="mkt-updated"><span class="dot"></span><span id="mkt-updated-text">Loading market data…</span></div>
-    <div class="mkt-controls-right">
-      <div class="tf-selector" id="tf-selector" role="tablist" aria-label="Timeframe"></div>
-      <button class="flip-all-btn" id="flip-all" type="button"></button>
+<!-- ── THINKING ── -->
+<section id="thinking">
+  <div class="thinking-grid">
+    <div>
+      <div class="section-eyebrow">Thinking</div>
+      <h2 class="section-h2">What I believe.</h2>
+      <p class="section-lead">
+        Five principles I keep coming back to. They come from what I've seen work and fail, and they are always in progress.
+      </p>
     </div>
+    <ol class="principle-stack">
+      <li class="principle-box">
+        <span class="principle-num">01</span>
+        <div>
+          <div class="principle-text">A method is worth 100 processes</div>
+          <p class="principle-desc">One shared way of working replaces a hundred separate rules.</p>
+        </div>
+      </li>
+      <li class="principle-box">
+        <span class="principle-num">02</span>
+        <div>
+          <div class="principle-text">Build systems that nudge people to take the right actions</div>
+          <p class="principle-desc">Make the right action the easiest one to take.</p>
+        </div>
+      </li>
+      <li class="principle-box">
+        <span class="principle-num">03</span>
+        <div>
+          <div class="principle-text">A tool nobody uses has no impact</div>
+          <p class="principle-desc">Building is the cheap part. Adoption is the real work.</p>
+        </div>
+      </li>
+      <li class="principle-box">
+        <span class="principle-num">04</span>
+        <div>
+          <div class="principle-text">Complementarity is a necessary foundation for synergy</div>
+          <p class="principle-desc">A team adds up when its roles differ and fit together.</p>
+        </div>
+      </li>
+      <li class="principle-box is-highlight">
+        <span class="principle-num">05</span>
+        <div>
+          <div class="principle-text">Communicate the what, not the how</div>
+          <p class="principle-desc">Set the goal clearly, and let people find the way.</p>
+        </div>
+      </li>
+    </ol>
   </div>
-  <div id="mkt-content"><div class="mkt-state">Fetching the latest market data…</div></div>
-  <p class="mkt-foot" style="margin-top:28px;max-width:860px;line-height:1.6;font-size:9.5px;">Prices via Yahoo Finance, cached and refreshed hourly. Data is end-of-day, so a 1D chart is a single prev-close→now segment; 7D–12M draw the full daily trend. For information only — not investment advice.</p>
 </section>
 
 <!-- ── ARTICLES ── -->
-<section id="articles">
-  <div class="section-eyebrow">Articles</div>
-  <h2 class="section-h2">My business view.</h2>
-  <p class="section-lead">
-    My perspective on finance, business, and leadership. I write about the things I see, the patterns I notice, and the ideas I keep coming back to. Opinions grounded in real experience, and always in progress.
-  </p>
-  <div class="articles-list" id="articles-list">
-    <div class="article-row" style="opacity:0.4;pointer-events:none;">
-      <div class="article-num">—</div>
-      <div><div class="article-title">Loading articles…</div></div>
+<section id="articles" aria-label="Articles">
+  <div class="questions-grid" id="articles-list">
+    <div class="question-card article-tile is-loading">
+      <div class="question">Loading articles…</div>
     </div>
   </div>
 </section>
@@ -719,53 +509,24 @@
   </div>
 </section>
 
-<!-- ── SERVICES ── -->
-<section id="services" style="background: var(--ink); color: var(--paper);">
-  <div class="section-eyebrow" style="color: var(--yellow); --warm: var(--yellow);">How I can help</div>
-  <h2 class="section-h2" style="color: var(--paper);">Where I can add value.</h2>
-  <div class="services-grid">
-    <div class="service-card">
-      <div class="service-header"><span class="service-num">01</span><span class="service-title">Data</span></div>
-      <div class="service-desc">Building the foundation — infrastructure, definitions, and the pipelines that make everything downstream reliable.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-header"><span class="service-num">02</span><span class="service-title">Analytics</span></div>
-      <div class="service-desc">Turning data into decisions — KPI hierarchy, cohort analysis, unit economics, and the metrics that actually drive growth.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-header"><span class="service-num">03</span><span class="service-title">Strategy</span></div>
-      <div class="service-desc">Translating insights into a plan — forecasting, budgeting, valuation, and the scenarios that shape direction.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-header"><span class="service-num">04</span><span class="service-title">Implementation</span></div>
-      <div class="service-desc">Taking the plan into the organisation — project management, cross-functional coordination, and the delivery that closes the gap between strategy and reality.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-header"><span class="service-num">05</span><span class="service-title">Automation</span></div>
-      <div class="service-desc">Designing processes for consistent outcome — AI-assisted reporting, automated workflows, and the infrastructure that lets your team focus on decisions, not spreadsheets.</div>
-    </div>
-    <div class="service-card">
-      <div class="service-header"><span class="service-num">06</span><span class="service-title">Continuous Improvement</span></div>
-      <div class="service-desc">Getting sharper every quarter — process design, automation, and removing the friction that slows teams down.</div>
-    </div>
-  </div>
-  <hr style="border:none;border-top:1px solid rgba(255,255,255,0.1);margin:48px 0;">
-  <div style="display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:24px;">
-    <p style="font-size:17px;color:rgba(247,245,240,0.6);max-width:420px;line-height:1.8;margin:0;">Whether you need to build from scratch or sharpen what's already running — let's talk on LinkedIn for a first free consultation.</p>
-    <a href="https://www.linkedin.com/in/riccardo-pollacchini" target="_blank" class="btn-primary" style="display:inline-flex;align-items:center;gap:10px;background:var(--yellow);color:var(--ink);">
+<!-- ── CONTACT ── -->
+<section id="contact">
+  <div class="section-eyebrow">Contact</div>
+  <h2 class="section-h2">Let's <em>talk.</em></h2>
+  <div class="contact-row">
+    <p>I'm always glad to spar with peers, and I occasionally collaborate with founders and finance leaders on problems where my experience is useful. LinkedIn is the easiest way to reach me.</p>
+    <a href="https://www.linkedin.com/in/riccardo-pollacchini" target="_blank" class="btn-primary btn-linkedin">
       <svg viewBox="0 0 24 24" fill="currentColor" width="18" height="18"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
       Connect on LinkedIn
     </a>
   </div>
-  <div class="footer-bar" style="border-top-color: rgba(255,255,255,0.1); margin-top: 80px;">
-    <span class="footer-copy" style="color: rgba(247,245,240,0.4);">© 2026 Riccardo Pollacchini · pollacchini.com</span>
-    <span class="footer-built" style="color: rgba(247,245,240,0.2);">Built with intention</span>
+  <div class="footer-bar">
+    <span class="footer-copy">© 2026 Riccardo Pollacchini · pollacchini.com</span>
+    <span class="footer-built">Built with intention</span>
   </div>
 </section>
 
 <script>
-  const LI_SVG = `<svg viewBox="0 0 24 24" fill="#0A66C2" width="14" height="14"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>`;
-
   // ── MOBILE NAV ──
   const hamburger = document.getElementById('nav-hamburger');
   const mobileMenu = document.getElementById('nav-mobile-menu');
@@ -817,29 +578,41 @@
     `).join('');
   }
 
+  // The line shown under each article title, keyed by slug: the sentence from the
+  // article that states its argument. An article without an entry falls back to
+  // the first sentence of its opening paragraph (all-caps headings skipped).
+  const ARTICLE_TEASERS = {
+    'five-layers-execution-strategy': 'The strategy was fine. The operating system underneath it was not.',
+    'ai-building-trap-impact-effort-lens': 'Teams are building faster than organisations can absorb.',
+    'finance-tactical-lineup': 'When everyone is at the front line, the structure of finance begins to collapse.',
+  };
+
+  function articleTeaser(body) {
+    const para = (body || '').split(/\n+/).map(x => x.trim()).find(x => x && x !== x.toUpperCase());
+    if (!para) return '';
+    const first = para.match(/^.*?[.!?](?=\s|$)/);
+    return first ? first[0] : para;
+  }
+
   function renderArticles(articles) {
     const list = document.getElementById('articles-list');
     if (!list) return;
     if (!articles || articles.length === 0) {
-      list.innerHTML = '<p style="color:var(--muted);font-size:14px;padding:28px 0;">No articles published yet — check back soon.</p>';
+      list.innerHTML = '<p style="color:var(--muted);font-size:14px;">No articles published yet — check back soon.</p>';
       return;
     }
     list.innerHTML = articles.map(a => `
-      <div class="article-row">
-        <div class="article-num">${a.num}</div>
-        <div>
-          <a href="${a.slug ? '/article?slug=' + a.slug : '#'}" style="text-decoration:none;color:inherit;"><div class="article-title">${a.title}</div></a>
-          <div class="article-meta-row">
+      <a class="question-card article-tile" href="${a.slug ? '/article?slug=' + a.slug : '#'}">
+        <div class="question">${a.title.replace(/<[^>]+>/g, '')}</div>
+        <div class="question-how">${ARTICLE_TEASERS[a.slug] || articleTeaser(a.body)}</div>
+        <div class="article-foot">
+          <div class="article-meta">
             ${a.category ? `<span class="article-cat">${a.category}</span>` : ''}
-            ${a.readTime ? `<span class="article-read">${a.readTime}</span>` : ''}
-            ${a.date ? `<span class="article-date" style="font-size:12px;color:var(--muted);">${formatDate(a.date)}</span>` : ''}
+            ${a.readTime ? `<span>${a.readTime}</span>` : ''}
           </div>
+          <span class="article-link">Read more →</span>
         </div>
-        <div class="article-actions">
-          <a href="${a.slug ? '/article?slug=' + a.slug : '#'}" class="article-link">Read →</a>
-          <button class="share-btn" onclick="shareOnLinkedIn('${a.title.replace(/<[^>]+>/g, '')}', 'A new article by Riccardo Pollacchini on pollacchini.com')"><span>Share on</span>${LI_SVG}</button>
-        </div>
-      </div>
+      </a>
     `).join('');
   }
 
@@ -857,375 +630,6 @@
 
   loadContent();
 
-  // ── MARKETS ──
-  const MKT = { W: 300, H: 156, padL: 40, padR: 10, padT: 12, padB: 20 };
-  // [key, short label, chart-window days, long label]. TF_ALL is used by the
-  // returns table; the selector (TF_OPTIONS) drops 1D — the data is end-of-day
-  // so a 1-day chart isn't meaningful, but the 1-day number stays in the table.
-  const TF_ALL = [
-    ['d1', '1D', 1, '1 Day'], ['d7', '7D', 7, '7 Days'], ['d30', '30D', 30, '30 Days'],
-    ['m3', '3M', 91, '3 Months'], ['m6', '6M', 182, '6 Months'], ['m12', '12M', 365, '12 Months'],
-  ];
-  const TF_OPTIONS = TF_ALL.filter(o => o[0] !== 'd1');
-  let MARKET = null;    // fetched payload
-  let TF = 'm12';       // active timeframe key (default view)
-  let allFlipped = false; // flip-all toggle state
-  const tfMeta = k => TF_ALL.find(o => o[0] === k);
-
-  function mktValue(item) {
-    const v = item.current;
-    if (v == null) return '—';
-    if (item.unit === 'percent') return v.toFixed(2) + '%';
-    if (item.unit === 'bps') return `${v >= 0 ? '+' : '−'}${Math.abs(Math.round(v))}<span class="suffix"> bps</span>`;
-    if (item.unit === 'ratio') return v.toFixed(3);
-    if (item.unit === 'fx') return v.toFixed(4);
-    const n = v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-    if (item.unit === 'usd') return `$${n}<span class="suffix">${item.suffix || ''}</span>`;
-    return n;
-  }
-  function mktNum(v, item) {
-    if (item.unit === 'percent') return v.toFixed(2) + '%';
-    if (item.unit === 'bps') return `${v >= 0 ? '+' : '−'}${Math.abs(Math.round(v))} bps`;
-    if (item.unit === 'ratio') return v.toFixed(3);
-    if (item.unit === 'fx') return v.toFixed(4);
-    return v.toLocaleString('en-US', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-  }
-  function mktAxisNum(v, item) {
-    if (item.unit === 'percent') return v.toFixed(2);
-    if (item.unit === 'bps') return Math.round(v);
-    if (item.unit === 'ratio') return v.toFixed(2);
-    if (item.unit === 'fx') return v.toFixed(3);
-    if (Math.abs(v) >= 1000) return Math.round(v).toLocaleString('en-US');
-    return v.toFixed(2);
-  }
-  // Change badge/table cell: absolute (bps / pp) for spread & rate metrics, else %.
-  function fmtChange(item, val) {
-    if (item.changeAbs) {
-      const u = item.changeUnit || 'bps';
-      if (val == null) return { cls: 'flat', t: '—' };
-      if (val === 0) return { cls: 'flat', t: '±0 ' + u };
-      return { cls: val > 0 ? 'up' : 'down', t: (val > 0 ? '▲ +' : '▼ ') + Math.abs(val) + ' ' + u };
-    }
-    return fmtPct(val);
-  }
-  function mktDate(ts) {
-    return new Date(ts * 1000).toLocaleDateString('en-GB', { day: 'numeric', month: 'short' });
-  }
-  function mktStamp(iso) {
-    const d = new Date(iso);
-    const time = d.toLocaleTimeString('en-GB', { hour: '2-digit', minute: '2-digit', timeZone: 'UTC' });
-    const date = d.toLocaleDateString('en-GB', { day: 'numeric', month: 'short', timeZone: 'UTC' });
-    return `Updated hourly · as of ${time} UTC, ${date}`;
-  }
-  function fmtPct(pct) {
-    if (pct == null) return { cls: 'flat', t: '—' };
-    if (pct === 0) return { cls: 'flat', t: '±0.00%' };
-    return { cls: pct > 0 ? 'up' : 'down', t: (pct > 0 ? '▲ +' : '▼ ') + Math.abs(pct).toFixed(2) + '%' };
-  }
-
-  // Slice full history to the selected window (min 2 points so a line always draws).
-  function windowHistory(history, days) {
-    if (!history || !history.length) return [];
-    const cutoff = history[history.length - 1].t - days * 86400;
-    let s = history.filter(p => p.t >= cutoff);
-    if (s.length < 2) s = history.slice(-2);
-    return s;
-  }
-
-  // Interactive line chart (windowed) with x/y axis labels and a hover tooltip.
-  function buildChart(item, days) {
-    const { W, H, padL, padR, padT, padB } = MKT;
-    const hist = windowHistory(item.history, days), pts = hist.map(p => p.c);
-    const wrap = document.createElement('div');
-    wrap.className = 'chart-wrap';
-    if (pts.length < 2) { wrap.innerHTML = ''; return wrap; }
-
-    let min = Math.min(...pts), max = Math.max(...pts);
-    if (max === min) { const pad = Math.abs(max) * 0.02 || 0.1; min -= pad; max += pad; } // flat series → centre it
-    const span = (max - min) || 1;
-    const X = i => padL + (W - padL - padR) * (i / (pts.length - 1));
-    const Y = v => padT + (H - padT - padB) * (1 - (v - min) / span);
-    const rising = pts.at(-1) >= pts[0];
-    const col = rising ? 'var(--up)' : 'var(--down)';
-    const rgb = rising ? '22,121,76' : '192,57,43';
-    const uid = 'g' + item.symbol.replace(/[^a-z0-9]/gi, '') + TF;
-
-    const line = pts.map((v, i) => `${i ? 'L' : 'M'}${X(i).toFixed(1)},${Y(v).toFixed(1)}`).join(' ');
-    const area = `${line} L${X(pts.length - 1).toFixed(1)},${(H - padB).toFixed(1)} L${X(0).toFixed(1)},${(H - padB).toFixed(1)} Z`;
-
-    const yv = [max, (max + min) / 2, min];
-    const yAxis = yv.map((v, k) => {
-      const gy = Y(v).toFixed(1);
-      return `<line x1="${padL}" y1="${gy}" x2="${W - padR}" y2="${gy}" stroke="var(--border)" stroke-width="1"${k === 1 ? ' stroke-dasharray="2 4"' : ''}/>`
-        + `<text class="mkt-axis" x="${padL - 5}" y="${(+gy + 3).toFixed(1)}" text-anchor="end" font-size="8.5">${mktAxisNum(v, item)}</text>`;
-    }).join('');
-
-    const xi = pts.length > 2 ? [0, Math.floor((pts.length - 1) / 2), pts.length - 1] : [0, pts.length - 1];
-    const xAxis = xi.map((i, k) => {
-      const anchor = i === 0 ? 'start' : i === pts.length - 1 ? 'end' : 'middle';
-      return `<text class="mkt-axis" x="${X(i).toFixed(1)}" y="${H - 6}" text-anchor="${anchor}" font-size="8.5">${mktDate(hist[i].t)}</text>`;
-    }).join('');
-
-    const dx = X(pts.length - 1).toFixed(1), dy = Y(pts.at(-1)).toFixed(1);
-    wrap.innerHTML = `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="xMidYMid meet" role="img" aria-label="${item.label} trend">
-      <defs><linearGradient id="${uid}" x1="0" x2="0" y1="0" y2="1"><stop offset="0%" stop-color="rgba(${rgb},0.22)"/><stop offset="100%" stop-color="rgba(${rgb},0)"/></linearGradient></defs>
-      ${yAxis}${xAxis}
-      <path d="${area}" fill="url(#${uid})" stroke="none"/>
-      <path d="${line}" fill="none" stroke="${col}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
-      <circle cx="${dx}" cy="${dy}" r="6" fill="rgba(${rgb},0.16)"/><circle cx="${dx}" cy="${dy}" r="3" fill="${col}"/>
-      <line class="xh" x1="0" y1="${padT}" x2="0" y2="${H - padB}" stroke="${col}" stroke-width="1" stroke-dasharray="3 3" opacity="0"/>
-      <circle class="xh-dot" r="3.5" fill="${col}" stroke="var(--card)" stroke-width="1.5" opacity="0"/>
-    </svg><div class="chart-tip"></div>`;
-
-    const svg = wrap.querySelector('svg');
-    const xh = wrap.querySelector('.xh'), xhDot = wrap.querySelector('.xh-dot'), tip = wrap.querySelector('.chart-tip');
-    const pre = item.unit === 'usd' ? '$' : '';
-
-    function move(clientX) {
-      const r = svg.getBoundingClientRect();
-      const vx = (clientX - r.left) / r.width * W;
-      let i = Math.round((vx - padL) / (W - padL - padR) * (pts.length - 1));
-      i = Math.max(0, Math.min(pts.length - 1, i));
-      const cx = X(i), cy = Y(pts[i]);
-      xh.setAttribute('x1', cx); xh.setAttribute('x2', cx); xh.setAttribute('opacity', '0.6');
-      xhDot.setAttribute('cx', cx); xhDot.setAttribute('cy', cy); xhDot.setAttribute('opacity', '1');
-      tip.innerHTML = `${mktDate(hist[i].t)} · <b>${pre}${mktNum(pts[i], item)}</b>`;
-      tip.style.left = (cx / W * 100) + '%';
-      tip.style.top = (cy / H * 100) + '%';
-      tip.style.opacity = '1';
-    }
-    function leave() {
-      xh.setAttribute('opacity', '0'); xhDot.setAttribute('opacity', '0'); tip.style.opacity = '0';
-    }
-    svg.addEventListener('mousemove', e => move(e.clientX));
-    svg.addEventListener('mouseleave', leave);
-    svg.addEventListener('touchmove', e => { if (e.touches[0]) move(e.touches[0].clientX); }, { passive: true });
-    svg.addEventListener('touchend', leave);
-    return wrap;
-  }
-
-  // Front → flip to the returns table (table icon); back → flip to the chart (line-chart icon).
-  const TABLE_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="3" y1="15" x2="21" y2="15"/><line x1="9" y1="3" x2="9" y2="21"/></svg>';
-  const CHART_ICON = '<svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="3 17 9 11 13 15 21 7"/><polyline points="15 7 21 7 21 13"/></svg>';
-
-  function mktCard(item) {
-    const meta = tfMeta(TF);
-    const card = document.createElement('div');
-    card.className = 'mkt-card';
-    const flip = document.createElement('div');
-    flip.className = 'mkt-flip';
-
-    // ── Front: value + inline change (selected timeframe) + windowed chart ──
-    const front = document.createElement('div');
-    front.className = 'mkt-face mkt-front';
-    const headF = document.createElement('div');
-    headF.className = 'mkt-card-head';
-    headF.innerHTML = `<div class="mkt-label">${item.label}${item.info ? ' <button class="info-btn" type="button" aria-label="Why this matters" title="Why this matters">?</button>' : ''}</div>`;
-    const infoBtn = headF.querySelector('.info-btn');
-    if (infoBtn) infoBtn.addEventListener('click', e => { e.stopPropagation(); openInfoModal(item); });
-    const btnF = document.createElement('button');
-    btnF.className = 'flip-btn'; btnF.type = 'button';
-    btnF.setAttribute('aria-label', 'Show returns table'); btnF.title = 'Returns table';
-    btnF.innerHTML = TABLE_ICON;
-    headF.appendChild(btnF);
-    const chg = item.changes ? item.changes[TF] : null;
-    const c = fmtChange(item, chg);
-    const valRow = document.createElement('div');
-    valRow.className = 'mkt-value-row';
-    valRow.innerHTML = `<span class="mkt-value">${mktValue(item)}</span>`
-      + (chg == null ? '' : `<span class="mkt-chg ${c.cls}">${c.t}<span class="win">${meta[1].toLowerCase()}</span></span>`);
-    front.appendChild(headF);
-    front.appendChild(valRow);
-    front.appendChild(buildChart(item, meta[2]));
-
-    // ── Back: striped returns table across all timeframes ──
-    const back = document.createElement('div');
-    back.className = 'mkt-face mkt-back';
-    const headB = document.createElement('div');
-    headB.className = 'mkt-card-head';
-    headB.innerHTML = `<div class="mkt-label">${item.label}</div>`;
-    const btnB = document.createElement('button');
-    btnB.className = 'flip-btn'; btnB.type = 'button';
-    btnB.setAttribute('aria-label', 'Back to chart'); btnB.title = 'Back to chart';
-    btnB.innerHTML = CHART_ICON;
-    headB.appendChild(btnB);
-    const rows = TF_ALL.map(([k, , , long]) => {
-      const p = fmtChange(item, item.changes ? item.changes[k] : null);
-      return `<tr><td>${long}</td><td class="${p.cls}">${p.t}</td></tr>`;
-    }).join('');
-    const table = document.createElement('table');
-    table.className = 'ret-table';
-    table.innerHTML = `<tbody>${rows}</tbody>`;
-    back.appendChild(headB);
-    back.appendChild(table);
-
-    flip.appendChild(front);
-    flip.appendChild(back);
-    card.appendChild(flip);
-    btnF.addEventListener('click', () => card.classList.add('flipped'));
-    btnB.addEventListener('click', () => card.classList.remove('flipped'));
-    return card;
-  }
-
-  // Sectors rendered as a diverging bar chart for the selected timeframe.
-  function sectorBars(items) {
-    const vals = items.map(it => ({ label: it.label, v: it.changes ? it.changes[TF] : null }))
-      .filter(x => x.v != null)
-      .sort((a, b) => b.v - a.v);
-    const maxAbs = Math.max(0.1, ...vals.map(x => Math.abs(x.v)));
-    const panel = document.createElement('div');
-    panel.className = 'sector-panel';
-    const title = document.createElement('div');
-    title.className = 'sp-title';
-    title.textContent = `All sectors · ${tfMeta(TF)[1].toLowerCase()}`;
-    panel.appendChild(title);
-    const bars = document.createElement('div');
-    bars.className = 'sp-bars';
-    vals.forEach(x => {
-      const up = x.v >= 0;
-      const w = (Math.abs(x.v) / maxAbs * 50).toFixed(1);
-      const row = document.createElement('div');
-      row.className = 'bar-row';
-      row.innerHTML = `<span class="bar-label" title="${x.label}">${x.label}</span>`
-        + `<div class="bar-track"><div class="bar-fill ${up ? 'up' : 'down'}" style="width:${w}%"></div></div>`
-        + `<span class="bar-val ${up ? 'up' : 'down'}">${up ? '+' : ''}${x.v.toFixed(2)}%</span>`;
-      bars.appendChild(row);
-    });
-    panel.appendChild(bars);
-    return panel;
-  }
-
-  function updateFlipAllBtn() {
-    const btn = document.getElementById('flip-all');
-    btn.innerHTML = (allFlipped ? CHART_ICON : TABLE_ICON) + `<span>${allFlipped ? 'Charts' : 'Tables'}</span>`;
-    btn.title = allFlipped ? 'Show all charts' : 'Show all returns tables';
-  }
-  function setupFlipAll() {
-    const btn = document.getElementById('flip-all');
-    btn.addEventListener('click', () => {
-      const cards = [...document.querySelectorAll('.mkt-card')];
-      allFlipped = cards.some(c => !c.classList.contains('flipped')); // any showing chart → flip all to tables
-      cards.forEach(c => c.classList.toggle('flipped', allFlipped));
-      updateFlipAllBtn();
-    });
-    updateFlipAllBtn();
-  }
-
-  function buildSelector() {
-    const el = document.getElementById('tf-selector');
-    el.innerHTML = '';
-    TF_OPTIONS.forEach(([k, short]) => {
-      const b = document.createElement('button');
-      b.className = 'tf-btn' + (k === TF ? ' active' : '');
-      b.type = 'button'; b.dataset.tf = k; b.textContent = short;
-      b.setAttribute('role', 'tab'); b.setAttribute('aria-selected', k === TF);
-      b.addEventListener('click', () => { if (TF !== k) { TF = k; renderAll(); } });
-      el.appendChild(b);
-    });
-  }
-
-  function renderAll() {
-    const data = MARKET;
-    if (!data) return;
-    const root = document.getElementById('mkt-content');
-    root.innerHTML = '';
-    for (const g of data.groups) {
-      const group = document.createElement('div');
-      group.className = 'mkt-group';
-      const sub = document.createElement('div');
-      sub.className = 'mkt-sub';
-      sub.textContent = g.label;
-      group.appendChild(sub);
-      const grid = document.createElement('div');
-      grid.className = 'mkt-grid';
-      if (g.key === 'sectors') {
-        // Sectors: the diverging bar chart (as one card cell) AND the cards.
-        grid.appendChild(sectorBars(g.items));
-        const sorted = [...g.items].sort((a, b) => ((b.changes && b.changes[TF]) ?? -99) - ((a.changes && a.changes[TF]) ?? -99));
-        sorted.forEach(it => grid.appendChild(mktCard(it)));
-      } else {
-        g.items.forEach(it => grid.appendChild(mktCard(it)));
-      }
-      group.appendChild(grid);
-      root.appendChild(group);
-    }
-    if (data.failed && data.failed.length) {
-      const p = document.createElement('p');
-      p.className = 'mkt-foot';
-      p.style.cssText = 'color:var(--down);margin-top:20px;';
-      p.textContent = 'Temporarily unavailable: ' + data.failed.join(', ');
-      root.appendChild(p);
-    }
-    document.querySelectorAll('.tf-btn').forEach(b => {
-      const on = b.dataset.tf === TF;
-      b.classList.toggle('active', on);
-      b.setAttribute('aria-selected', on);
-    });
-    // Preserve the flip-all state across re-renders (timeframe changes).
-    if (allFlipped) document.querySelectorAll('.mkt-card').forEach(c => c.classList.add('flipped'));
-  }
-
-  // Explainer modal: name (top) · corporate-finance rationale (middle) · chart (bottom).
-  function setupInfoModal() {
-    if (document.getElementById('info-modal')) return;
-    const bd = document.createElement('div');
-    bd.className = 'info-modal-backdrop'; bd.id = 'info-modal'; bd.hidden = true;
-    bd.innerHTML = '<div class="info-modal"><button class="info-modal-close" aria-label="Close">×</button>'
-      + '<div class="info-modal-name"></div><div class="info-modal-value"></div>'
-      + '<div class="info-modal-text"></div><div class="info-modal-chart"></div></div>';
-    document.body.appendChild(bd);
-    const close = () => {
-      bd.classList.remove('open');
-      setTimeout(() => { bd.hidden = true; bd.querySelector('.info-modal-chart').innerHTML = ''; }, 200);
-    };
-    bd.addEventListener('click', e => { if (e.target === bd) close(); });
-    bd.querySelector('.info-modal-close').addEventListener('click', close);
-    document.addEventListener('keydown', e => { if (e.key === 'Escape' && !bd.hidden) close(); });
-  }
-  function openInfoModal(item) {
-    const bd = document.getElementById('info-modal');
-    if (!bd) return;
-    const meta = tfMeta(TF);
-    bd.querySelector('.info-modal-name').textContent = item.label;
-    const chg = item.changes ? item.changes[TF] : null;
-    const c = fmtChange(item, chg);
-    bd.querySelector('.info-modal-value').innerHTML = `<span>${mktValue(item)}</span>`
-      + (chg == null ? '' : ` &nbsp; <span class="${c.cls}">${c.t}</span> <span style="opacity:.55">${meta[1].toLowerCase()}</span>`);
-    bd.querySelector('.info-modal-text').textContent = item.info || '';
-    const chartBox = bd.querySelector('.info-modal-chart');
-    chartBox.innerHTML = '';
-    chartBox.appendChild(buildChart(item, meta[2]));
-    bd.hidden = false;
-    requestAnimationFrame(() => bd.classList.add('open'));
-  }
-
-  async function loadMarket() {
-    try {
-      const res = await fetch('/.netlify/functions/get-market');
-      if (!res.ok) throw new Error('HTTP ' + res.status);
-      const data = await res.json();
-      if (!data.groups || !data.groups.length) throw new Error('no data');
-      MARKET = data;
-      document.getElementById('mkt-updated-text').textContent = mktStamp(data.updatedAt);
-      buildSelector();
-      setupFlipAll();
-      setupInfoModal();
-      renderAll();
-    } catch (e) {
-      document.getElementById('mkt-updated-text').textContent = 'Data unavailable';
-      document.getElementById('mkt-content').innerHTML = '<div class="mkt-state">Couldn\'t load market data right now. Please try again shortly.</div>';
-      console.warn('Could not load market data:', e);
-    }
-  }
-
-  loadMarket();
-
-  function shareOnLinkedIn(title, text) {
-    const url = encodeURIComponent('https://pollacchini.com');
-    const summary = encodeURIComponent(text + ' Read more at pollacchini.com');
-    const liUrl = `https://www.linkedin.com/sharing/share-offsite/?url=${url}&title=${encodeURIComponent(title)}&summary=${summary}`;
-    window.open(liUrl, '_blank', 'width=600,height=500');
-  }
 </script>
 </body>
 </html>
